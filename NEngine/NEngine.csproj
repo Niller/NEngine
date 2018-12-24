@@ -55,6 +55,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Camera.cs" />
+    <Compile Include="Mesh.cs" />
+    <Compile Include="Rendering.cs" />
+    <Compile Include="Vectors\Vector2.cs" />
+    <Compile Include="Vectors\Vector2Int.cs" />
+    <Compile Include="Vectors\Vector3.cs" />
+    <Compile Include="Vectors\Vector3Int.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
