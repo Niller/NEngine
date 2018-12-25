@@ -1,4 +1,6 @@
-﻿using Math.Vectors;
+﻿using System.Windows;
+using System.Windows.Media.Media3D;
+using Math.Vectors;
 
 namespace NEngine
 {

@@ -29,6 +29,8 @@ namespace NEngine
             _rendering = new Rendering(new Vector2Int(640, 480));
             
             CompositionTarget.Rendering += CompositionTargetOnRendering;
+
+            TestScene1();
         }
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)

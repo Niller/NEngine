@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine", "NEngine\NEngine.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "Math\Math.csproj", "{1A950A35-ED0D-4EDB-BF78-49F0256C485A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathTests", "MathTests\MathTests.csproj", "{B2862479-91EC-4565-AB3F-AC55CF69E54E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1A950A35-ED0D-4EDB-BF78-49F0256C485A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A950A35-ED0D-4EDB-BF78-49F0256C485A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A950A35-ED0D-4EDB-BF78-49F0256C485A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

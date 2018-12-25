@@ -58,10 +58,6 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="Rendering.cs" />
-    <Compile Include="Vectors\Vector2.cs" />
-    <Compile Include="Vectors\Vector2Int.cs" />
-    <Compile Include="Vectors\Vector3.cs" />
-    <Compile Include="Vectors\Vector3Int.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -101,6 +97,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Math\Math.csproj">
+      <Project>{1A950A35-ED0D-4EDB-BF78-49F0256C485A}</Project>
+      <Name>Math</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
