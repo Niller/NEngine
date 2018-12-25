@@ -13,8 +13,8 @@ namespace MathTests
         {
             var m = new[]
             {
-                1d, 2d, 3d, 4d,
-                5d, 6d, 7d, 8d
+                1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f
             };
 
             var matrix1 = new Matrix(4, 2, m);
@@ -27,14 +27,14 @@ namespace MathTests
         {
             var m = new[]
             {
-                1d, 2d, 3d, 4d,
-                5d, 6d, 7d, 8d
+                1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f
             };
 
             var m1 = new[]
             {
-                1d, 2d, 3d, 4d,
-                5d, 6d, 7d, 8d
+                1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f
             };
 
             var matrix1 = new Matrix(4, 2, m);
@@ -44,14 +44,14 @@ namespace MathTests
 
             m = new[]
             {
-                1d, 2d, 3d, 4d,
-                5d, 6d, 7d, 8d
+                1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f
             };
 
             m1 = new[]
             {
-                1d, 2d, 3d, 4d,
-                5d, 6d, 74d, 8d
+                1f, 2f, 3f, 4f,
+                5f, 6f, 74f, 8f
             };
 
             matrix1 = new Matrix(4, 2, m);
@@ -65,10 +65,10 @@ namespace MathTests
         {
             var m = new[]
             {
-                1d, 2d, 3d, 4d,
-                5d, 6d, 7d, 8d,
-                9d, 10d, 11d, 12d,
-                13d, 14d, 15d, 16d
+                1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f,
+                9f, 10f, 11f, 12f,
+                13f, 14f, 15f, 16f
             };
 
             var matrix1 = new Matrix(4, 4, m);
@@ -95,9 +95,9 @@ namespace MathTests
         {
             var m = new[]
             {
-                1d, 2d, 3d, 
-                4d, 5d, 6d,
-                7d, 8d, 9d,
+                1f, 2f, 3f, 
+                4f, 5f, 6f,
+                7f, 8f, 9f,
 
             };
 
@@ -108,16 +108,16 @@ namespace MathTests
 
             var mustResult = new Matrix(3, 3, new []
             {
-                30d, 36d, 42d,
-                66d, 81d, 96d,
-                102d, 126d, 150d
+                30f, 36f, 42f,
+                66f, 81f, 96f,
+                102f, 126f, 150f
             });
 
             Assert.AreEqual(mustResult, result);
 
             m = new[]
             {
-                2d, 
+                2f, 
             };
 
             matrix1 = new Matrix(1, 1, m);
@@ -127,7 +127,7 @@ namespace MathTests
 
             mustResult = new Matrix(1, 1, new[]
             {
-                4d
+                4f
             });
 
             Assert.AreEqual(mustResult, result);

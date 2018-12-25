@@ -10,10 +10,10 @@ namespace Math.Matrices
     {
         public Vector2Int Dimension;
 
-        private readonly double[] _values;
+        private readonly float[] _values;
         private readonly int _hashCode;
 
-        public Matrix(int x, int y, double[] values)
+        public Matrix(int x, int y, float[] values)
         {
             if (values.Length <= 0)
             {
@@ -21,12 +21,12 @@ namespace Math.Matrices
             }
 
             Dimension = new Vector2Int(x, y);
-            _values = (double[])values.Clone();
+            _values = (float[])values.Clone();
 
             _hashCode = _values.GetHashCode();
         }
 
-        public double GetValue(int x, int y)
+        public float GetValue(int x, int y)
         {
             if (!MathUtilities.IsInRange(x, 0, Dimension.X - 1) || !MathUtilities.IsInRange(y, 0, Dimension.Y - 1))
             {
@@ -63,13 +63,13 @@ namespace Math.Matrices
                 throw new ArgumentException("Number of columns in Matrix1 not equals the number of rows in Matrix2");
             }
 
-            var array = new double[matrix1.Dimension.X * matrix2.Dimension.Y];
+            var array = new float[matrix1.Dimension.X * matrix2.Dimension.Y];
 
             for (var i = 0; i < matrix1.Dimension.X; ++i)
             {
                 for (var j = 0; j < matrix2.Dimension.Y; ++j)
                 {
-                    var result = 0d;
+                    var result = 0f;
                     for (var k = 0; k < matrix1.Dimension.Y; k++)
                     {
                         result += matrix1._values[i * matrix1.Dimension.Y + k] * matrix2._values[k * matrix2.Dimension.Y + j];

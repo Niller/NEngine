@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Math.Matrices;
 
 namespace Math.Vectors
 {
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public struct Vector3
     {
-        public double X;
-        public double Y;
-        public double Z;
+        public float X;
+        public float Y;
+        public float Z;
         private readonly int _hashCode;
 
-        public Vector3(double x, double y, double z)
+        public Vector3(float x, float y, float z)
         {
             X = x;
             Y = y;
@@ -39,6 +40,16 @@ namespace Math.Vectors
             return !vector1.Equals(vector2);
         }
 
+        public Vector3 TransformCoordinate(Matrix transformMatrix)
+        {
+            var vectorMatrix = new Matrix(4, 1, new []
+            {
+                X, Y, Z, 1f
+            });
+            var resultMatrix = transformMatrix * vectorMatrix;
+            return new Vector3(resultMatrix.GetValue(0, 0), resultMatrix.GetValue(1, 0), resultMatrix.GetValue(2, 0));
+        }
+
         public bool Equals(Vector3 other)
         {
             if (_hashCode != other.GetHashCode())
@@ -56,7 +67,7 @@ namespace Math.Vectors
 
         public override string ToString()
         {
-            return string.Format(new CultureInfo("en-EN"), "({0:0.###}, {1:0.###}, {2:0.###})", X, Y, Z);
+            return string.Format(new CultureInfo("en-EN"), "({0:0.##}, {1:0.##}, {2:0.##})", X, Y, Z);
         }
     }
 }

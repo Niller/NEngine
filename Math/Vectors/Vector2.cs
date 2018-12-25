@@ -7,11 +7,11 @@ namespace Math.Vectors
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public struct Vector2
     {
-        public double X;
-        public double Y;
+        public float X;
+        public float Y;
         private readonly int _hashCode;
 
-        public Vector2(double x, double y)
+        public Vector2(float x, float y)
         {
             X = x;
             Y = y;

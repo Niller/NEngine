@@ -44,8 +44,26 @@ namespace MathTests
         [TestMethod]
         public void VectorToStringTest()
         {
-            var vector3 = new Vector3(0.21d, 12343.3333d, 1.4444444d);
-            Assert.AreEqual("(0.21, 12343.333, 1.444)", vector3.ToString());
+            var vector3 = new Vector3(0.21f, 12343.3333f, 1.4444444f);
+            Assert.AreEqual("(0.21, 12343.33, 1.44)", vector3.ToString());
+        }
+
+        [TestMethod]
+        public void TransformCoordinateTest()
+        {
+            var vector3 = new Vector3(1, 2, 3);
+            var m = new[]
+            {
+                1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f,
+                9f, 10f, 11f, 12f,
+                13f, 14f, 15f, 16f
+            };
+            var matrix1 = new Matrix(4, 4, m);
+
+            var result = vector3.TransformCoordinate(matrix1);
+
+            Assert.AreEqual(new Vector3(18, 46, 74), result);
         }
     }
 }

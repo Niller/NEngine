@@ -21,12 +21,12 @@ namespace NEngine
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Rendering _rendering;
+        private readonly Device _device;
 
         public MainWindow()
         {
             InitializeComponent();
-            _rendering = new Rendering(new Vector2Int(640, 480));
+            _device = new Device(new Vector2Int(640, 480), null);
             
             CompositionTarget.Rendering += CompositionTargetOnRendering;
 
@@ -35,7 +35,7 @@ namespace NEngine
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
         {
-            _rendering.Render();
+            _device.Render();
         }
 
         protected override void OnClosed(EventArgs e)
