@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Math.Vectors
 {
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public struct Vector2
     {
         public double X;
@@ -24,14 +26,29 @@ namespace Math.Vectors
             return _hashCode;
         }
 
-        public override bool Equals(object obj)
+        public static bool operator ==(Vector2 vector1, Vector2 vector2)
         {
-            if (obj is Vector2)
+            return vector1.Equals(vector2);
+        }
+
+        public static bool operator !=(Vector2 vector1, Vector2 vector2)
+        {
+            return !vector1.Equals(vector2);
+        }
+
+        public bool Equals(Vector2 other)
+        {
+            if (_hashCode != other.GetHashCode())
             {
-                return _hashCode == ((Vector2)obj).GetHashCode();
+                return false;
             }
 
-            return false;
+            return X == other.X && Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vector2 && Equals((Vector2)obj);
         }
 
 

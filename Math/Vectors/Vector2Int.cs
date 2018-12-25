@@ -21,14 +21,29 @@
             return _hashCode;
         }
 
-        public override bool Equals(object obj)
+        public static bool operator ==(Vector2Int vector1, Vector2Int vector2)
         {
-            if (obj is Vector2Int)
+            return vector1.Equals(vector2);
+        }
+
+        public static bool operator !=(Vector2Int vector1, Vector2Int vector2)
+        {
+            return !vector1.Equals(vector2);
+        }
+
+        public bool Equals(Vector2Int other)
+        {
+            if (_hashCode != other.GetHashCode())
             {
-                return _hashCode == ((Vector2Int) obj).GetHashCode();
+                return false;
             }
 
-            return false;
+            return X == other.X && Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vector2Int && Equals((Vector2Int)obj);
         }
 
         public override string ToString()

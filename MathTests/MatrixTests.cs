@@ -9,18 +9,55 @@ namespace MathTests
     public class MatrixTests
     {
         [TestMethod]
-        public void CreateMatrixTest()
+        public void ToStringMatrixTest()
         {
-            var matrix1 = new Matrix(1, 3);
-            var matrix2 = new Matrix(new Vector2Int(1, 3));
+            var m = new[]
+            {
+                1d, 2d, 3d, 4d,
+                5d, 6d, 7d, 8d
+            };
 
-            Assert.AreEqual(matrix1.Dimension, matrix2.Dimension);
-            Assert.AreEqual(matrix1.Dimension, new Vector2Int(1, 3));
+            var matrix1 = new Matrix(4, 2, m);
 
-            matrix1 = new Matrix(1, 2);
-            matrix2 = new Matrix(new Vector2Int(1, 3));
+            Assert.AreEqual("{1, 2, 3, 4" + System.Environment.NewLine + "5, 6, 7, 8}", matrix1.ToString());
+        }
 
-            Assert.AreNotEqual(matrix1.Dimension, matrix2.Dimension);
+        [TestMethod]
+        public void EqualMatrixTest()
+        {
+            var m = new[]
+            {
+                1d, 2d, 3d, 4d,
+                5d, 6d, 7d, 8d
+            };
+
+            var m1 = new[]
+            {
+                1d, 2d, 3d, 4d,
+                5d, 6d, 7d, 8d
+            };
+
+            var matrix1 = new Matrix(4, 2, m);
+            var matrix2 = new Matrix(4, 2, m1);
+
+            Assert.AreEqual(matrix2, matrix1);
+
+            m = new[]
+            {
+                1d, 2d, 3d, 4d,
+                5d, 6d, 7d, 8d
+            };
+
+            m1 = new[]
+            {
+                1d, 2d, 3d, 4d,
+                5d, 6d, 74d, 8d
+            };
+
+            matrix1 = new Matrix(4, 2, m);
+            matrix2 = new Matrix(4, 2, m1);
+
+            Assert.AreNotEqual(matrix2, matrix1);
         }
     }
 }
