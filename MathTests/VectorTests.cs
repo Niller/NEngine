@@ -65,5 +65,23 @@ namespace MathTests
 
             Assert.AreEqual(new Vector3(18, 46, 74), result);
         }
+
+        [TestMethod]
+        public void DotTest()
+        {
+            var vector31 = new Vector3(1, 2, 3);
+            var vector32 = new Vector3(3, 2, 1);
+
+            Assert.AreEqual(10, vector31.Dot(vector32));
+        }
+
+        [TestMethod]
+        public void CrossTest()
+        {
+            var vector31 = new Vector3(1, 2, 3);
+            var vector32 = new Vector3(3, 2, 1);
+
+            Assert.AreEqual(new Vector3(-4, 8, -4), vector31.Cross(vector32));
+        }
     }
 }

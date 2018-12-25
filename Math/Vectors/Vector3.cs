@@ -50,6 +50,16 @@ namespace Math.Vectors
             return new Vector3(resultMatrix.GetValue(0, 0), resultMatrix.GetValue(1, 0), resultMatrix.GetValue(2, 0));
         }
 
+        public float Dot(Vector3 v)
+        {
+            return X * v.X + Y * v.Y + Z * v.Z;
+        }
+
+        public Vector3 Cross(Vector3 v)
+        {
+            return new Vector3(Y * v.Z - Z * v.Y, Z * v.X - X * v.Z, X * v.Y - Y * v.X);
+        }
+
         public bool Equals(Vector3 other)
         {
             if (_hashCode != other.GetHashCode())
