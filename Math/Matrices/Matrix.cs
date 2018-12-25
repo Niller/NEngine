@@ -30,10 +30,10 @@ namespace Math.Matrices
         {
             if (!MathUtilities.IsInRange(x, 0, Dimension.X - 1) || !MathUtilities.IsInRange(y, 0, Dimension.Y - 1))
             {
-                throw new IndexOutOfRangeException("Index is out of the matrix dimension");
+                throw new IndexOutOfRangeException($"Index {new Vector2Int(x, y).ToString()} is out of the matrix dimension");
             }
 
-            return _values[x + Dimension.Y + y];
+            return _values[x * Dimension.Y + y];
         }
 
         public override int GetHashCode()
@@ -51,6 +51,36 @@ namespace Math.Matrices
             return !matrix1.Equals(matrix2);
         }
 
+        public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+        {
+            return Mul(matrix1, matrix2);
+        }
+
+        private static Matrix Mul(Matrix matrix1, Matrix matrix2)
+        {
+            if (matrix1.Dimension.Y != matrix2.Dimension.X)
+            {
+                throw new ArgumentException("Number of columns in Matrix1 not equals the number of rows in Matrix2");
+            }
+
+            var array = new double[matrix1.Dimension.X * matrix2.Dimension.Y];
+
+            for (var i = 0; i < matrix1.Dimension.X; ++i)
+            {
+                for (var j = 0; j < matrix2.Dimension.Y; ++j)
+                {
+                    var result = 0d;
+                    for (var k = 0; k < matrix1.Dimension.Y; k++)
+                    {
+                        result += matrix1._values[i * matrix1.Dimension.Y + k] * matrix2._values[k * matrix2.Dimension.Y + j];
+                    }
+                    array[i * matrix2.Dimension.Y + j] = result;
+                }
+            }
+
+            return new Matrix(matrix1.Dimension.X, matrix2.Dimension.Y, array);
+        } 
+
         public bool Equals(Matrix other)
         {
             if (Dimension != other.Dimension)
@@ -58,7 +88,7 @@ namespace Math.Matrices
                 return false;
             }
 
-            for (int i = 0; i < _values.Length; ++i)
+            for (var i = 0; i < _values.Length; ++i)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (_values[i] != other._values[i])
@@ -81,9 +111,9 @@ namespace Math.Matrices
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append("{");
-            for (int y = 0; y < Dimension.Y; ++y)
+            for (var y = 0; y < Dimension.Y; ++y)
             {
-                for (int x = 0; x < Dimension.X; ++x)
+                for (var x = 0; x < Dimension.X; ++x)
                 {
                     stringBuilder.Append(_values[y*Dimension.X + x].ToString("0.###", cultureInfo));
 
