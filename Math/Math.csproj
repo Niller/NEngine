@@ -45,7 +45,6 @@
     <Compile Include="Utilities\MathUtilities.cs" />
     <Compile Include="Vectors\Vector.cs" />
     <Compile Include="Vectors\Vector2.cs" />
-    <Compile Include="Vectors\Vector2Int.cs" />
     <Compile Include="Vectors\Vector3.cs" />
     <Compile Include="Vectors\Vector4.cs" />
   </ItemGroup>

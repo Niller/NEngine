@@ -1,48 +1,29 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using System.Data;
 using Math.Matrices;
 
 namespace Math.Vectors
 {
-    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public struct Vector3
     {
-        public float X;
-        public float Y;
-        public float Z;
-        private readonly int _hashCode;
+        private readonly Vector _innerVector;
+
+        public float X => _innerVector.GetValue(0);
+        public float Y => _innerVector.GetValue(1);
+        public float Z => _innerVector.GetValue(2);
 
         public Vector3(float x, float y, float z)
         {
-            X = x;
-            Y = y;
-            Z = z;
-
-            int hashCode1 = X.GetHashCode();
-            int hashCode2 = Y.GetHashCode();
-            int hashCode3 = Z.GetHashCode();
-            _hashCode = hashCode1 ^ hashCode2 ^ hashCode3;
+            _innerVector = new Vector(x, y, z);
         }
 
-        public override int GetHashCode()
+        public Vector GetVector()
         {
-            return _hashCode;
-        }
-
-        public static bool operator ==(Vector3 vector1, Vector3 vector2)
-        {
-            return vector1.Equals(vector2);
-        }
-
-        public static bool operator !=(Vector3 vector1, Vector3 vector2)
-        {
-            return !vector1.Equals(vector2);
+            return _innerVector;
         }
 
         public Vector3 TransformCoordinate(Matrix transformMatrix)
         {
-            var vectorMatrix = new Matrix(4, 1, new []
+            var vectorMatrix = new Matrix(4, 1, new[]
             {
                 X, Y, Z, 1f
             });
@@ -60,14 +41,24 @@ namespace Math.Vectors
             return new Vector3(Y * v.Z - Z * v.Y, Z * v.X - X * v.Z, X * v.Y - Y * v.X);
         }
 
+        public override int GetHashCode()
+        {
+            return _innerVector.GetHashCode();
+        }
+
+        public static bool operator ==(Vector3 vector1, Vector3 vector2)
+        {
+            return vector1.Equals(vector2);
+        }
+
+        public static bool operator !=(Vector3 vector1, Vector3 vector2)
+        {
+            return !vector1.Equals(vector2);
+        }
+
         public bool Equals(Vector3 other)
         {
-            if (_hashCode != other.GetHashCode())
-            {
-                return false;
-            }
-
-            return X == other.X && Y == other.Y && Z == other.Z;
+            return _innerVector.Equals(other._innerVector);
         }
 
         public override bool Equals(object obj)
@@ -77,7 +68,8 @@ namespace Math.Vectors
 
         public override string ToString()
         {
-            return string.Format(new CultureInfo("en-EN"), "({0:0.##}, {1:0.##}, {2:0.##})", X, Y, Z);
+            return _innerVector.ToString();
         }
+
     }
 }

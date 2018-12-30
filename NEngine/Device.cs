@@ -7,15 +7,15 @@ namespace NEngine
 {
     public class Device
     {
-        private Vector2Int _resolution;
+        private Vector2 _resolution;
         private byte[] _backBuffer;
         private WriteableBitmap _bmp;
 
-        public Device(Vector2Int resolution, WriteableBitmap bmp)
+        public Device(Vector2 resolution, WriteableBitmap bmp)
         {
             _resolution = resolution;
             _bmp = bmp;
-            _backBuffer = new byte[resolution.X * resolution.Y];
+            _backBuffer = new byte[(int)System.Math.Round(resolution.X * resolution.Y)];
             
         }
 
@@ -57,7 +57,7 @@ namespace NEngine
             // As we have a 1-D Array for our back buffer
             // we need to know the equivalent cell in 1-D based
             // on the 2D coordinates on screen
-            var index = (x + y * _resolution.X) * 4;
+            var index = (x + y * (int)_resolution.X) * 4;
 
             _backBuffer[index] = color.B;
             _backBuffer[index + 1] = color.G;

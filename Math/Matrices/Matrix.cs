@@ -8,7 +8,8 @@ namespace Math.Matrices
 {
     public struct Matrix
     {
-        public Vector2Int Dimension;
+        public int Rows;
+        public int Columns;
 
         private readonly float[] _values;
         private readonly int _hashCode;
@@ -20,7 +21,9 @@ namespace Math.Matrices
                 throw new ArgumentException("Matrix must not be empty");
             }
 
-            Dimension = new Vector2Int(x, y);
+            Columns = x;
+            Rows = y;
+
             _values = (float[])values.Clone();
 
             _hashCode = _values.GetHashCode();
@@ -28,12 +31,12 @@ namespace Math.Matrices
 
         public float GetValue(int x, int y)
         {
-            if (!MathUtilities.IsInRange(x, 0, Dimension.X - 1) || !MathUtilities.IsInRange(y, 0, Dimension.Y - 1))
+            if (!MathUtilities.IsInRange(x, 0, Columns - 1) || !MathUtilities.IsInRange(y, 0, Rows - 1))
             {
-                throw new IndexOutOfRangeException($"Index {new Vector2Int(x, y).ToString()} is out of the matrix dimension");
+                throw new IndexOutOfRangeException($"Index {new Vector2(x, y).ToString()} is out of the matrix dimension");
             }
 
-            return _values[x * Dimension.Y + y];
+            return _values[x * Rows + y];
         }
 
         public override int GetHashCode()
@@ -58,32 +61,32 @@ namespace Math.Matrices
 
         private static Matrix Mul(Matrix matrix1, Matrix matrix2)
         {
-            if (matrix1.Dimension.Y != matrix2.Dimension.X)
+            if (matrix1.Rows != matrix2.Columns)
             {
                 throw new ArgumentException("Number of columns in Matrix1 not equals the number of rows in Matrix2");
             }
 
-            var array = new float[matrix1.Dimension.X * matrix2.Dimension.Y];
+            var array = new float[matrix1.Columns * matrix2.Rows];
 
-            for (var i = 0; i < matrix1.Dimension.X; ++i)
+            for (var i = 0; i < matrix1.Columns; ++i)
             {
-                for (var j = 0; j < matrix2.Dimension.Y; ++j)
+                for (var j = 0; j < matrix2.Rows; ++j)
                 {
                     var result = 0f;
-                    for (var k = 0; k < matrix1.Dimension.Y; k++)
+                    for (var k = 0; k < matrix1.Rows; k++)
                     {
-                        result += matrix1._values[i * matrix1.Dimension.Y + k] * matrix2._values[k * matrix2.Dimension.Y + j];
+                        result += matrix1._values[i * matrix1.Rows + k] * matrix2._values[k * matrix2.Rows + j];
                     }
-                    array[i * matrix2.Dimension.Y + j] = result;
+                    array[i * matrix2.Rows + j] = result;
                 }
             }
 
-            return new Matrix(matrix1.Dimension.X, matrix2.Dimension.Y, array);
+            return new Matrix(matrix1.Columns, matrix2.Rows, array);
         } 
 
         public bool Equals(Matrix other)
         {
-            if (Dimension != other.Dimension)
+            if (Rows != other.Rows || Columns != other.Columns)
             {
                 return false;
             }
@@ -111,19 +114,19 @@ namespace Math.Matrices
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append("{");
-            for (var y = 0; y < Dimension.Y; ++y)
+            for (var y = 0; y < Rows; ++y)
             {
-                for (var x = 0; x < Dimension.X; ++x)
+                for (var x = 0; x < Columns; ++x)
                 {
-                    stringBuilder.Append(_values[y*Dimension.X + x].ToString("0.###", cultureInfo));
+                    stringBuilder.Append(_values[y*Columns + x].ToString("0.###", cultureInfo));
 
-                    if (x < Dimension.X - 1)
+                    if (x < Columns - 1)
                     {
                         stringBuilder.Append(", ");
                     }
                 }
 
-                if (y < Dimension.Y - 1)
+                if (y < Rows - 1)
                 {
                     stringBuilder.Append(Environment.NewLine);
                 }

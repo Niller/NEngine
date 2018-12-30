@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Math.Vectors
@@ -14,7 +17,7 @@ namespace Math.Vectors
         private readonly float[] _array;
         private readonly int _hashCode;
 
-        public Vector(float[] array)
+        public Vector(params float[] array)
         {
             if (array == null || array.Length == 0)
             {
@@ -31,21 +34,12 @@ namespace Math.Vectors
             }
         }
 
+        [Pure]
         public float GetValue(int index)
         {
             return _array[index];
         }
-        /*
-        public Vector3 TransformCoordinate(Matrix transformMatrix)
-        {
-            var vectorMatrix = new Matrix(4, 1, new[]
-            {
-                X, Y, Z, 1f
-            });
-            var resultMatrix = transformMatrix * vectorMatrix;
-            return new Vector3(resultMatrix.GetValue(0, 0), resultMatrix.GetValue(1, 0), resultMatrix.GetValue(2, 0));
-        }
-        */
+
         public override int GetHashCode()
         {
             return _hashCode;
@@ -61,6 +55,7 @@ namespace Math.Vectors
             return !vector1.Equals(vector2);
         }
 
+        [Pure]
         public bool Equals(Vector other)
         {
             if (_hashCode != other.GetHashCode() || Length != other.Length)
@@ -82,7 +77,7 @@ namespace Math.Vectors
 
         public override bool Equals(object obj)
         {
-            return obj is Vector4 && Equals((Vector4)obj);
+            return obj is Vector && Equals((Vector)obj);
         }
 
         public override string ToString()
@@ -92,6 +87,7 @@ namespace Math.Vectors
             stringBuilder.Append(_array[0].ToString("0.##", new CultureInfo("en-EN")));
             for (int i = 1; i < Length; ++i)
             {
+                stringBuilder.Append(", ");
                 stringBuilder.Append(_array[i].ToString("0.##", new CultureInfo("en-EN")));
             }
             stringBuilder.Append(")");

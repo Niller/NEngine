@@ -1,29 +1,25 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
-namespace Math.Vectors
+﻿namespace Math.Vectors
 {
-    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public struct Vector2
     {
-        public float X;
-        public float Y;
-        private readonly int _hashCode;
+        private readonly Vector _innerVector;
+
+        public float X => _innerVector.GetValue(0);
+        public float Y => _innerVector.GetValue(1);
 
         public Vector2(float x, float y)
         {
-            X = x;
-            Y = y;
+            _innerVector = new Vector(x, y);
+        }
 
-            int hashCode1 = X.GetHashCode();
-            int hashCode2 = Y.GetHashCode();
-            _hashCode = hashCode1 ^ hashCode2;
+        public Vector GetVector()
+        {
+            return _innerVector;
         }
 
         public override int GetHashCode()
         {
-            return _hashCode;
+            return _innerVector.GetHashCode();
         }
 
         public static bool operator ==(Vector2 vector1, Vector2 vector2)
@@ -38,12 +34,7 @@ namespace Math.Vectors
 
         public bool Equals(Vector2 other)
         {
-            if (_hashCode != other.GetHashCode())
-            {
-                return false;
-            }
-
-            return X == other.X && Y == other.Y;
+            return _innerVector.Equals(other._innerVector);
         }
 
         public override bool Equals(object obj)
@@ -51,10 +42,9 @@ namespace Math.Vectors
             return obj is Vector2 && Equals((Vector2)obj);
         }
 
-
         public override string ToString()
         {
-            return string.Format(new CultureInfo("en-EN"), "({0:0.###}, {1:0.###})", X, Y);
+            return _innerVector.ToString();
         }
     }
 }

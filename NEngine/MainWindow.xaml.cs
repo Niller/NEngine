@@ -26,7 +26,7 @@ namespace NEngine
         public MainWindow()
         {
             InitializeComponent();
-            _device = new Device(new Vector2Int(640, 480), null);
+            _device = new Device(new Vector2(640, 480), null);
             
             CompositionTarget.Rendering += CompositionTargetOnRendering;
 

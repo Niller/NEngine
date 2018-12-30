@@ -1,34 +1,27 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
-namespace Math.Vectors
+﻿namespace Math.Vectors
 {
-    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public struct Vector4
     {
-        public double X;
-        public double Y;
-        public double Z;
-        public double W;
-        private readonly int _hashCode;
+        private Vector _innerVector;
 
-        public Vector4(double x, double y, double z, double w)
+        public float X => _innerVector.GetValue(0);
+        public float Y => _innerVector.GetValue(1);
+        public float Z => _innerVector.GetValue(2);
+        public float W => _innerVector.GetValue(2);
+
+        public Vector4(float x, float y, float z, float w)
         {
-            X = x;
-            Y = y;
-            Z = z;
-            W = w;
+            _innerVector = new Vector(x, y, z, w);
+        }
 
-            int hashCode1 = X.GetHashCode();
-            int hashCode2 = Y.GetHashCode();
-            int hashCode3 = Z.GetHashCode();
-            int hashCode4 = W.GetHashCode();
-            _hashCode = hashCode1 ^ hashCode2 ^ hashCode3 ^ hashCode4;
+        public Vector GetVector()
+        {
+            return _innerVector;
         }
 
         public override int GetHashCode()
         {
-            return _hashCode;
+            return _innerVector.GetHashCode();
         }
 
         public static bool operator ==(Vector4 vector1, Vector4 vector2)
@@ -43,12 +36,7 @@ namespace Math.Vectors
 
         public bool Equals(Vector4 other)
         {
-            if (_hashCode != other.GetHashCode())
-            {
-                return false;
-            }
-
-            return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+            return _innerVector.Equals(other._innerVector);
         }
 
         public override bool Equals(object obj)
@@ -58,7 +46,7 @@ namespace Math.Vectors
 
         public override string ToString()
         {
-            return string.Format(new CultureInfo("en-EN"), "({0:0.###}, {1:0.###}, {2:0.###}, {3:0.###})", X, Y, Z, W);
+            return _innerVector.ToString();
         }
     }
 }

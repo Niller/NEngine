@@ -10,16 +10,6 @@ namespace MathTests
         [TestMethod]
         public void EqualVectorsTest()
         {
-            var vector2Int1 = new Vector2Int(1, 2);
-            var vector2Int2 = new Vector2Int(1, 2);
-
-            Assert.AreEqual(vector2Int1, vector2Int2);
-
-            vector2Int1 = new Vector2Int(1, 3);
-            vector2Int2 = new Vector2Int(1, 2);
-
-            Assert.AreNotEqual(vector2Int1, vector2Int2);
-
             var vector21 = new Vector2(1, 2);
             var vector22 = new Vector2(1, 2);
 
