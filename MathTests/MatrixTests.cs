@@ -1,7 +1,8 @@
 ﻿using System;
 using Math.Matrices;
-using Math.Vectors;
+using SharpDX;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Matrix = Math.Matrices.Matrix;
 
 namespace MathTests
 {
@@ -131,6 +132,12 @@ namespace MathTests
             });
 
             Assert.AreEqual(mustResult, result);
+        }
+
+        [TestMethod]
+        public void LookAtLHTest()
+        {
+            //SharpDX.Matrix.LookAtLH()
         }
     }
 }
