@@ -39,6 +39,11 @@ namespace Math.Matrices
             return _values[x * Rows + y];
         }
 
+        public float GetValue(int i)
+        {
+            return _values[i];
+        }
+
         public override int GetHashCode()
         {
             return _hashCode;

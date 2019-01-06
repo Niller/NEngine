@@ -2,7 +2,7 @@
 
 namespace Math.Vectors
 {
-    public struct Vector2 : IVector
+    public struct Vector2
     {
         private readonly Vector _innerVector;
 
@@ -54,9 +54,9 @@ namespace Math.Vectors
             return new Vector2(Vector.Sub(vector1.GetVector(), vector2.GetVector()));
         }
 
-        public Vector GetNormalized()
+        public Vector2 GetNormalized()
         {
-            return _innerVector.GetNormalized();
+            return new Vector2(_innerVector.GetNormalized());
         }
 
         public float GetMagnitude()
@@ -64,9 +64,9 @@ namespace Math.Vectors
             return _innerVector.GetMagnitude();
         }
 
-        public Vector GetReverse()
+        public Vector2 GetReverse()
         {
-            return _innerVector.GetReverse();
+            return new Vector2(_innerVector.GetReverse());
         }
 
         public bool Equals(Vector2 other)

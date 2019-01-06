@@ -134,12 +134,27 @@ namespace MathTests
             Assert.AreEqual(mustResult, result);
         }
 
-        
-
         [TestMethod]
-        public void LookAtLHTest()
+        public void LookAtLeftHandedTest()
         {
-            //SharpDX.Matrix.LookAtLH()
+            var sharpDxMatrix = SharpDX.Matrix.LookAtLH(new Vector3(0.0f, 3.0f, -5.0f), new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
+            var m = Matrix4X4.GetLookAtLeftHandedMatrix(new Math.Vectors.Vector3(0.0f, 3.0f, -5.0f),
+                new Math.Vectors.Vector3(0.0f, 0.0f, 0.0f), new Math.Vectors.Vector3(0.0f, 1.0f, 0.0f));
+
+
+            CompareDxMatrixAndNEngineMatrix(sharpDxMatrix, m);
+
+            Console.WriteLine(sharpDxMatrix);
+            Console.WriteLine("-------------");
+            Console.WriteLine(m);
+        }
+
+        private void CompareDxMatrixAndNEngineMatrix(SharpDX.Matrix dxM, Matrix4X4 m)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                Assert.AreEqual(dxM[i], m.GetMatrix().GetValue(i));
+            }
         }
     }
 }

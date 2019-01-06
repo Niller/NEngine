@@ -4,7 +4,7 @@ using Math.Matrices;
 
 namespace Math.Vectors
 {
-    public struct Vector3 : IVector
+    public struct Vector3
     {
         private readonly Vector _innerVector;
 
@@ -77,9 +77,9 @@ namespace Math.Vectors
             return new Vector3(Vector.Sub(vector1.GetVector(), vector2.GetVector()));
         }
 
-        public Vector GetNormalized()
+        public Vector3 GetNormalized()
         {
-            return _innerVector.GetNormalized();
+            return new Vector3(_innerVector.GetNormalized());
         }
 
         public float GetMagnitude()
@@ -87,9 +87,9 @@ namespace Math.Vectors
             return _innerVector.GetMagnitude();
         }
 
-        public Vector GetReverse()
+        public Vector3 GetReverse()
         {
-            return _innerVector.GetReverse();
+            return new Vector3(_innerVector.GetReverse());
         }
 
         public bool Equals(Vector3 other)

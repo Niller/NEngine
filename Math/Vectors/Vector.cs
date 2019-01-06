@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Math.Vectors
 {
-    public struct Vector : IVector
+    public struct Vector
     {
         public int Length
         {
