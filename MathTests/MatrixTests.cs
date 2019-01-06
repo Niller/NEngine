@@ -1,8 +1,9 @@
 ﻿using System;
 using Math.Matrices;
-using SharpDX;
+using Math.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Matrix = Math.Matrices.Matrix;
+using Vector3 = SharpDX.Vector3;
 
 namespace MathTests
 {
@@ -137,10 +138,9 @@ namespace MathTests
         [TestMethod]
         public void LookAtLeftHandedTest()
         {
-            var sharpDxMatrix = SharpDX.Matrix.LookAtLH(new Vector3(0.0f, 3.0f, -5.0f), new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
-            var m = Matrix4X4.GetLookAtLeftHandedMatrix(new Math.Vectors.Vector3(0.0f, 3.0f, -5.0f),
-                new Math.Vectors.Vector3(0.0f, 0.0f, 0.0f), new Math.Vectors.Vector3(0.0f, 1.0f, 0.0f));
-
+            var sharpDxMatrix = SharpDX.Matrix.LookAtLH(new Vector3(0f, 0f, 10f), new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
+            var m = Matrix4X4.GetLookAtLeftHandedMatrix(new Math.Vectors.Vector3(0f, 0f, 10f),
+                new Math.Vectors.Vector3(0.0f, 0.0f, 0.0f), Math.Vectors.Vector3.Up);
 
             CompareDxMatrixAndNEngineMatrix(sharpDxMatrix, m);
 

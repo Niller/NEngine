@@ -24,34 +24,46 @@ namespace NEngine
         private Device _device;
         Mesh _mesh;
         readonly Camera _camera = new Camera();
+        private WriteableBitmap _bmp;
 
         public MainWindow()
         {
             this.InitializeComponent();
 
-            var bmp = BitmapFactory.New(640, 480);
+            _bmp = BitmapFactory.New(640, 480);
 
-            FrontBuffer.Source = bmp;
+            FrontBuffer.Source = _bmp;
 
             InitializeComponent();
-            _device = new Device(new Vector2(640, 480), bmp);
+            _device = new Device(new Vector2(640, 480), _bmp);
 
             CompositionTarget.Rendering += CompositionTargetOnRendering;
+           
 
             TestScene1();
         }
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
         {
+            Render();
+        }
+
+        private void Render()
+        {
+            _bmp.Lock();
             _device.Clear(0, 0, 0, 255);
 
             // rotating slightly the cube during each frame rendered
-            _mesh.Rotation = new Vector3(_mesh.Rotation.X + 0.01f, _mesh.Rotation.Y + 0.01f, _mesh.Rotation.Z);
+            _mesh.Rotation = new Vector3(_mesh.Rotation.X + 0.001f, _mesh.Rotation.Y + 0.001f, _mesh.Rotation.Z);
 
             // Doing the various matrix operations
             _device.Render(_camera, _mesh);
             // Flushing the back buffer into the front buffer
             _device.Present();
+
+            _bmp.AddDirtyRect(new Int32Rect(0, 0,
+                _bmp.PixelWidth, _bmp.PixelHeight));
+            _bmp.Unlock();
         }
 
         protected override void OnClosed(EventArgs e)

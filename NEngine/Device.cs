@@ -37,8 +37,6 @@ namespace NEngine
         // into the front buffer. 
         public void Present()
         {
-            _bmp.Lock();
-
             unsafe
             {
                 byte* backBuffer = (byte*)_bmp.BackBuffer;
@@ -48,10 +46,6 @@ namespace NEngine
                     backBuffer[i] = _backBuffer[i];
                 }
             }
-
-            _bmp.AddDirtyRect(new Int32Rect(0, 0,
-                _bmp.PixelWidth, _bmp.PixelHeight));
-            _bmp.Unlock();
         }
 
         // Called to put a pixel on screen at a specific X,Y coordinates
@@ -77,8 +71,8 @@ namespace NEngine
             // The transformed coordinates will be based on coordinate system
             // starting on the center of the screen. But drawing on screen normally starts
             // from top left. We then need to transform them again to have x:0, y:0 on top left.
-            var x = point.X * _bmp.PixelWidth + _bmp.PixelWidth / 2.0f;
-            var y = -point.Y * _bmp.PixelHeight + _bmp.PixelHeight / 2.0f;
+            var x = point.X * (_bmp.PixelWidth/8f) + _bmp.PixelWidth / 2.0f;
+            var y = -point.Y * (_bmp.PixelHeight/8f) + _bmp.PixelHeight / 2.0f;
             return (new Vector2(x, y));
         }
 
