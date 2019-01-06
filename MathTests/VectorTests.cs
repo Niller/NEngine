@@ -73,5 +73,49 @@ namespace MathTests
 
             Assert.AreEqual(new Vector3(-4, 8, -4), vector31.Cross(vector32));
         }
+
+        [TestMethod]
+        public void MagnitudeTest()
+        {
+            var vector = new Vector(-3, 4);
+            Assert.AreEqual(5, vector.GetMagnitude());
+
+            var vector3 = new Vector3(3, 4, 12);
+            Assert.AreEqual(13, vector3.GetMagnitude());
+        }
+
+        [TestMethod]
+        public void NormalizedTest()
+        {
+            var vector = new Vector(3, 4);
+            Assert.AreEqual(new Vector(3f/5f, 4f/5f), vector.GetNormalized());
+        }
+
+        [TestMethod]
+        public void ReversedTest()
+        {
+            var vector = new Vector(3, 4);
+            Assert.AreEqual(new Vector(-3, -4), vector.GetReverse());
+        }
+
+        [TestMethod]
+        public void AddTest()
+        {
+            var vector = new Vector(3, 4, 3);
+            var vector1 = new Vector(1, 2, 3);
+
+            Assert.AreEqual(new Vector(4, 6, 6), vector + vector1);
+            Assert.AreEqual(new Vector(4, 6, 6), vector1 + vector);
+        }
+
+        [TestMethod]
+        public void SubTest()
+        {
+            var vector = new Vector(3, 4, 3);
+            var vector1 = new Vector(1, 2, 3);
+
+            Assert.AreEqual(new Vector(2, 2, 0), vector - vector1);
+            Assert.AreEqual(new Vector(-2, -2, 0), vector1 - vector);
+        }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Math.Matrices;
 
 namespace Math.Vectors
 {
-    public struct Vector3
+    public struct Vector3 : IVector
     {
         private readonly Vector _innerVector;
 
@@ -14,6 +15,16 @@ namespace Math.Vectors
         public Vector3(float x, float y, float z)
         {
             _innerVector = new Vector(x, y, z);
+        }
+
+        public Vector3(Vector vector)
+        {
+            if (vector.Length != 3)
+            {
+                throw new ArgumentException("Length of inner vector is not equal 3");
+            }
+
+            _innerVector = vector;
         }
 
         public Vector GetVector()
@@ -56,6 +67,31 @@ namespace Math.Vectors
             return !vector1.Equals(vector2);
         }
 
+        public static Vector3 operator +(Vector3 vector1, Vector3 vector2)
+        {
+            return new Vector3(Vector.Add(vector1.GetVector(), vector2.GetVector()));
+        }
+
+        public static Vector3 operator -(Vector3 vector1, Vector3 vector2)
+        {
+            return new Vector3(Vector.Sub(vector1.GetVector(), vector2.GetVector()));
+        }
+
+        public Vector GetNormalized()
+        {
+            return _innerVector.GetNormalized();
+        }
+
+        public float GetMagnitude()
+        {
+            return _innerVector.GetMagnitude();
+        }
+
+        public Vector GetReverse()
+        {
+            return _innerVector.GetReverse();
+        }
+
         public bool Equals(Vector3 other)
         {
             return _innerVector.Equals(other._innerVector);
@@ -69,7 +105,6 @@ namespace Math.Vectors
         public override string ToString()
         {
             return _innerVector.ToString();
-        }
-
+        }   
     }
 }

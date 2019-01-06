@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Math.Vectors
 {
-    public struct Vector
+    public struct Vector : IVector
     {
         public int Length
         {
@@ -41,6 +41,8 @@ namespace Math.Vectors
             return _values[index];
         }
 
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector GetNormalized()
         {
             var magnitude = GetMagnitude();
@@ -54,6 +56,8 @@ namespace Math.Vectors
             return new Vector(newVectorValues);
         }
 
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float GetMagnitude()
         {
             var magnitude = 0f;
@@ -66,6 +70,8 @@ namespace Math.Vectors
             return (float)System.Math.Sqrt(magnitude);
         }
 
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector GetReverse()
         {
             var newVectorValues = new float[_values.Length];

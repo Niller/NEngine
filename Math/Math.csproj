@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Matrices\Matrix.cs" />
+    <Compile Include="Matrices\Matrix4x4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\MathUtilities.cs" />
+    <Compile Include="Vectors\IVector.cs" />
     <Compile Include="Vectors\Vector.cs" />
     <Compile Include="Vectors\Vector2.cs" />
     <Compile Include="Vectors\Vector3.cs" />

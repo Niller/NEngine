@@ -1,6 +1,8 @@
-﻿namespace Math.Vectors
+﻿using System;
+
+namespace Math.Vectors
 {
-    public struct Vector2
+    public struct Vector2 : IVector
     {
         private readonly Vector _innerVector;
 
@@ -10,6 +12,16 @@
         public Vector2(float x, float y)
         {
             _innerVector = new Vector(x, y);
+        }
+
+        public Vector2(Vector vector)
+        {
+            if (vector.Length != 2)
+            {
+                throw new ArgumentException("Length of inner vector is not equal 2");
+            }
+
+            _innerVector = vector;
         }
 
         public Vector GetVector()
@@ -30,6 +42,31 @@
         public static bool operator !=(Vector2 vector1, Vector2 vector2)
         {
             return !vector1.Equals(vector2);
+        }
+
+        public static Vector2 operator +(Vector2 vector1, Vector2 vector2)
+        {
+            return new Vector2(Vector.Add(vector1.GetVector(), vector2.GetVector()));
+        }
+
+        public static Vector2 operator -(Vector2 vector1, Vector2 vector2)
+        {
+            return new Vector2(Vector.Sub(vector1.GetVector(), vector2.GetVector()));
+        }
+
+        public Vector GetNormalized()
+        {
+            return _innerVector.GetNormalized();
+        }
+
+        public float GetMagnitude()
+        {
+            return _innerVector.GetMagnitude();
+        }
+
+        public Vector GetReverse()
+        {
+            return _innerVector.GetReverse();
         }
 
         public bool Equals(Vector2 other)

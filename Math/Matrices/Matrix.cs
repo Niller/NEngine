@@ -6,33 +6,6 @@ using Math.Vectors;
 
 namespace Math.Matrices
 {
-    public struct Matrix4x4
-    {
-        private Matrix _innerMatrix;
-
-        public Matrix4x4(float[] values)
-        {
-            if (values.Length != 16)
-            {
-                throw new ArgumentException("Matrix must have 16 values");
-            }
-
-            _innerMatrix = new Matrix(4, 4, values);
-        }
-
-
-
-        public Matrix GetMatrix()
-        {
-            return _innerMatrix;
-        }
-
-        //public static Matrix4x4 GetLookAtLeftHandedMatrix(Vector3 cameraPos, Vector3 cameraTarget, Vector3 vectorUp)
-        //{
-        //    
-        //}
-    }
-
     public struct Matrix
     {
         public int Rows;

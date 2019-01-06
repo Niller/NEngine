@@ -134,6 +134,8 @@ namespace MathTests
             Assert.AreEqual(mustResult, result);
         }
 
+        
+
         [TestMethod]
         public void LookAtLHTest()
         {
