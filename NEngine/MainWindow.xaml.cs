@@ -35,7 +35,7 @@ namespace NEngine
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
         {
-            _device.Render();
+            //_device.Render();
         }
 
         protected override void OnClosed(EventArgs e)

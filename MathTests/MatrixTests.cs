@@ -149,11 +149,44 @@ namespace MathTests
             Console.WriteLine(m);
         }
 
+        [TestMethod]
+        public void PerspectiveFovRightHandedTest()
+        {
+            var sharpDxProjectionMatrix = SharpDX.Matrix.PerspectiveFovRH(0.78f,
+                640f / 480f,
+                0.01f, 1.0f);
+            var m = Matrix4X4.GetPerspectiveFovRightHandedMatrix(0.78f,
+                640f / 480f,
+                0.01f, 1.0f);
+
+            CompareDxMatrixAndNEngineMatrix(sharpDxProjectionMatrix, m);
+
+            Console.WriteLine(sharpDxProjectionMatrix);
+            Console.WriteLine("-------------");
+            Console.WriteLine(m);
+        }
+
+        [TestMethod]
+        public void RotationYawPitchRollTest()
+        {
+            var yaw = (float) System.Math.PI / 3f;
+            var pitch = (float) System.Math.PI / 4f;
+            var roll = (float) System.Math.PI / 5f;
+            var dxRotationMatrix = SharpDX.Matrix.RotationYawPitchRoll(yaw, pitch, roll);
+            var m = Matrix4X4.GetRotationYawPitchRollMatrix(yaw, pitch, roll);
+
+            CompareDxMatrixAndNEngineMatrix(dxRotationMatrix, m);
+
+            Console.WriteLine(dxRotationMatrix);
+            Console.WriteLine("-------------");
+            Console.WriteLine(m);
+        }
+
         private void CompareDxMatrixAndNEngineMatrix(SharpDX.Matrix dxM, Matrix4X4 m)
         {
             for (int i = 0; i < 16; i++)
-            {
-                Assert.AreEqual(dxM[i], m.GetMatrix().GetValue(i));
+            {  
+                Assert.AreEqual(true, System.Math.Abs(dxM[i] - m.GetMatrix().GetValue(i)) < 0.00001f);
             }
         }
     }

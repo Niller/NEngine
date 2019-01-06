@@ -12,6 +12,10 @@ namespace Math.Vectors
         public float Y => _innerVector.GetValue(1);
         public float Z => _innerVector.GetValue(2);
 
+        public static Vector3 Up = new Vector3(0, 1, 0);
+        public static Vector3 Down = new Vector3(0, -1, 0);
+        public static Vector3 Zero = new Vector3(0, 0, 0);
+
         public Vector3(float x, float y, float z)
         {
             _innerVector = new Vector(x, y, z);

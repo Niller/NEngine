@@ -14,7 +14,7 @@ namespace Math.Matrices
         private readonly float[] _values;
         private readonly int _hashCode;
 
-        public Matrix(int x, int y, float[] values)
+        public Matrix(int x, int y, params float[] values)
         {
             if (values.Length <= 0)
             {

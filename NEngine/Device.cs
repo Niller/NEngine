@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Math.Matrices;
 using Math.Vectors;
+using Matrix = System.Windows.Media.Matrix;
 
 namespace NEngine
 {
@@ -79,9 +81,34 @@ namespace NEngine
             return (new Vector2(x, y));
         }
 
-        public void Render()
+        // The main method of the engine that re-compute each vertex projection
+        // during each frame
+        public void Render(Camera camera, params Mesh[] meshes)
         {
+            var viewMatrix = Matrix4X4.GetLookAtLeftHandedMatrix(camera.Position, camera.Target, Vector3.Up);
+            var projectionMatrix = Matrix4X4.GetPerspectiveFovRightHandedMatrix(0.78f,
+                (float)_bmp.PixelWidth / _bmp.PixelHeight,
+                0.01f, 1.0f);
 
+            foreach (Mesh mesh in meshes)
+            {
+                /*
+                // Beware to apply rotation before translation 
+                var worldMatrix = Matrix.RotationYawPitchRoll(mesh.Rotation.Y,
+                                      mesh.Rotation.X, mesh.Rotation.Z) *
+                                  Matrix.Translation(mesh.Position);
+
+                var transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
+
+                foreach (var vertex in mesh.Vertices)
+                {
+                    // First, we project the 3D coordinates into the 2D space
+                    var point = Project(vertex, transformMatrix);
+                    // Then we can draw on screen
+                    DrawPoint(point);
+                }
+                */
+            }
         }
     }
 }
