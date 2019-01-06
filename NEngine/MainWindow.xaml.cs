@@ -21,13 +21,21 @@ namespace NEngine
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Device _device;
+        private Device _device;
+        Mesh _mesh;
+        readonly Camera _camera = new Camera();
 
         public MainWindow()
         {
+            this.InitializeComponent();
+
+            var bmp = BitmapFactory.New(640, 480);
+
+            FrontBuffer.Source = bmp;
+
             InitializeComponent();
-            _device = new Device(new Vector2(640, 480), null);
-            
+            _device = new Device(new Vector2(640, 480), bmp);
+
             CompositionTarget.Rendering += CompositionTargetOnRendering;
 
             TestScene1();
@@ -35,7 +43,15 @@ namespace NEngine
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
         {
-            //_device.Render();
+            _device.Clear(0, 0, 0, 255);
+
+            // rotating slightly the cube during each frame rendered
+            _mesh.Rotation = new Vector3(_mesh.Rotation.X + 0.01f, _mesh.Rotation.Y + 0.01f, _mesh.Rotation.Z);
+
+            // Doing the various matrix operations
+            _device.Render(_camera, _mesh);
+            // Flushing the back buffer into the front buffer
+            _device.Present();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -46,7 +62,7 @@ namespace NEngine
 
         private void TestScene1()
         {
-            var mesh = new Mesh("Cube", 8)
+            _mesh = new Mesh("Cube", 8)
             {
                 Vertices =
                 {
@@ -60,6 +76,12 @@ namespace NEngine
                     [7] = new Vector3(1, -1, -1)
                 }
             };
+
+            _mesh.Position = Vector3.Zero;
+            _mesh.Rotation = Vector3.Zero;
+
+            _camera.Position = new Vector3(0, 0, 10.0f);
+            _camera.Target = Vector3.Zero;
         }
     }
 }

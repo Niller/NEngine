@@ -182,6 +182,32 @@ namespace MathTests
             Console.WriteLine(m);
         }
 
+        [TestMethod]
+        public void TranslationTest()
+        {
+            var dxTranslationMatrix = SharpDX.Matrix.Translation(new Vector3(5, 10, 7));
+            var m = Matrix4X4.GetTranslationMatrix(new Math.Vectors.Vector3(5, 10, 7));
+
+            CompareDxMatrixAndNEngineMatrix(dxTranslationMatrix, m);
+
+            Console.WriteLine(dxTranslationMatrix);
+            Console.WriteLine("-------------");
+            Console.WriteLine(m);
+        }
+
+        [TestMethod]
+        public void ScalingTest()
+        {
+            var dxScalingMatrix = SharpDX.Matrix.Scaling(new Vector3(5, 10, 7));
+            var m = Matrix4X4.GetScalingMatrix(new Math.Vectors.Vector3(5, 10, 7));
+
+            CompareDxMatrixAndNEngineMatrix(dxScalingMatrix, m);
+
+            Console.WriteLine(dxScalingMatrix);
+            Console.WriteLine("-------------");
+            Console.WriteLine(m);
+        }
+
         private void CompareDxMatrixAndNEngineMatrix(SharpDX.Matrix dxM, Matrix4X4 m)
         {
             for (int i = 0; i < 16; i++)

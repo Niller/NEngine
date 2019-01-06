@@ -9,16 +9,15 @@ namespace NEngine
 {
     public class Device
     {
-        private Vector2 _resolution;
-        private byte[] _backBuffer;
-        private WriteableBitmap _bmp;
+        private readonly Vector2 _resolution;
+        private readonly byte[] _backBuffer;
+        private readonly WriteableBitmap _bmp;
 
         public Device(Vector2 resolution, WriteableBitmap bmp)
         {
             _resolution = resolution;
             _bmp = bmp;
-            _backBuffer = new byte[(int)System.Math.Round(resolution.X * resolution.Y)];
-            
+            _backBuffer = new byte[(int)resolution.X * (int)resolution.Y*4];
         }
 
         // This method is called to clear the back buffer with a specific color
@@ -38,6 +37,8 @@ namespace NEngine
         // into the front buffer. 
         public void Present()
         {
+            _bmp.Lock();
+
             unsafe
             {
                 byte* backBuffer = (byte*)_bmp.BackBuffer;
@@ -69,7 +70,7 @@ namespace NEngine
 
         // Project takes some 3D coordinates and transform them
         // in 2D coordinates using the transformation matrix
-        public Vector2 Project(Vector3 coord, Math.Matrices.Matrix transMat)
+        public Vector2 Project(Vector3 coord, Matrix4X4 transMat)
         {
             // transforming the coordinates
             var point = coord.TransformCoordinate(transMat);
@@ -92,14 +93,14 @@ namespace NEngine
 
             foreach (Mesh mesh in meshes)
             {
-                /*
+                
                 // Beware to apply rotation before translation 
-                var worldMatrix = Matrix.RotationYawPitchRoll(mesh.Rotation.Y,
+                var worldMatrix = Matrix4X4.GetRotationYawPitchRollMatrix(mesh.Rotation.Y,
                                       mesh.Rotation.X, mesh.Rotation.Z) *
-                                  Matrix.Translation(mesh.Position);
+                                  Matrix4X4.GetTranslationMatrix(mesh.Position);
 
                 var transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
-
+                
                 foreach (var vertex in mesh.Vertices)
                 {
                     // First, we project the 3D coordinates into the 2D space
@@ -107,7 +108,17 @@ namespace NEngine
                     // Then we can draw on screen
                     DrawPoint(point);
                 }
-                */
+                
+            }
+        }
+
+        public void DrawPoint(Vector2 point)
+        {
+            // Clipping what's visible on screen
+            if (point.X >= 0 && point.Y >= 0 && point.X < _bmp.PixelWidth && point.Y < _bmp.PixelHeight)
+            {
+                // Drawing a yellow point
+                PutPixel((int)point.X, (int)point.Y, Colors.Yellow);
             }
         }
     }

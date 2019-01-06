@@ -49,7 +49,7 @@ namespace MathTests
                 9f, 10f, 11f, 12f,
                 13f, 14f, 15f, 16f
             };
-            var matrix1 = new Matrix(4, 4, m);
+            var matrix1 = new Matrix4X4(m);
 
             var result = vector3.TransformCoordinate(matrix1);
 

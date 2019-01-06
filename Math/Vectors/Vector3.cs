@@ -36,13 +36,13 @@ namespace Math.Vectors
             return _innerVector;
         }
 
-        public Vector3 TransformCoordinate(Matrix transformMatrix)
+        public Vector3 TransformCoordinate(Matrix4X4 transformMatrix)
         {
             var vectorMatrix = new Matrix(4, 1, new[]
             {
                 X, Y, Z, 1f
             });
-            var resultMatrix = transformMatrix * vectorMatrix;
+            var resultMatrix = transformMatrix.GetMatrix() * vectorMatrix;
             return new Vector3(resultMatrix.GetValue(0, 0), resultMatrix.GetValue(1, 0), resultMatrix.GetValue(2, 0));
         }
 

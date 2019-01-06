@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NEngine"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="640" Width="480">
     <Grid>
-        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Image x:Name="FrontBuffer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
     </Grid>
 </Window>

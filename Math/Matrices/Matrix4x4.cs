@@ -17,9 +17,24 @@ namespace Math.Matrices
             _innerMatrix = new Matrix(4, 4, values);
         }
 
+        public Matrix4X4(Matrix m)
+        {
+            if (m.Columns != m.Rows || m.Columns != 4)
+            {
+                throw new ArgumentException("Matrix must be 4x4");
+            }
+
+            _innerMatrix = m;
+        }
+
         public Matrix GetMatrix()
         {
             return _innerMatrix;
+        }
+
+        public static Matrix4X4 operator *(Matrix4X4 matrix1, Matrix4X4 matrix2)
+        {
+            return new Matrix4X4(matrix1.GetMatrix() * matrix2.GetMatrix());
         }
 
         public static Matrix4X4 GetLookAtLeftHandedMatrix(Vector3 cameraPos, Vector3 cameraTarget, Vector3 vectorUp)
@@ -78,6 +93,24 @@ namespace Math.Matrices
                 m.GetValue(0), m.GetValue(1), m.GetValue(2), 0,
                 m.GetValue(3), m.GetValue(4), m.GetValue(5), 0,
                 m.GetValue(6), m.GetValue(7), m.GetValue(8), 0,
+                0, 0, 0, 1);
+        }
+
+        public static Matrix4X4 GetTranslationMatrix(Vector3 position)
+        {
+            return new Matrix4X4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                position.X, position.Y, position.Z, 1);
+        }
+
+        public static Matrix4X4 GetScalingMatrix(Vector3 scale)
+        {
+            return new Matrix4X4(
+                scale.X, 0, 0, 0,
+                0, scale.Y, 0, 0,
+                0, 0, scale.Z, 0,
                 0, 0, 0, 1);
         }
 
