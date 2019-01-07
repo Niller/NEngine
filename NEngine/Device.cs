@@ -106,9 +106,9 @@ namespace NEngine
                     var pixelB = Project(vertexB, transformMatrix);
                     var pixelC = Project(vertexC, transformMatrix);
 
-                    DrawBline(pixelA, pixelB);
-                    DrawBline(pixelB, pixelC);
-                    DrawBline(pixelC, pixelA);
+                    DrawBLine(pixelA, pixelB);
+                    DrawBLine(pixelB, pixelC);
+                    DrawBLine(pixelC, pixelA);
                 }
 
             }
@@ -143,7 +143,7 @@ namespace NEngine
             DrawLine(middlePoint, point1);
         }
 
-        public void DrawBline(Vector2 point0, Vector2 point1)
+        public void DrawBLine(Vector2 point0, Vector2 point1)
         {
             int x0 = (int)point0.X;
             int y0 = (int)point0.Y;

@@ -5,9 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NEngine"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="640">
-    <Grid>
-        <Image x:Name="FrontBuffer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        Title="MainWindow" Height="480" Width="960">
 
-    </Grid>
+        <DockPanel>
+        <Image DockPanel.Dock="Left" x:Name="FrontBuffer"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="640" MinHeight="480"/>
+            <StackPanel  DockPanel.Dock="Right" MinWidth="200">
+                <Button Background="Blue" Content="1" />
+                <Button Background="White" Content="2" />
+                <Button Background="Red" Content="3" />
+            </StackPanel>
+        <TreeView DockPanel.Dock="Right" Background="Aquamarine" >
+            <TextBox>Objects</TextBox>
+            <TreeViewItem Header="Root">
+                <TreeViewItem Header="Camera" />
+                <TreeViewItem Header="Cube" />
+            </TreeViewItem>
+        </TreeView>
+        
+    </DockPanel>
+        
+       
 </Window>
