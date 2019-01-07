@@ -101,6 +101,19 @@ namespace Math.Vectors
             return new Vector(newVectorValues);
         }
 
+        public static Vector Div(Vector vector1, float number)
+        {
+            var length = vector1._values.Length;
+
+            var newVectorValues = new float[length];
+            for (var i = 0; i < length; ++i)
+            {
+                newVectorValues[i] = vector1.GetValue(i) / number;
+            }
+
+            return new Vector(newVectorValues);
+        }
+
         public static Vector Sub(Vector vector1, Vector vector2)
         {
             return Add(vector1, vector2.GetReverse());
@@ -119,6 +132,11 @@ namespace Math.Vectors
         public static Vector operator -(Vector vector1, Vector vector2)
         {
             return Sub(vector1, vector2);
+        }
+
+        public static Vector operator /(Vector vector1, float number)
+        {
+            return Div(vector1, number);
         }
 
         public static bool operator ==(Vector vector1, Vector vector2)

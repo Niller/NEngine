@@ -54,6 +54,11 @@ namespace Math.Vectors
             return new Vector2(Vector.Sub(vector1.GetVector(), vector2.GetVector()));
         }
 
+        public static Vector2 operator /(Vector2 vector1, float number)
+        {
+            return new Vector2(Vector.Div(vector1.GetVector(), number));
+        }
+
         public Vector2 GetNormalized()
         {
             return new Vector2(_innerVector.GetNormalized());
