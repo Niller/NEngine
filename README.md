@@ -1,1 +1,3 @@
 # NEngine
+
+For educational purposes
