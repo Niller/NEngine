@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -105,12 +108,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ECS\ECS.csproj">
+      <Project>{517a6553-c645-4229-aab2-c072773ce315}</Project>
+      <Name>ECS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{1A950A35-ED0D-4EDB-BF78-49F0256C485A}</Project>
       <Name>Math</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)Dependencies\PostBuild\ECSCodeInjection\ECS.CodeInjection.exe" "$(SolutionDir)NEngine\bin\Debug\ECS.dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
