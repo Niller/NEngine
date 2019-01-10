@@ -17,6 +17,8 @@ namespace ECS.CodeInjection
                 return;
             }
 
+            InjectionCache.Initialize(args);
+
             TestInject.Inject(args[0]);
         }
     }
