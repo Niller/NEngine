@@ -7,7 +7,9 @@ namespace CodeInjection
 {
     public static class InjectionCache
     {
-        public static Dictionary<string, TypeReference> Types;
+        private const string BannedTypeName = "<Module>";
+
+        public static Dictionary<string, TypeReference> Types = new Dictionary<string, TypeReference>();
 
         public static void Initialize(params string[] assemblyPaths)
         {
@@ -15,17 +17,36 @@ namespace CodeInjection
             {
                 using (var moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, new ReaderParameters { ReadWrite = true }))
                 {
-                    foreach (var type in moduleDefinition.GetAllTypes())
+                    foreach (var type in moduleDefinition.Types)
                     {
-                        if (Types.ContainsKey(type.FullName))
+                        if (type.FullName != BannedTypeName)
                         {
-                            throw new Exception("Type with such fullname has been already added");
-                        }       
-                        Types.Add(type.FullName, type);
+                            AddType(type.FullName, type);
+                        }
                     }
                 }
             }
-            
+        }
+
+        public static void AddType(string fullName, TypeReference typeReference)
+        {
+            if (Types.ContainsKey(fullName))
+            {
+                throw new Exception($"Type with fullname {fullName} has been already added");
+            }
+            Types.Add(fullName, typeReference);
+        }
+
+        public static TypeReference GetType(string fullname)
+        {
+            TypeReference type;
+            if (!Types.TryGetValue(fullname, out type))
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                throw new Exception($"Cannot inject array because of type with name {type.FullName} not registered");
+            }
+
+            return type;
         }
     }
 }

@@ -20,8 +20,6 @@ namespace NEngine
         {
             this.InitializeComponent();
 
-           // TestECS();
-
             _bmp = BitmapFactory.New(640, 480);
 
             FrontBuffer.Source = _bmp;
@@ -34,12 +32,6 @@ namespace NEngine
 
             TestScene1();
         }
-
-        private void TestECS()
-        {
-            ECS.ECS.GetContext("TestContext");
-        }
-
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
         {

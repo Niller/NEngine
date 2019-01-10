@@ -12,14 +12,9 @@ namespace CodeInjection
             _typeDefinition = typeDefinition;
         }
 
-        public void InjectArray(Type type, string name)
+        public void InjectArray(Type type, string name, FieldAttributes attributes)
         {
-            TypeReference typeReference;
-            if (type.FullName == null || !InjectionCache.Types.TryGetValue(type.FullName, out typeReference))
-            {
-                throw new Exception($"Cannot inject array because of type with name {type.FullName} not registered");
-            }
-            _typeDefinition.Fields.Add(new FieldDefinition(name, FieldAttributes.Private, new ArrayType(typeReference)));
+            _typeDefinition.Fields.Add(new FieldDefinition(name, attributes, new ArrayType(InjectionCache.GetType(type.FullName))));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Management.Instrumentation;
 
 namespace ECS
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Struct)]
     public class ComponentAttribute : Attribute
     {
         public string Context;

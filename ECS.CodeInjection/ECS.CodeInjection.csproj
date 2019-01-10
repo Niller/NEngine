@@ -54,6 +54,10 @@
       <Project>{E9B30D80-224C-4879-BFB5-510FEE2B32CA}</Project>
       <Name>CodeInjection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ECS.Core\ECS.Core.csproj">
+      <Project>{1ED917B4-7865-4669-8E28-66F08EE1C297}</Project>
+      <Name>ECS.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
