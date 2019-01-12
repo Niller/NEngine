@@ -9,7 +9,7 @@ namespace CodeInjection
     {
         private const string BannedTypeName = "<Module>";
 
-        public static Dictionary<string, TypeReference> Types = new Dictionary<string, TypeReference>();
+        public static Dictionary<string, TypeDefinition> Types = new Dictionary<string, TypeDefinition>();
 
         public static void Initialize(params string[] assemblyPaths)
         {
@@ -28,7 +28,7 @@ namespace CodeInjection
             }
         }
 
-        public static void AddType(string fullName, TypeReference typeReference)
+        public static void AddType(string fullName, TypeDefinition typeReference)
         {
             if (Types.ContainsKey(fullName))
             {
@@ -37,9 +37,9 @@ namespace CodeInjection
             Types.Add(fullName, typeReference);
         }
 
-        public static TypeReference GetType(string fullname)
+        public static TypeDefinition GetType(string fullname)
         {
-            TypeReference type;
+            TypeDefinition type;
             if (!Types.TryGetValue(fullname, out type))
             {
                 // ReSharper disable once PossibleNullReferenceException

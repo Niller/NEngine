@@ -6,6 +6,7 @@ namespace NEngine.ECS
 {
     public static class ECS
     {
+        // ReSharper disable once CollectionNeverUpdated.Local
         private static readonly Dictionary<string, BaseContext> Contexts = new Dictionary<string, BaseContext>();
 
         public static BaseContext GetContext(string contextName)

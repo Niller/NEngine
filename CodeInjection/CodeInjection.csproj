@@ -56,8 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyDefinition.cs" />
-    <Compile Include="ClassDefinition.cs" />
+    <Compile Include="ModuleDefinitionWrapper.cs" />
+    <Compile Include="TypeDefinitionWrapper.cs" />
     <Compile Include="InjectionCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

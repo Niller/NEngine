@@ -48,6 +48,10 @@
       <Project>{1ED917B4-7865-4669-8E28-66F08EE1C297}</Project>
       <Name>ECS.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NEngine.ECS\NEngine.ECS.csproj">
+      <Project>{517a6553-c645-4229-aab2-c072773ce315}</Project>
+      <Name>NEngine.ECS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
