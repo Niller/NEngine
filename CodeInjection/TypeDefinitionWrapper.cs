@@ -34,12 +34,64 @@ namespace CodeInjection
             throw new Exception($"Attribute {targetAttribute.FullName} doesn't belong type {_typeDefinition.FullName}");
         }
 
-        public FieldDefinitionWrapper InjectArray(string type, string name)
+        public FieldDefinitionWrapper InjectArrayField(string type, string name)
         {
             var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public,
                 new ArrayType(_typeDefinition.Module.ImportReference(InjectionCache.GetType(type))));
             _typeDefinition.Fields.Add(fieldDefinition);
             return new FieldDefinitionWrapper(fieldDefinition);
+        }
+
+        public MethodDefinitionWrapper InjectOverrideMethod(MethodDefinitionWrapper baseMethod, bool callBase)
+        {
+            if (!baseMethod.GetDefinition().IsVirtual && !baseMethod.GetDefinition().IsAbstract)
+            {
+                throw new Exception(
+                    $"Cannot override method {baseMethod.GetDefinition().Name} because it's not abstract or virtual");
+            }
+
+            var methodAttributes = (baseMethod.GetDefinition().Attributes & ~MethodAttributes.NewSlot) | MethodAttributes.ReuseSlot;
+            var method = new MethodDefinition(baseMethod.GetDefinition().Name, methodAttributes, baseMethod.GetDefinition().ReturnType);
+
+            foreach (var parameterDefinition in baseMethod.GetDefinition().Parameters)
+            {
+                method.Parameters.Add(parameterDefinition);
+            }
+
+            if (callBase)
+            {
+                method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+
+                int index = 0;
+                foreach (var parameterDefinition in baseMethod.GetDefinition().Parameters)
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_1));
+                            break;
+                        case 1:
+                            method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_2));
+                            break;
+                        case 2:
+                            method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_3));
+                            break;
+                        default:
+                            method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_S, parameterDefinition));
+                            break;
+                    }
+                }
+
+                method.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
+                    _typeDefinition.Module.ImportReference(baseMethod.GetDefinition())));
+
+            }
+
+            method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+
+            _typeDefinition.Methods.Add(method);
+
+            return new MethodDefinitionWrapper(method);
         }
 
         public MethodDefinitionWrapper AddConstructor(params Type[] argumentTypes)
@@ -66,14 +118,30 @@ namespace CodeInjection
         }
 
         public MethodDefinitionWrapper GetConstructor(params Type[] argumentTypes)
-        {  
-            foreach (var constructor in _typeDefinition.GetConstructors())
+        {
+            return GetMethod(".ctor", argumentTypes);
+        }
+
+        public MethodDefinitionWrapper GetMethod(string name, params Type[] argumentTypes)
+        {
+            foreach (var method in _typeDefinition.Methods)
             {
+                if (method.Name != name)
+                {
+                    continue;
+                }
+
                 var index = 0;
                 var isMatch = true;
-                foreach (var constructorParameter in constructor.Parameters)
+
+                if (method.Parameters.Count != argumentTypes.Length)
                 {
-                    if (constructorParameter.ParameterType.FullName != argumentTypes[index++].FullName)
+                    continue;
+                }
+
+                foreach (var parameter in method.Parameters)
+                {
+                    if (parameter.ParameterType.FullName != argumentTypes[index++].FullName)
                     {
                         isMatch = false;
                         break;
@@ -82,7 +150,7 @@ namespace CodeInjection
 
                 if (isMatch)
                 {
-                    return new MethodDefinitionWrapper(constructor);
+                    return new MethodDefinitionWrapper(method);
                 }
             }
 

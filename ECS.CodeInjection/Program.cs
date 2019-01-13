@@ -26,6 +26,12 @@ namespace ECS.CodeInjection
 
             InjectionCache.Initialize(args);
 
+
+            using (var ecsCore = new ModuleDefinitionWrapper(args[0]))
+            {
+                ECSInjectionCache.BaseContextType = ecsCore.GetType(typeof(BaseContext));
+            }
+
             using (var nEngineEditor = new ModuleDefinitionWrapper(args[2]))
             {
                 var targetAttribute = typeof(ComponentAttribute);
@@ -55,10 +61,15 @@ namespace ECS.CodeInjection
                 {
                     var context = nEngineEcs.AddClass("NEngine.ECS.Contexts", componentsForContext.Key+"Context", typeof(BaseContext));
                     var ctor = context.AddConstructor();
+                    var resizeMethod =
+                        context.InjectOverrideMethod(ECSInjectionCache.BaseContextType.GetMethod("Resize"), true);
+                    
                     foreach (var componentType in componentsForContext.Value)
                     {
-                        var field = context.InjectArray(componentType, ComponentsArrayPrefix+ECSInjectionUtilities.GetTypeName(componentType));
+                        var field = context.InjectArrayField(componentType, ComponentsArrayPrefix+ECSInjectionUtilities.GetTypeName(componentType));
+                        //TODO fix hardcode (100)
                         ctor.InjectArrayInitialization(field, 100, ctor.GetEndLineIndex(), InjectLineOrder.Before);
+                        resizeMethod.InjectArrayResize(field, 100, Operation.Add, resizeMethod.GetEndLineIndex(), InjectLineOrder.Before);
                     }
                 }
                 nEngineEcs.Save();

@@ -18,12 +18,12 @@ namespace CodeInjection
             _moduleDefinition?.Dispose();
         }
 
-        public TypeDefinitionWrapper GetClass(Type type)
+        public TypeDefinitionWrapper GetType(Type type)
         {
-            return GetClass(type.FullName);
+            return GetType(type.FullName);
         }
 
-        public TypeDefinitionWrapper GetClass(string fullname)
+        public TypeDefinitionWrapper GetType(string fullname)
         {
             return new TypeDefinitionWrapper(_moduleDefinition.GetType(fullname));
         }
