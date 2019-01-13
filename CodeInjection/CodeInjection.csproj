@@ -56,6 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeInjectionUtilities.cs" />
+    <Compile Include="FieldDefinitionWrapper.cs" />
+    <Compile Include="InjectLineOrder.cs" />
+    <Compile Include="MethodDefinitionWrapper.cs" />
     <Compile Include="ModuleDefinitionWrapper.cs" />
     <Compile Include="TypeDefinitionWrapper.cs" />
     <Compile Include="InjectionCache.cs" />

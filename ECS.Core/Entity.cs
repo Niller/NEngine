@@ -1,26 +1,25 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
 
 namespace ECS
 {
     public struct Entity
     {
-        public ulong Id
+        public int Id
         {
             get;
         }
 
         private readonly BaseContext _currentContext;
 
-        internal Entity(BaseContext currentContext, ulong id)
+        internal Entity(BaseContext currentContext, int id)
         {
             Id = id;
             _currentContext = currentContext;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetComponent<T>() where T : struct
         {
-            return _currentContext.GetComponent<T>(this);
+            throw new Exception("You cannot use directly GetComponent method. It must be replaced by code injection!");
         }
         
     }

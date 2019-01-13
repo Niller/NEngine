@@ -53,10 +53,12 @@ namespace ECS.CodeInjection
             {
                 foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
                 {
-                    var context = nEngineEcs.AddClass("NEngine.ECS.Contexts", componentsForContext.Key, typeof(BaseContext));
+                    var context = nEngineEcs.AddClass("NEngine.ECS.Contexts", componentsForContext.Key+"Context", typeof(BaseContext));
+                    var ctor = context.AddConstructor();
                     foreach (var componentType in componentsForContext.Value)
                     {
-                        context.InjectArray(componentType, ComponentsArrayPrefix+ECSInjectionUtilities.GetTypeName(componentType));
+                        var field = context.InjectArray(componentType, ComponentsArrayPrefix+ECSInjectionUtilities.GetTypeName(componentType));
+                        ctor.InjectArrayInitialization(field, 100, ctor.GetEndLineIndex(), InjectLineOrder.Before);
                     }
                 }
                 nEngineEcs.Save();
