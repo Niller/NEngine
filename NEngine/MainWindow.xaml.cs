@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Math.Vectors;
+using NEngine.Editor;
 
 namespace NEngine
 {
@@ -11,14 +12,20 @@ namespace NEngine
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Device _device;
+        private readonly Device _device;
         Mesh _mesh;
         readonly Camera _camera = new Camera();
-        private WriteableBitmap _bmp;
+        private readonly WriteableBitmap _bmp;
 
+        readonly System.Windows.Threading.DispatcherTimer _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+       
         public MainWindow()
         {
             this.InitializeComponent();
+
+            _dispatcherTimer.Tick += dispatcherTimer_Tick;
+            _dispatcherTimer.Interval = new TimeSpan(0, 5, 0);
+            _dispatcherTimer.Start();
 
             _bmp = BitmapFactory.New(640, 480);
 
@@ -28,9 +35,13 @@ namespace NEngine
             _device = new Device(new Vector2(640, 480), _bmp);
 
             CompositionTarget.Rendering += CompositionTargetOnRendering;
-           
 
             TestScene1();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            Services.ECS.Execute();
         }
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
@@ -59,6 +70,7 @@ namespace NEngine
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
+            _dispatcherTimer.Tick -= dispatcherTimer_Tick;
             CompositionTarget.Rendering -= CompositionTargetOnRendering;
         }
 

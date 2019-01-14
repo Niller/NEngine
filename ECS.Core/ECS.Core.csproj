@@ -42,7 +42,11 @@
   <ItemGroup>
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="BaseContext.cs" />
+    <Compile Include="ECSManager.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="Feature.cs" />
+    <Compile Include="IExecuteSystem.cs" />
+    <Compile Include="ISystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

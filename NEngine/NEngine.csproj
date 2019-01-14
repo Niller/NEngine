@@ -108,13 +108,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ECS.Core\ECS.Core.csproj">
+      <Project>{1ed917b4-7865-4669-8e28-66f08ee1c297}</Project>
+      <Name>ECS.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{1A950A35-ED0D-4EDB-BF78-49F0256C485A}</Project>
       <Name>Math</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NEngine.ECS\NEngine.ECS.csproj">
-      <Project>{517a6553-c645-4229-aab2-c072773ce315}</Project>
-      <Name>NEngine.ECS</Name>
     </ProjectReference>
     <ProjectReference Include="..\NEngine.Editor\NEngine.Editor.csproj">
       <Project>{2621fa89-19aa-4952-9728-a36f17f2c61f}</Project>
@@ -123,7 +123,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)Dependencies\PostBuild\ECSCodeInjection\ECS.CodeInjection.exe" "$(SolutionDir)ECS.Core\bin\Debug\ECS.Core.dll" "$(SolutionDir)NEngine\bin\Debug\NEngine.ECS.dll" "$(SolutionDir)NEngine\bin\Debug\NEngine.Editor.dll"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)Dependencies\PostBuild\ECSCodeInjection\ECS.CodeInjection.exe" "$(SolutionDir)ECS.Core\bin\Debug\ECS.Core.dll" "$(SolutionDir)NEngine\bin\Debug\NEngine.Editor.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

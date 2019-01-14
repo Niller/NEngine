@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Core", "ECS.Core\ECS.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Editor", "NEngine.Editor\NEngine.Editor.csproj", "{2621FA89-19AA-4952-9728-A36F17F2C61F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.ECS", "NEngine.ECS\NEngine.ECS.csproj", "{517A6553-C645-4229-AAB2-C072773CE315}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{517A6553-C645-4229-AAB2-C072773CE315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{517A6553-C645-4229-AAB2-C072773CE315}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{517A6553-C645-4229-AAB2-C072773CE315}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{517A6553-C645-4229-AAB2-C072773CE315}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

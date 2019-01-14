@@ -6,7 +6,6 @@ namespace ECS.CodeInjection
 {
     class Program
     {
-
         private const string ComponentsArrayPrefix = "_components_";
 
         //args[0] - ECS.Core.dll;
@@ -19,7 +18,6 @@ namespace ECS.CodeInjection
                 args = new[]
                 {
                     "G:\\projects\\NEngine\\ECS.Core\\bin\\Debug\\ECS.Core.dll",
-                    "G:\\projects\\NEngine\\NEngine\\bin\\Debug\\NEngine.ECS.dll",
                     "G:\\projects\\NEngine\\NEngine\\bin\\Debug\\NEngine.Editor.dll",
                 };
             }
@@ -32,8 +30,9 @@ namespace ECS.CodeInjection
                 ECSInjectionCache.BaseContextType = ecsCore.GetType(typeof(BaseContext));
             }
 
-            using (var nEngineEditor = new ModuleDefinitionWrapper(args[2]))
+            using (var nEngineEditor = new ModuleDefinitionWrapper(args[1]))
             {
+                //Find all components
                 var targetAttribute = typeof(ComponentAttribute);
                 var componentTypes = nEngineEditor.GetTypesByAttribute(targetAttribute);
                 foreach (var componentType in componentTypes)
@@ -53,26 +52,24 @@ namespace ECS.CodeInjection
 
                     components.Add(componentType.FullName);
                 }
-            }
 
-            using (var nEngineEcs = new ModuleDefinitionWrapper(args[1]))
-            {
+                //Add contexts
                 foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
                 {
-                    var context = nEngineEcs.AddClass("NEngine.ECS.Contexts", componentsForContext.Key+"Context", typeof(BaseContext));
+                    var context = nEngineEditor.AddClass("NEngine.ECS.Contexts", componentsForContext.Key + "Context", typeof(BaseContext));
                     var ctor = context.AddConstructor();
                     var resizeMethod =
                         context.InjectOverrideMethod(ECSInjectionCache.BaseContextType.GetMethod("Resize"), true);
-                    
+
                     foreach (var componentType in componentsForContext.Value)
                     {
-                        var field = context.InjectArrayField(componentType, ComponentsArrayPrefix+ECSInjectionUtilities.GetTypeName(componentType));
+                        var field = context.InjectArrayField(componentType, ComponentsArrayPrefix + ECSInjectionUtilities.GetTypeName(componentType));
                         //TODO fix hardcode (100)
                         ctor.InjectArrayInitialization(field, 100, ctor.GetEndLineIndex(), InjectLineOrder.Before);
                         resizeMethod.InjectArrayResize(field, 100, Operation.Add, resizeMethod.GetEndLineIndex(), InjectLineOrder.Before);
                     }
                 }
-                nEngineEcs.Save();
+                nEngineEditor.Save();
             }
         }
     }

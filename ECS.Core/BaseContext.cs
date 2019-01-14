@@ -3,20 +3,6 @@ using System.Collections.Generic;
 
 namespace ECS
 {
-    public class BaseContext1 : BaseContext
-    {
-        internal override T GetComponent<T>(Entity entity)
-        {
-            return default(T);
-        }
-
-        public override void Foo(int x, Entity y, BaseContext c, int t, int t1, int t2, int t3)
-        {
-            base.Foo(x, y, c, t, t1, t2, t3);
-        }
-
-    }
-
     public abstract class BaseContext
     {
         protected const int CapacityStep = 100;
@@ -48,11 +34,6 @@ namespace ECS
         public virtual void Resize()
         {
             Array.Resize(ref Entities, Entities.Length + CapacityStep);
-        }
-
-        public virtual void Foo(int x, Entity y, BaseContext c, int t, int t1, int t2, int t3)
-        {
-
         }
 
         internal abstract T GetComponent<T>(Entity entity) where T : struct;
