@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2621FA89-19AA-4952-9728-A36F17F2C61F}</ProjectGuid>
+    <ProjectGuid>{0827E44D-F722-40C6-A69A-0E8BE82E2126}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NEngine.Editor</RootNamespace>
-    <AssemblyName>NEngine.Editor</AssemblyName>
+    <RootNamespace>NEngine.Rendering</RootNamespace>
+    <AssemblyName>NEngine.Rendering</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,7 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,40 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\CameraComponent.cs" />
-    <Compile Include="Components\DeviceComponent.cs" />
-    <Compile Include="Components\MainCameraComponent.cs" />
-    <Compile Include="Components\MeshRendererComponent.cs" />
-    <Compile Include="Components\StartCubeComponent.cs" />
-    <Compile Include="Components\TestComponent.cs" />
-    <Compile Include="Components\TransformComponent.cs" />
-    <Compile Include="Edtior.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="Mesh.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services.cs" />
-    <Compile Include="Systems\PermanentRotateCubeSystem.cs" />
-    <Compile Include="Systems\RenderSystem.cs" />
+    <Compile Include="Triangle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ECS.Core\ECS.Core.csproj">
-      <Project>{1ED917B4-7865-4669-8E28-66F08EE1C297}</Project>
-      <Name>ECS.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{1A950A35-ED0D-4EDB-BF78-49F0256C485A}</Project>
       <Name>Math</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NEngine.Rendering\NEngine.Rendering.csproj">
-      <Project>{0827e44d-f722-40c6-a69a-0e8be82e2126}</Project>
-      <Name>NEngine.Rendering</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine", "NEngine\NEngine.csproj", "{56DD4681-40B2-4376-95E6-5E22559F85D9}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Core", "ECS.Core\ECS.Core.csproj", "{1ED917B4-7865-4669-8E28-66F08EE1C297}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Editor", "NEngine.Editor\NEngine.Editor.csproj", "{2621FA89-19AA-4952-9728-A36F17F2C61F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Rendering", "NEngine.Rendering\NEngine.Rendering.csproj", "{0827E44D-F722-40C6-A69A-0E8BE82E2126}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,8 +53,15 @@ Global
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45A964EB-3586-4D60-A6D1-BCF8C457A3C2}
 	EndGlobalSection
 EndGlobal

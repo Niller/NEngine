@@ -64,8 +64,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Camera.cs" />
-    <Compile Include="Mesh.cs" />
     <Compile Include="Device.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -120,6 +118,10 @@
     <ProjectReference Include="..\NEngine.Editor\NEngine.Editor.csproj">
       <Project>{2621fa89-19aa-4952-9728-a36f17f2c61f}</Project>
       <Name>NEngine.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NEngine.Rendering\NEngine.Rendering.csproj">
+      <Project>{0827e44d-f722-40c6-a69a-0e8be82e2126}</Project>
+      <Name>NEngine.Rendering</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

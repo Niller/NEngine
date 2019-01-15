@@ -1,6 +1,6 @@
 ﻿using Math.Vectors;
 
-namespace NEngine
+namespace NEngine.Rendering
 {
     public class Camera
     {

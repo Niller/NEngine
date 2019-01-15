@@ -37,8 +37,22 @@ namespace ECS
             Array.Resize(ref Entities, Entities.Length + CapacityStep);
         }
 
-        public abstract IEnumerable<Entity> GetAllEntities<T>() where T : struct;
+        public ref Entity GetEntity(int id)
+        {
+            return ref Entities[id];
+        }
 
-        internal abstract T GetComponent<T>(Entity entity) where T : struct;
+        public bool HasEntity(int id)
+        {
+            return !Entities[id].IsNull;
+        }
+
+        public abstract bool HasEntity<T>() where T : struct;
+
+        public abstract ref Entity GetEntity<T>() where T : struct;
+
+        public abstract IEnumerable<int> GetAllEntities<T>() where T : struct;
+
+        internal abstract ref T GetComponent<T>(Entity entity) where T : struct;
     }
 }

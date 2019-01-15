@@ -12,25 +12,30 @@ namespace ECS
 
         private readonly BaseContext _currentContext;
 
+        //TODO Check performance
+        internal bool IsNull
+        {
+            get => !_notNull;
+            set => _notNull = !value;
+        }
+
+        private bool _notNull;
+
         internal Entity(BaseContext currentContext, int id)
         {
+            _notNull = true;
             Id = id;
             _currentContext = currentContext;
         }
 
-        public T GetComponent<T>() where T : struct
+        public bool HasComponent<T>() where T : struct
+        {
+            throw new Exception("You cannot use directly HasComponent method. It must be replaced by code injection!");
+        }
+
+        public ref T GetComponent<T>() where T : struct
         {
             throw new Exception("You cannot use directly GetComponent method. It must be replaced by code injection!");
-        }
-        
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) =>  throw new NotSupportedException();
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode() => throw new NotSupportedException();
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string ToString() => throw new NotSupportedException();
-        
+        }       
     }
 }

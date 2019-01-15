@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Math.Vectors;
 using NEngine.Editor;
+using NEngine.Rendering;
 
 namespace NEngine
 {

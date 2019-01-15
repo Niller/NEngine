@@ -3,6 +3,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Math.Matrices;
 using Math.Vectors;
+using NEngine.Rendering;
 using Matrix = System.Windows.Media.Matrix;
 using Vector = System.Windows.Vector;
 
