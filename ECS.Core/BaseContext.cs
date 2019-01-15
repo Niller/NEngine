@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ECS
@@ -35,6 +36,8 @@ namespace ECS
         {
             Array.Resize(ref Entities, Entities.Length + CapacityStep);
         }
+
+        public abstract IEnumerable<Entity> GetAllEntities<T>() where T : struct;
 
         internal abstract T GetComponent<T>(Entity entity) where T : struct;
     }
