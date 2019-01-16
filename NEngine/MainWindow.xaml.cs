@@ -109,10 +109,6 @@ namespace NEngine
                 Rotation = Vector3.Zero
             };
 
-
-
-
-
             _camera.Position = new Vector3(0, 0, 10.0f);
             _camera.Target = Vector3.Zero;
         }
