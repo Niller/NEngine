@@ -47,7 +47,9 @@
     <Compile Include="ECSManager.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Feature.cs" />
+    <Compile Include="ICleanupSystem.cs" />
     <Compile Include="IExecuteSystem.cs" />
+    <Compile Include="IInitializeSystem.cs" />
     <Compile Include="ISystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
