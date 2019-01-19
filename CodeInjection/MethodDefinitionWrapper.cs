@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Mono.Cecil;
@@ -7,15 +8,6 @@ using Mono.Cecil.Rocks;
 
 namespace CodeInjection
 {
-    public enum Operation
-    {
-        Set,
-        Add,
-        Sub,
-        Mul,
-        Div
-    }
-
     public class MethodDefinitionWrapper
     {
         private readonly MethodDefinition _methodDefinition;
@@ -104,6 +96,8 @@ namespace CodeInjection
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Call, _methodDefinition.Module.ImportReference(genericMethod)), milestone, InjectLineOrder.Before);
         }
+
+        
 
         public int GetEndLineIndex()
         {

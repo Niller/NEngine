@@ -10,7 +10,7 @@ namespace ECS
             get;
         }
 
-        private readonly BaseContext _currentContext;
+        public readonly BaseContext CurrentContext;
 
         //TODO Check performance
         internal bool IsNull
@@ -25,7 +25,7 @@ namespace ECS
         {
             _notNull = true;
             Id = id;
-            _currentContext = currentContext;
+            CurrentContext = currentContext;
         }
 
         public bool HasComponent<T>() where T : struct
