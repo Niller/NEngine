@@ -15,6 +15,7 @@ namespace Math.Vectors
         public static Vector3 Up = new Vector3(0, 1, 0);
         public static Vector3 Down = new Vector3(0, -1, 0);
         public static Vector3 Zero = new Vector3(0, 0, 0);
+        public static Vector3 One = new Vector3(1, 1, 1);
 
         public Vector3(float x, float y, float z)
         {

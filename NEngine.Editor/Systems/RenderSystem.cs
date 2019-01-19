@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Windows;
+using System.Windows.Media;
 using ECS;
 using Math.Matrices;
 using Math.Vectors;
@@ -33,6 +34,9 @@ namespace NEngine.Editor.Systems
 
             var deviceEntity = context.GetEntity<DeviceComponent>();
             var deviceComponent = deviceEntity.GetComponent<DeviceComponent>();
+
+            deviceComponent.Bmp.Lock();
+            Clear(ref deviceComponent, 0, 0, 0, 255);
 
             var viewMatrix = Matrix4X4.GetLookAtLeftHandedMatrix(cameraComponent.Position, cameraComponent.Target, Vector3.Up);
             var projectionMatrix = Matrix4X4.GetPerspectiveFovRightHandedMatrix(0.78f,
@@ -75,6 +79,12 @@ namespace NEngine.Editor.Systems
                 }
 
             }
+
+            Present(ref deviceComponent);
+
+            deviceComponent.Bmp.AddDirtyRect(new Int32Rect(0, 0,
+                deviceComponent.Bmp.PixelWidth, deviceComponent.Bmp.PixelHeight));
+            deviceComponent.Bmp.Unlock();
         }
 
         // Project takes some 3D coordinates and transform them

@@ -14,7 +14,7 @@ namespace ECS
 
         public Entity[] Entities = new Entity[CapacityStep];
 
-        public Entity AddEntity()
+        public ref Entity AddEntity()
         {
             //TODO [Optimization] avoid using property
             var entityId = NextId;
@@ -29,7 +29,7 @@ namespace ECS
 
             Entities[entity.Id] = entity;
 
-            return entity;
+            return ref Entities[entity.Id];
         }
 
         public virtual void Resize()

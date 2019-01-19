@@ -11,8 +11,7 @@ namespace ECS
 
         public BaseContext GetContext(string contextName)
         {
-            BaseContext context;
-            if (!_contexts.TryGetValue(contextName, out context))
+            if (!_contexts.TryGetValue(contextName, out var context))
             {
                 throw new Exception($"Context with name {contextName} doesn't exist");
             }
@@ -38,6 +37,15 @@ namespace ECS
             }
 
             _features.Add(name, feature);
+        }
+
+        public Feature GetFeature(string featureName)
+        {
+            if (!_features.TryGetValue(featureName, out var feature))
+            {
+                throw new Exception($"Feature with name {featureName} doesn't exist");
+            }
+            return feature;
         }
 
         public void RemoveFeature(Feature feature)

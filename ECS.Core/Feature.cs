@@ -25,6 +25,11 @@ namespace ECS
             Name = name;
         }
 
+        public void AddSystem<T>() where T : ISystem, new()
+        {
+            AddSystem(new T());
+        }
+
         public void AddSystem(ISystem system)
         {
             if (system is IExecuteSystem executeSystem)

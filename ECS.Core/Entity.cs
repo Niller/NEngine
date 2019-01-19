@@ -36,6 +36,16 @@ namespace ECS
         public ref T GetComponent<T>() where T : struct
         {
             throw new Exception("You cannot use directly GetComponent method. It must be replaced by code injection!");
-        }       
+        }
+
+        public ref T AddComponent<T>(ref T component) where T : struct
+        {
+            throw new Exception("You cannot use directly AddComponent method. It must be replaced by code injection!");
+        }
+
+        public void AddComponent<T>(T component) where T : struct
+        {
+            throw new Exception("You cannot use directly AddComponent method. It must be replaced by code injection!");
+        }
     }
 }
