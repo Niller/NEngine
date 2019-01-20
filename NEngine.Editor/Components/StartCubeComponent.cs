@@ -3,7 +3,12 @@
 namespace NEngine.Editor.Components
 {
     [Component("Main")]
-    public struct StartCubeComponent
+    public struct StartCubeComponent : IComponent
     {
+        public bool HasValue
+        {
+            get;
+            set;
+        }
     }
 }

@@ -3,6 +3,15 @@ using System.Collections.Generic;
 
 namespace ECS
 {
+    public interface IComponent
+    {
+        bool HasValue
+        {
+            get;
+            set;
+        }
+    }
+
     public class TestContext : BaseContext
     {
         public TestComponent[] _TestComponents = new TestComponent[CapacityStep];

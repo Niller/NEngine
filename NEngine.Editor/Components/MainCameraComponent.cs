@@ -3,7 +3,12 @@
 namespace NEngine.Editor.Components
 {
     [Component("Main")]
-    public struct MainCameraComponent
+    public struct MainCameraComponent : IComponent
     {
+        public bool HasValue
+        {
+            get;
+            set;
+        }
     }
 }
