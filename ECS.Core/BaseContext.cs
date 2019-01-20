@@ -19,7 +19,7 @@ namespace ECS
 
         public bool HasEntity_TestComponent<T>() where T : struct
         {
-            for (var i = 0; i < CurrentEntityPoolSize; ++i)
+            for (int i = 0, ilen = _TestComponents.Length; i < ilen; ++i)
             {
                 if (_TestComponents[i].HasValue)
                 {

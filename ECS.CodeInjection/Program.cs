@@ -49,7 +49,7 @@ namespace ECS.CodeInjection
                         ECSInjectionCache.ComponentsForContexts.Add(context, components);
                     }
 
-                    componentType.InjectField("NotNull", typeof(bool));
+                    //componentType.InjectField("NotNull", typeof(bool));
 
                     components.Add(componentType.FullName);
                     ECSInjectionCache.Components.Add(componentType.FullName, componentType);
