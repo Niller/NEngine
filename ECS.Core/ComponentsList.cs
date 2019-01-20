@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ECS
 {
-    public class ComponentsList<T> where T : struct, IComponent
+    public sealed class ComponentsList<T> where T : struct, IComponent
     {
         private readonly Queue<int> _freeIds;
 

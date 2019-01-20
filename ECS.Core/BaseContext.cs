@@ -14,13 +14,14 @@ namespace ECS
 
     public class TestContext : BaseContext
     {
-        public TestComponent[] _TestComponents = new TestComponent[CapacityStep];
+        public ComponentsList<TestComponent> _TestComponents = new ComponentsList<TestComponent>(16, 128);
+        
 
         public bool HasEntity_TestComponent<T>() where T : struct
         {
             for (var i = 0; i < CurrentEntityPoolSize; ++i)
             {
-                if (_TestComponents[i].@NotNull)
+                if (_TestComponents[i].HasValue)
                 {
                     return true;
                 }
@@ -31,15 +32,15 @@ namespace ECS
 
         public ref Entity GetEntity_TestComponent<T>() where T : struct
         {
-            for (var i = 0; i < CurrentEntityPoolSize; ++i)
+            for (int i = 0, ilen = _TestComponents.Length; i < ilen; ++i)
             {
-                if (_TestComponents[i].@NotNull)
+                if (_TestComponents[i].HasValue)
                 {
                     return ref Entities[i];
                 }
             }
 
-            throw new Exception("Entity not exist");
+            return ref DefaultEntity;
         }
 
         public List<int> GetAllEntities_TestComponent<T>() where T : struct
@@ -47,7 +48,7 @@ namespace ECS
             AllEntitiesRequestPool.Clear();
             for (var i = 0; i < CurrentEntityPoolSize; ++i)
             {
-                if (_TestComponents[i].NotNull)
+                if (_TestComponents[i].HasValue)
                 {
                     AllEntitiesRequestPool.Add(i);
                 }
@@ -55,11 +56,26 @@ namespace ECS
 
             return AllEntitiesRequestPool;
         }
+
+        public override void Resize()
+        {
+            base.Resize();
+
+            _TestComponents.ResizeIds(_TestComponents.Length + 100);
+        }
     }
 
-    public struct TestComponent
+    public struct TestComponent : IComponent
     {
-        public bool NotNull;
+        public TestComponent(int x)
+        {
+            X = x;
+            HasValue = true;
+        }
+
+        public int X;
+
+        public bool HasValue { get; set; }
     }
 
     public abstract class BaseContext
@@ -72,6 +88,7 @@ namespace ECS
 
         protected int CurrentEntityPoolSize = CapacityStep;
         protected List<int> AllEntitiesRequestPool = new List<int>(CapacityStep);
+        protected Entity DefaultEntity = new Entity();
 
         public Entity[] Entities = new Entity[CapacityStep];
 
@@ -107,7 +124,7 @@ namespace ECS
 
         public bool HasEntity(int id)
         {
-            return !Entities[id].IsNull;
+            return Entities[id].HasValue;
         }
 
         public void Test()

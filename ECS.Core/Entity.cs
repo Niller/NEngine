@@ -13,17 +13,11 @@ namespace ECS
         public readonly BaseContext CurrentContext;
 
         //TODO Check performance
-        internal bool IsNull
-        {
-            get => !_notNull;
-            set => _notNull = !value;
-        }
-
-        private bool _notNull;
+        public bool HasValue;
 
         internal Entity(BaseContext currentContext, int id)
         {
-            _notNull = true;
+            HasValue = true;
             Id = id;
             CurrentContext = currentContext;
         }

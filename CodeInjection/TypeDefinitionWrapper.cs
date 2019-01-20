@@ -17,6 +17,11 @@ namespace CodeInjection
             _typeDefinition = typeDefinition;
         }
 
+        public TypeDefinition GetDefinition()
+        {
+            return _typeDefinition;
+        }
+
         public object GetAttributeParameters(Type targetAttribute, int index)
         {
             foreach (var customAttribute in _typeDefinition.CustomAttributes)
@@ -34,10 +39,12 @@ namespace CodeInjection
             throw new Exception($"Attribute {targetAttribute.FullName} doesn't belong type {_typeDefinition.FullName}");
         }
 
-        public FieldDefinitionWrapper InjectArrayField(string type, string name)
+        public FieldDefinitionWrapper InjectComponentsListField(Type componentsList, string type, string name)
         {
-            var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public,
-                new ArrayType(_typeDefinition.Module.ImportReference(InjectionCache.GetType(type))));
+            var fieldType = new GenericInstanceType(_typeDefinition.Module.ImportReference(InjectionCache.GetType(componentsList.FullName)));
+            fieldType.GenericArguments.Add(_typeDefinition.Module.ImportReference(InjectionCache.GetType(type)));
+
+            var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public, fieldType);
             _typeDefinition.Fields.Add(fieldDefinition);
             return new FieldDefinitionWrapper(fieldDefinition);
         }

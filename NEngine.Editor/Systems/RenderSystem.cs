@@ -12,27 +12,28 @@ namespace NEngine.Editor.Systems
         public void Execute()
         {
             var context = Services.ECS.GetContext("Main");
-
-            if (!context.HasEntity<MainCameraComponent>())
-            {
-                return;
-            }
             
             var mainCameraEntity = context.GetEntity<MainCameraComponent>();
 
-            if (!mainCameraEntity.HasComponent<CameraComponent>())
+            if (!mainCameraEntity.HasValue)
             {
                 return;
             }
 
             var cameraComponent = mainCameraEntity.GetComponent<CameraComponent>();
 
-            if (!context.HasEntity<DeviceComponent>())
+            if (!cameraComponent.HasValue)
             {
                 return;
             }
 
             var deviceEntity = context.GetEntity<DeviceComponent>();
+
+            if (!deviceEntity.HasValue)
+            {
+                return;
+            }
+
             var deviceComponent = deviceEntity.GetComponent<DeviceComponent>();
 
             deviceComponent.Bmp.Lock();
@@ -47,12 +48,12 @@ namespace NEngine.Editor.Systems
             {
                 var entity = context.GetEntity(entityId);
 
-                if (!entity.HasComponent<TransformComponent>())
+                var transform = entity.GetComponent<TransformComponent>();
+
+                if (!transform.HasValue)
                 {
                     continue;
                 }
-
-                var transform = entity.GetComponent<TransformComponent>();
 
                 var mesh = entity.GetComponent<MeshRendererComponent>().Mesh;
 

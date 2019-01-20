@@ -22,36 +22,33 @@ namespace CodeInjection
             return _methodDefinition;
         }
 
-        public void InjectArrayInitialization(FieldDefinitionWrapper arrayField, int capacity, int lineIndex, InjectLineOrder orderType)
+        public void InjectComponentsListInitialization(FieldDefinitionWrapper listField, TypeDefinitionWrapper itemType, int capacityItems, int capacityIds, int lineIndex, InjectLineOrder orderType)
         {
-            if (!arrayField.GetDefinition().FieldType.IsArray)
-            {
-                throw new Exception($"Field {arrayField.GetDefinition().Name} is not array");
-            }
-
             var il = _methodDefinition.Body.GetILProcessor();
 
             var milestone = _methodDefinition.Body.Instructions[lineIndex];
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
-            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, capacity), milestone, InjectLineOrder.Before);
-            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newarr, arrayField.GetDefinition().FieldType.GetElementType()), milestone, InjectLineOrder.Before);
-            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stfld, arrayField.GetDefinition()), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, capacityItems), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, capacityIds), milestone, InjectLineOrder.Before);
+
+            var ctor = new TypeDefinitionWrapper(
+                listField.GetDefinition().FieldType.Resolve()).GetConstructor(typeof(int), typeof(int)).GetDefinition();
+
+            var genericMethod = ctor.MakeGeneric(_methodDefinition.Module.ImportReference(itemType.GetDefinition()));
+
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj, _methodDefinition.Module.ImportReference(genericMethod)), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stfld, listField.GetDefinition()), milestone, InjectLineOrder.Before);
         }
 
-        public void InjectArrayResize(FieldDefinitionWrapper arrayField, int value, Operation operation, int lineIndex, InjectLineOrder orderType)
+        public void InjectComponentsListResize(FieldDefinitionWrapper listField, TypeDefinitionWrapper itemType, int value, Operation operation, int lineIndex, InjectLineOrder orderType)
         {
-            if (!arrayField.GetDefinition().FieldType.IsArray)
-            {
-                throw new Exception($"Field {arrayField.GetDefinition().Name} is not array");
-            }
-
             var il = _methodDefinition.Body.GetILProcessor();
 
             var milestone = _methodDefinition.Body.Instructions[lineIndex];
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
-            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldflda, arrayField.GetDefinition()), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld, listField.GetDefinition()), milestone, InjectLineOrder.Before);
 
             if (operation == Operation.Set)
             {
@@ -61,11 +58,11 @@ namespace CodeInjection
             {
                 CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone,
                     InjectLineOrder.Before);
-                CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld, arrayField.GetDefinition()),
+                CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld, listField.GetDefinition()),
                     milestone, InjectLineOrder.Before);
-                CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldlen), milestone, InjectLineOrder.Before);
-                CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Conv_I4), milestone,
-                    InjectLineOrder.Before);
+                var getLengthMethod = _methodDefinition.Module.ImportReference(new TypeDefinitionWrapper(listField.GetDefinition().FieldType.Resolve()).GetMethod("get_Length").GetDefinition()).Resolve();
+                var genericGetLengthMethod = getLengthMethod.MakeGeneric(itemType.GetDefinition());
+                CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericGetLengthMethod)), milestone, InjectLineOrder.Before);
                 CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, value), milestone,
                     InjectLineOrder.Before);
                 switch (operation)
@@ -89,12 +86,12 @@ namespace CodeInjection
                 }
             }
 
-            var resizeMethod = _methodDefinition.Module.ImportReference(typeof(Array).GetMethod("Resize")).Resolve();
+            var resizeMethod = _methodDefinition.Module.ImportReference(new TypeDefinitionWrapper(listField.GetDefinition().FieldType.Resolve()).GetMethod("ResizeIds", typeof(int)).GetDefinition()).Resolve();
+            var genericResizeMethod = resizeMethod.MakeGeneric(itemType.GetDefinition());
+            //var genericMethod = new GenericInstanceMethod(resizeMethod);
+            //genericMethod.GenericArguments.Add(listField.GetDefinition().FieldType.GetElementType());
 
-            var genericMethod = new GenericInstanceMethod(resizeMethod);
-            genericMethod.GenericArguments.Add(arrayField.GetDefinition().FieldType.GetElementType());
-
-            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Call, _methodDefinition.Module.ImportReference(genericMethod)), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericResizeMethod)), milestone, InjectLineOrder.Before);
         }
 
         

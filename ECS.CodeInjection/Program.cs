@@ -66,11 +66,11 @@ namespace ECS.CodeInjection
 
                     foreach (var componentType in componentsForContext.Value)
                     {
-                        var field = context.InjectArrayField(componentType,
+                        var field = context.InjectComponentsListField(typeof(ComponentsList<>), componentType,
                             ComponentsArrayPrefix + ECSInjectionUtilities.GetTypeName(componentType));
                         //TODO fix hardcode (100)
-                        ctor.InjectArrayInitialization(field, 128, ctor.GetEndLineIndex(), InjectLineOrder.Before);
-                        resizeMethod.InjectArrayResize(field, 128, Operation.Add, resizeMethod.GetEndLineIndex(),
+                        ctor.InjectComponentsListInitialization(field, ECSInjectionCache.Components[componentType], 16, 128, ctor.GetEndLineIndex(), InjectLineOrder.Before);
+                        resizeMethod.InjectComponentsListResize(field, ECSInjectionCache.Components[componentType], 128, Operation.Add, resizeMethod.GetEndLineIndex(),
                             InjectLineOrder.Before);
                         context.InjectHasEntityMethod(field, ECSInjectionCache.Components[componentType]);
                     }
