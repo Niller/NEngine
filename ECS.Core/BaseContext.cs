@@ -46,7 +46,7 @@ namespace ECS
         public List<int> GetAllEntities_TestComponent<T>() where T : struct
         {
             AllEntitiesRequestPool.Clear();
-            for (var i = 0; i < CurrentEntityPoolSize; ++i)
+            for (int i = 0, ilen = _TestComponents.Length; i < ilen; ++i)
             {
                 if (_TestComponents[i].HasValue)
                 {

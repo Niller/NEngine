@@ -74,6 +74,7 @@ namespace ECS.CodeInjection
                             InjectLineOrder.Before);
                         context.InjectHasEntityMethod(field, ECSInjectionCache.Components[componentType]);
                         context.InjectGetEntityMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
+                        context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);
                     }
                 }
                 nEngineEditor.Save();

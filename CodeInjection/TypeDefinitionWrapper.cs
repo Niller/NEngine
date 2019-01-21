@@ -154,6 +154,102 @@ namespace CodeInjection
             return new MethodDefinitionWrapper(method);
         }
 
+        public void InjectGetAllEntitiesMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper)
+        {
+            var module = _typeDefinition.Module;
+            var intType = module.ImportReference(typeof(int));
+            var boolType = module.ImportReference(typeof(bool));
+            var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
+            var listFieldTypeWrapper = new TypeDefinitionWrapper(arrayField.GetDefinition().FieldType.Resolve());
+            var poolField = module.ImportReference(new TypeDefinitionWrapper(_typeDefinition.BaseType.Resolve())
+                .GetField("AllEntitiesRequestPool").GetDefinition());
+
+            var methodAttributes = MethodAttributes.Public;
+            var method = new MethodDefinition("GetAllEntities_" + componentType.Name, methodAttributes, poolField.FieldType);
+
+            method.Body.InitLocals = true;
+            var tempVar1 = new VariableDefinition(intType);
+            var tempVar2 = new VariableDefinition(intType);
+            var tempVar3 = new VariableDefinition(boolType);
+            var tempVar4 = new VariableDefinition(boolType);
+            var tempVar5 = new VariableDefinition(poolField.FieldType);
+            method.Body.Variables.Add(tempVar1);
+            method.Body.Variables.Add(tempVar2);
+            method.Body.Variables.Add(tempVar3);
+            method.Body.Variables.Add(tempVar4);
+            method.Body.Variables.Add(tempVar5);
+
+            var il = method.Body.GetILProcessor();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, poolField);
+            il.Emit(OpCodes.Callvirt, module.ImportReference(new TypeDefinitionWrapper(poolField.FieldType.Resolve()).GetMethod("Clear").GetDefinition().MakeGeneric(intType)));
+
+            il.Emit(OpCodes.Ldc_I4_0);
+            il.Emit(OpCodes.Stloc_0);
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, arrayField.GetDefinition());
+            var getLengthGenericMethod = listFieldTypeWrapper.GetMethod("get_Length").GetDefinition()
+                .MakeGeneric(componentTypeWrapper.GetDefinition());
+            il.Emit(OpCodes.Callvirt, _typeDefinition.Module.ImportReference(getLengthGenericMethod));
+            il.Emit(OpCodes.Stloc_1);
+
+            var label1 = il.Body.Instructions.Last();
+            il.Emit(OpCodes.Ldarg_0);
+            var label6 = il.Body.Instructions.Last();
+            il.Emit(OpCodes.Ldfld, arrayField.GetDefinition());
+            il.Emit(OpCodes.Ldloc_0);
+            var getItemGenericMethod = listFieldTypeWrapper.GetMethod("get_Item", typeof(int)).GetDefinition()
+                .MakeGeneric(componentTypeWrapper.GetDefinition());
+            il.Emit(OpCodes.Callvirt, _typeDefinition.Module.ImportReference(getItemGenericMethod));
+            il.Emit(OpCodes.Call, _typeDefinition.Module.ImportReference(componentTypeWrapper.GetMethod("get_HasValue").GetDefinition()));
+            il.Emit(OpCodes.Stloc_2);
+            il.Emit(OpCodes.Ldloc_2);
+            var label2 = il.Body.Instructions.Last();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, poolField);
+            il.Emit(OpCodes.Ldloc_0);
+            il.Emit(OpCodes.Callvirt, module.ImportReference(new TypeDefinitionWrapper(poolField.FieldType.Resolve()).GetMethod("Add", typeof(int)).GetDefinition().MakeGeneric(intType)));
+
+            il.Emit(OpCodes.Ldloc_0);
+            var label4 = il.Body.Instructions.Last();
+            il.Emit(OpCodes.Ldc_I4_1);
+            il.Emit(OpCodes.Add);
+            il.Emit(OpCodes.Stloc_0);
+
+            il.Emit(OpCodes.Ldloc_0);
+            var label5 = il.Body.Instructions.Last();
+            il.Emit(OpCodes.Ldloc_1);
+            il.Emit(OpCodes.Clt);
+            il.Emit(OpCodes.Stloc_3);
+
+            il.Emit(OpCodes.Ldloc_3);
+            il.Emit(OpCodes.Brtrue_S, label6);
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, poolField);
+            il.Emit(OpCodes.Stloc_S, tempVar5);
+            var label8 = il.Body.Instructions.Last();
+
+            il.Emit(OpCodes.Ldloc_S, tempVar5);
+            var label7 = il.Body.Instructions.Last();
+            il.Emit(OpCodes.Ret);
+
+
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Br_S, label5), label1,
+                InjectLineOrder.After);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Brfalse_S, label4), label2,
+                InjectLineOrder.After);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Br_S, label7), label8,
+                InjectLineOrder.After);
+
+
+            _typeDefinition.Methods.Add(method);
+        }
+
+
         public void InjectGetEntityMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper, string entityTypeName)
         {
             var module = _typeDefinition.Module;
@@ -378,7 +474,7 @@ namespace CodeInjection
 
                 foreach (var parameter in method.Parameters)
                 {
-                    if (parameter.ParameterType.FullName != argumentTypes[index++].FullName)
+                    if (parameter.ParameterType.FullName != argumentTypes[index++].FullName && !parameter.ParameterType.IsGenericParameter)
                     {
                         isMatch = false;
                         break;
