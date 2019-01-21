@@ -57,6 +57,14 @@ namespace CodeInjection
             return new FieldDefinitionWrapper(fieldDefinition);
         }
 
+        public FieldDefinitionWrapper InjectField(string name, TypeDefinitionWrapper type)
+        {
+            var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public,
+                _typeDefinition.Module.ImportReference(type.GetDefinition()));
+            _typeDefinition.Fields.Add(fieldDefinition);
+            return new FieldDefinitionWrapper(fieldDefinition);
+        }
+
         public MethodDefinitionWrapper InjectOverrideMethod(MethodDefinitionWrapper baseMethod, bool callBase)
         {
             if (!baseMethod.GetDefinition().IsVirtual && !baseMethod.GetDefinition().IsAbstract)

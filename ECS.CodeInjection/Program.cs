@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using CodeInjection;
 
@@ -49,11 +50,19 @@ namespace ECS.CodeInjection
                         ECSInjectionCache.ComponentsForContexts.Add(context, components);
                     }
 
-                    //componentType.InjectField("NotNull", typeof(bool));
-
                     components.Add(componentType.FullName);
                     ECSInjectionCache.Components.Add(componentType.FullName, componentType);
                 }
+
+                var managerAttribute = typeof(ECSManagerAttribute);
+                var ecsManagers = nEngineEditor.GetTypesByAttribute(managerAttribute);
+
+                if (ecsManagers.Count > 1)
+                {
+                    throw new NotImplementedException();
+                }
+
+                var manager = ecsManagers.First();
 
                 foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
                 {
@@ -76,6 +85,9 @@ namespace ECS.CodeInjection
                         context.InjectGetEntityMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
                         context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);
                     }
+
+                    manager.InjectField(componentsForContext.Key, context);
+
                 }
                 nEngineEditor.Save();
             }

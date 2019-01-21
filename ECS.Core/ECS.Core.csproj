@@ -45,6 +45,7 @@
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="BaseContext.cs" />
     <Compile Include="ECSManager.cs" />
+    <Compile Include="ECSManagerAttribute.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="ICleanupSystem.cs" />

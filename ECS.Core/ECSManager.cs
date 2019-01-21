@@ -3,29 +3,13 @@ using System.Collections.Generic;
 
 namespace ECS
 {
-    public class ECSManager
+    public abstract class ECSManager
     {
-        // ReSharper disable once CollectionNeverUpdated.Local
-        private readonly Dictionary<string, BaseContext> _contexts = new Dictionary<string, BaseContext>();
         private readonly Dictionary<string, Feature> _features = new Dictionary<string, Feature>();
 
         public BaseContext GetContext(string contextName)
         {
-            if (!_contexts.TryGetValue(contextName, out var context))
-            {
-                throw new Exception($"Context with name {contextName} doesn't exist");
-            }
-            return context;
-        }
-
-        public void AddContext(string contextName, BaseContext context)
-        {
-            if (_features.ContainsKey(contextName))
-            {
-                throw new ArgumentException($"Context with name {contextName} already exists");
-            }
-
-            _contexts.Add(contextName, context);
+            throw new Exception("You cannot use directly GetContext method. It must be replaced by code injection!");
         }
 
         public void AddFeature(Feature feature)
