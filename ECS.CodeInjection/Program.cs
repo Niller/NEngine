@@ -73,6 +73,7 @@ namespace ECS.CodeInjection
                         resizeMethod.InjectComponentsListResize(field, ECSInjectionCache.Components[componentType], 128, Operation.Add, resizeMethod.GetEndLineIndex(),
                             InjectLineOrder.Before);
                         context.InjectHasEntityMethod(field, ECSInjectionCache.Components[componentType]);
+                        context.InjectGetEntityMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
                     }
                 }
                 nEngineEditor.Save();
