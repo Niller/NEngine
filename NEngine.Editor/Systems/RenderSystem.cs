@@ -4,6 +4,7 @@ using ECS;
 using Math.Matrices;
 using Math.Vectors;
 using NEngine.Editor.Components;
+using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Systems
 {
@@ -11,7 +12,7 @@ namespace NEngine.Editor.Systems
     {
         public void Execute()
         {
-            var context = Services.ECS.GetContext("Main");
+            var context = Services.ECS.GetContext<MainContext>();
             
             var mainCameraEntity = context.GetEntity<MainCameraComponent>();
 

@@ -1,5 +1,4 @@
-﻿using System;
-using ECS;
+﻿using ECS;
 using NEngine.Editor.Systems;
 
 namespace NEngine.Editor

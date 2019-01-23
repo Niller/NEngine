@@ -63,13 +63,12 @@ namespace ECS.CodeInjection
                 }
 
                 var manager = ecsManagers.First();
+                var managerCtor = manager.GetConstructor();
 
                 foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
                 {
-                    var context = nEngineEditor.AddClass("NEngine.ECS.Contexts",
-                        componentsForContext.Key + "Context",
-                        typeof(BaseContext));
-                    var ctor = context.AddConstructor();
+                    var context = nEngineEditor.GetType(componentsForContext.Key);
+                    var ctor = context.GetConstructor();
                     var resizeMethod =
                         context.InjectOverrideMethod(ECSInjectionCache.BaseContextType.GetMethod("Resize"), true);
 
@@ -86,8 +85,8 @@ namespace ECS.CodeInjection
                         context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);
                     }
 
-                    manager.InjectField(componentsForContext.Key, context);
-
+                    //TODO Inject adding contexts to dictionary
+                    //managerCtor.InjectComponentsListInitialization();
                 }
                 nEngineEditor.Save();
             }

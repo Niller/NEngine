@@ -1,9 +1,10 @@
 ﻿using ECS;
 using Math.Vectors;
+using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Components
 {
-    [Component("Main")]
+    [Component(typeof(MainContext))]
     public struct TransformComponent : IComponent
     {
         public bool HasValue

@@ -6,9 +6,9 @@ namespace ECS
     [AttributeUsage(AttributeTargets.Struct)]
     public class ComponentAttribute : Attribute
     {
-        public string Context;
+        public Type Context;
 
-        public ComponentAttribute(string context)
+        public ComponentAttribute(Type context)
         {
             Context = context;
         }

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="BaseContext.cs" />
+    <Compile Include="ContextAttribute.cs" />
     <Compile Include="ECSManager.cs" />
     <Compile Include="ECSManagerAttribute.cs" />
     <Compile Include="Entity.cs" />

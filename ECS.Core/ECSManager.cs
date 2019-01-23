@@ -6,10 +6,15 @@ namespace ECS
     public abstract class ECSManager
     {
         private readonly Dictionary<string, Feature> _features = new Dictionary<string, Feature>();
+        protected readonly Dictionary<Type, BaseContext> Contexts = new Dictionary<Type, BaseContext>();
 
-        public BaseContext GetContext(string contextName)
+        public T GetContext<T>() where T : BaseContext
         {
-            throw new Exception("You cannot use directly GetContext method. It must be replaced by code injection!");
+            if (Contexts.TryGetValue(typeof(T), out var context))
+            {
+                return (T)context;
+            }
+            throw new ArgumentException($"Context {typeof(T).FullName} could not be found");
         }
 
         public void AddFeature(Feature feature)

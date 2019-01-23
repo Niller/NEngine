@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ECS;
+﻿using ECS;
 using Math.Vectors;
 using NEngine.Editor.Components;
+using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Systems
 {
@@ -13,7 +9,7 @@ namespace NEngine.Editor.Systems
     {
         public void Execute()
         {
-            var context = Services.ECS.GetContext("Main");
+            var context = Services.ECS.GetContext<MainContext>();
             foreach (var entityId in context.GetAllEntities<StartCubeComponent>())
             {
                 var entity = context.GetEntity(entityId);

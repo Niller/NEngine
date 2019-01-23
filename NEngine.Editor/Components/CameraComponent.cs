@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.Design.Serialization;
 using ECS;
 using Math.Vectors;
+using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Components
 {
-    [Component("Main")]
+    [Component(typeof(MainContext))]
     public struct CameraComponent : IComponent
     {
         public bool HasValue

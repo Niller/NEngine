@@ -33,7 +33,13 @@ namespace CodeInjection
                         throw new Exception($"Attribute {targetAttribute.FullName} doesn't have parameter by index {index}");
                     }
 
-                    return customAttribute.ConstructorArguments[index].Value;
+                    var value = customAttribute.ConstructorArguments[index].Value;
+                    if (value is TypeDefinition typeDefinitionValue)
+                    {
+                        return typeDefinitionValue.FullName;
+                    }
+
+                    return value;
                 }
             }
             throw new Exception($"Attribute {targetAttribute.FullName} doesn't belong type {_typeDefinition.FullName}");

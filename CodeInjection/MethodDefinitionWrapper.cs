@@ -22,6 +22,8 @@ namespace CodeInjection
             return _methodDefinition;
         }
 
+        //public void InjectDictionaryAdd(FieldDefinitionWrapper dictionaryField, )
+
         public void InjectComponentsListInitialization(FieldDefinitionWrapper listField, TypeDefinitionWrapper itemType, int capacityItems, int capacityIds, int lineIndex, InjectLineOrder orderType)
         {
             var il = _methodDefinition.Body.GetILProcessor();

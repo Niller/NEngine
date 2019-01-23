@@ -88,7 +88,7 @@ namespace ECS
 
         protected int CurrentEntityPoolSize = CapacityStep;
         protected List<int> AllEntitiesRequestPool = new List<int>(CapacityStep);
-        protected Entity DefaultEntity = new Entity();
+        protected Entity DefaultEntity;
 
         public Entity[] Entities = new Entity[CapacityStep];
 

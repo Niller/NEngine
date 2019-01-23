@@ -1,10 +1,11 @@
 ﻿using System.Windows.Media.Imaging;
 using ECS;
 using Math.Vectors;
+using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Components
 {
-    [Component("Main")]
+    [Component(typeof(MainContext))]
     public struct DeviceComponent : IComponent
     {
         public bool HasValue

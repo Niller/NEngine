@@ -1,6 +1,7 @@
 ﻿using ECS;
 using Math.Vectors;
 using NEngine.Editor.Components;
+using NEngine.Editor.Contexts;
 using NEngine.Rendering;
 
 namespace NEngine.Editor.Systems
@@ -9,7 +10,7 @@ namespace NEngine.Editor.Systems
     {
         public void Execute()
         {
-            var context = Services.ECS.GetContext("Main");
+            var context = Services.ECS.GetContext<MainContext>();
             var meshEntity = context.AddEntity();
 
             meshEntity.AddComponent(new TransformComponent(Vector3.One));

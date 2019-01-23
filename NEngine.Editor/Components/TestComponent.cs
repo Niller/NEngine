@@ -1,8 +1,9 @@
 ﻿using ECS;
+using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Components
 {
-    [Component("Main")]
+    [Component(typeof(MainContext))]
     public struct TestComponent : IComponent
     {
         public bool HasValue

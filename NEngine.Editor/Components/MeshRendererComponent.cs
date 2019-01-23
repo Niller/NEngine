@@ -1,9 +1,10 @@
 ﻿using ECS;
+using NEngine.Editor.Contexts;
 using NEngine.Rendering;
 
 namespace NEngine.Editor.Components
 {
-    [Component("Main")]
+    [Component(typeof(MainContext))]
     public struct MeshRendererComponent : IComponent
     {
         public bool HasValue
