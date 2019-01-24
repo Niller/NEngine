@@ -33,6 +33,9 @@ namespace ECS.CodeInjection
 
             using (var nEngineEditor = new ModuleDefinitionWrapper(args[1]))
             {
+                var componentContextMapping = new Dictionary<string, string>();
+                var contexts = new Dictionary<string, TypeDefinitionWrapper>();
+
                 //Find all components
                 var targetAttribute = typeof(ComponentAttribute);
                 var componentTypes = nEngineEditor.GetTypesByAttribute(targetAttribute);
@@ -52,6 +55,9 @@ namespace ECS.CodeInjection
 
                     components.Add(componentType.FullName);
                     ECSInjectionCache.Components.Add(componentType.FullName, componentType);
+                    componentContextMapping.Add(componentType.FullName, context);
+
+                    
                 }
 
                 var managerAttribute = typeof(ECSManagerAttribute);
@@ -64,10 +70,13 @@ namespace ECS.CodeInjection
 
                 var manager = ecsManagers.First();
                 var managerCtor = manager.GetConstructor();
-
+                
                 foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
                 {
                     var context = nEngineEditor.GetType(componentsForContext.Key);
+
+                    contexts[context.FullName] = context;
+
                     var ctor = context.GetConstructor();
                     var resizeMethod =
                         context.InjectOverrideMethod(ECSInjectionCache.BaseContextType.GetMethod("Resize"), true);
@@ -89,7 +98,13 @@ namespace ECS.CodeInjection
 
                 }
 
-                nEngineEditor.
+                foreach (var type in nEngineEditor.GetAllTypes())
+                {
+                    foreach (var method in type.GetAllMethods())
+                    {
+                        method.ReplaceCalls(typeof(BaseContext), componentContextMapping, contexts);
+                    }
+                }
 
                 nEngineEditor.Save();
             }

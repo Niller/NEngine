@@ -14,14 +14,19 @@ namespace CodeInjection
             return new TypeDefinitionWrapper(typeDefinition);
         }
 
-        public static TypeDefinitionWrapper AsWrapper(this TypeReference typeDefinition)
+        public static TypeDefinitionWrapper AsWrapper(this TypeReference typeReference)
         {
-            return new TypeDefinitionWrapper(typeDefinition.Resolve());
+            return new TypeDefinitionWrapper(typeReference.Resolve());
         }
 
         public static MethodDefinitionWrapper AsWrapper(this MethodDefinition methodDefinition)
         {
             return new MethodDefinitionWrapper(methodDefinition);
+        }
+
+        public static MethodDefinitionWrapper AsWrapper(this MethodReference methodReference)
+        {
+            return new MethodDefinitionWrapper(methodReference.Resolve());
         }
 
         public static FieldDefinitionWrapper AsWrapper(this FieldDefinition fieldDefinition)

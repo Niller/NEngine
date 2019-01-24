@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -471,6 +472,11 @@ namespace CodeInjection
             }
 
             return null;
+        }
+
+        public List<MethodDefinitionWrapper> GetAllMethods()
+        {
+            return _typeDefinition.Methods.Select(m => m.AsWrapper()).ToList();
         }
 
         public MethodDefinitionWrapper GetMethod(string name, params Type[] argumentTypes)

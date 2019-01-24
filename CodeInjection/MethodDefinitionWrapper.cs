@@ -113,7 +113,39 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericResizeMethod)), milestone, InjectLineOrder.Before);
         }
 
-        
+        public void ReplaceCalls(Type baseContextType, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts)
+        {
+            for (int i = 0, ilen = _methodDefinition.Body.Instructions.Count; i < ilen; ++i)
+            {
+                var instruction = _methodDefinition.Body.Instructions[i];
+                if (instruction.OpCode != OpCodes.Callvirt)
+                {
+                    continue;
+                }
+
+                var method = ((MethodReference) instruction.Operand);
+
+                if (method.DeclaringType.FullName != baseContextType.FullName)
+                {
+                    continue;
+                }
+
+                switch (method.Name)
+                {
+                    case "GetEntity":
+                        if (!(method is GenericInstanceMethod genericInstanceMethod))
+                        {
+                            continue;
+                        }
+
+                        var componentType = genericInstanceMethod.GenericArguments.First();
+                        var contextType = contexts[componentContextMapping[componentType.FullName]];
+                        var newMethod = contextType.GetMethod("GetEntity_" + componentType.Name).GetDefinition();
+                        instruction.Operand = newMethod;
+                        break;
+                }
+;            }
+        }
 
         public int GetEndLineIndex()
         {
