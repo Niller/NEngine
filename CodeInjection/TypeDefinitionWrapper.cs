@@ -47,7 +47,7 @@ namespace CodeInjection
 
         public TypeDefinitionWrapper GetBaseType()
         {
-            return new TypeDefinitionWrapper(_typeDefinition.BaseType.Resolve());
+            return _typeDefinition.BaseType.Resolve().AsWrapper();
         }
 
         public FieldDefinitionWrapper InjectComponentsListField(Type componentsList, string type, string name)
@@ -57,7 +57,7 @@ namespace CodeInjection
 
             var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public, fieldType);
             _typeDefinition.Fields.Add(fieldDefinition);
-            return new FieldDefinitionWrapper(fieldDefinition);
+            return fieldDefinition.AsWrapper();
         }
 
         public FieldDefinitionWrapper InjectField(string name, Type type)
@@ -65,7 +65,7 @@ namespace CodeInjection
             var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public,
                 _typeDefinition.Module.ImportReference(type));
             _typeDefinition.Fields.Add(fieldDefinition);
-            return new FieldDefinitionWrapper(fieldDefinition);
+            return fieldDefinition.AsWrapper();
         }
 
         public FieldDefinitionWrapper InjectField(string name, TypeDefinitionWrapper type)
@@ -73,7 +73,7 @@ namespace CodeInjection
             var fieldDefinition = new FieldDefinition(name, FieldAttributes.Public,
                 _typeDefinition.Module.ImportReference(type.GetDefinition()));
             _typeDefinition.Fields.Add(fieldDefinition);
-            return new FieldDefinitionWrapper(fieldDefinition);
+            return fieldDefinition.AsWrapper();
         }
 
         public MethodDefinitionWrapper InjectOverrideMethod(MethodDefinitionWrapper baseMethod, bool callBase)
@@ -147,7 +147,7 @@ namespace CodeInjection
 
             _typeDefinition.Methods.Add(method);
 
-            return new MethodDefinitionWrapper(method);
+            return method.AsWrapper();
         }
 
         public MethodDefinitionWrapper AddConstructor(params Type[] argumentTypes)
@@ -170,7 +170,7 @@ namespace CodeInjection
             method.Body.Instructions.Add(Instruction.Create(OpCodes.Call, _typeDefinition.Module.ImportReference(typeof(object).GetConstructor(new Type[0]))));
             method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
             _typeDefinition.Methods.Add(method);
-            return new MethodDefinitionWrapper(method);
+            return method.AsWrapper();
         }
 
         public void InjectGetAllEntitiesMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper)
@@ -179,9 +179,8 @@ namespace CodeInjection
             var intType = module.ImportReference(typeof(int));
             var boolType = module.ImportReference(typeof(bool));
             var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
-            var listFieldTypeWrapper = new TypeDefinitionWrapper(arrayField.GetDefinition().FieldType.Resolve());
-            var poolField = module.ImportReference(new TypeDefinitionWrapper(_typeDefinition.BaseType.Resolve())
-                .GetField("AllEntitiesRequestPool").GetDefinition());
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
+            var poolField = module.ImportReference(_typeDefinition.BaseType.AsWrapper().GetField("AllEntitiesRequestPool").GetDefinition());
 
             var methodAttributes = MethodAttributes.Public;
             var method = new MethodDefinition("GetAllEntities_" + componentType.Name, methodAttributes, poolField.FieldType);
@@ -202,7 +201,7 @@ namespace CodeInjection
 
             il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Ldfld, poolField);
-            il.Emit(OpCodes.Callvirt, module.ImportReference(new TypeDefinitionWrapper(poolField.FieldType.Resolve()).GetMethod("Clear").GetDefinition().MakeGeneric(intType)));
+            il.Emit(OpCodes.Callvirt, module.ImportReference(poolField.FieldType.AsWrapper().GetMethod("Clear").GetDefinition().MakeGeneric(intType)));
 
             il.Emit(OpCodes.Ldc_I4_0);
             il.Emit(OpCodes.Stloc_0);
@@ -230,7 +229,7 @@ namespace CodeInjection
             il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Ldfld, poolField);
             il.Emit(OpCodes.Ldloc_0);
-            il.Emit(OpCodes.Callvirt, module.ImportReference(new TypeDefinitionWrapper(poolField.FieldType.Resolve()).GetMethod("Add", typeof(int)).GetDefinition().MakeGeneric(intType)));
+            il.Emit(OpCodes.Callvirt, module.ImportReference(poolField.FieldType.AsWrapper().GetMethod("Add", typeof(int)).GetDefinition().MakeGeneric(intType)));
 
             il.Emit(OpCodes.Ldloc_0);
             var label4 = il.Body.Instructions.Last();
@@ -275,7 +274,7 @@ namespace CodeInjection
             var intType = module.ImportReference(typeof(int));
             var boolType = module.ImportReference(typeof(bool));
             var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
-            var listFieldTypeWrapper = new TypeDefinitionWrapper(arrayField.GetDefinition().FieldType.Resolve());
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
             var entityType = module.ImportReference(InjectionCache.GetType(entityTypeName));
 
             var methodAttributes = MethodAttributes.Public;
@@ -319,7 +318,7 @@ namespace CodeInjection
             var label2 = il.Body.Instructions.Last();
 
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldfld, module.ImportReference(new TypeDefinitionWrapper(_typeDefinition.BaseType.Resolve()).GetField("Entities").GetDefinition()));
+            il.Emit(OpCodes.Ldfld, module.ImportReference(_typeDefinition.BaseType.AsWrapper().GetField("Entities").GetDefinition()));
             il.Emit(OpCodes.Ldloc_0);
             il.Emit(OpCodes.Ldelema, entityType);
             il.Emit(OpCodes.Stloc_3);
@@ -342,7 +341,7 @@ namespace CodeInjection
             il.Emit(OpCodes.Brtrue_S, label6);
 
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldflda, module.ImportReference(new TypeDefinitionWrapper(_typeDefinition.BaseType.Resolve()).GetField("DefaultEntity").GetDefinition()));
+            il.Emit(OpCodes.Ldflda, module.ImportReference(_typeDefinition.BaseType.AsWrapper().GetField("DefaultEntity").GetDefinition()));
             il.Emit(OpCodes.Stloc_3);
             var label8 = il.Body.Instructions.Last();
 
@@ -370,7 +369,7 @@ namespace CodeInjection
             var intType = module.ImportReference(typeof(int));
             var boolType = module.ImportReference(typeof(bool));
             var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
-            var listFieldTypeWrapper = new TypeDefinitionWrapper(arrayField.GetDefinition().FieldType.Resolve());
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
 
             var methodAttributes = MethodAttributes.Public;
             var method = new MethodDefinition("HasEntity_" + componentType.Name, methodAttributes, boolType);
@@ -468,7 +467,7 @@ namespace CodeInjection
                     continue;
                 }
 
-                return new FieldDefinitionWrapper(field);
+                return field.AsWrapper();
             }
 
             return null;
@@ -502,7 +501,7 @@ namespace CodeInjection
 
                 if (isMatch)
                 {
-                    return new MethodDefinitionWrapper(method);
+                    return method.AsWrapper();
                 }
             }
 

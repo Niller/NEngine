@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CecilExtensions.cs" />
     <Compile Include="CodeInjectionUtilities.cs" />
     <Compile Include="FieldDefinitionWrapper.cs" />
     <Compile Include="InjectLineOrder.cs" />

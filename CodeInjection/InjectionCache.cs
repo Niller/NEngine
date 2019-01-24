@@ -39,8 +39,7 @@ namespace CodeInjection
 
         public static TypeDefinition GetType(string fullname)
         {
-            TypeDefinition type;
-            if (!Types.TryGetValue(fullname, out type))
+            if (!Types.TryGetValue(fullname, out var type))
             {
                 // ReSharper disable once PossibleNullReferenceException
                 throw new Exception($"Cannot inject array because of type with name {type.FullName} not registered");

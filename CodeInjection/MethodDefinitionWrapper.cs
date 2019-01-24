@@ -36,7 +36,7 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj, contextType.GetConstructor().GetDefinition()), milestone, InjectLineOrder.Before);
 
             //TODO Refactor GetMethod
-            var addMethod = new TypeDefinitionWrapper(dictionaryFieldDefinition.FieldType.Resolve()).GetMethod("Add", typeof(Type), typeof(Type)).GetDefinition();
+            var addMethod = dictionaryFieldDefinition.FieldType.Resolve().AsWrapper().GetMethod("Add", typeof(Type), typeof(Type)).GetDefinition();
             var genericAddMethod =_methodDefinition.Module.ImportReference(
                 addMethod.MakeGeneric(_methodDefinition.Module.ImportReference(typeof(Type)),
                     InjectionCache.GetType(baseContextType.FullName)));
@@ -54,8 +54,7 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, capacityItems), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, capacityIds), milestone, InjectLineOrder.Before);
 
-            var ctor = new TypeDefinitionWrapper(
-                listField.GetDefinition().FieldType.Resolve()).GetConstructor(typeof(int), typeof(int)).GetDefinition();
+            var ctor = listField.GetDefinition().FieldType.Resolve().AsWrapper().GetConstructor(typeof(int), typeof(int)).GetDefinition();
 
             var genericMethod = ctor.MakeGeneric(_methodDefinition.Module.ImportReference(itemType.GetDefinition()));
 
@@ -82,7 +81,7 @@ namespace CodeInjection
                     InjectLineOrder.Before);
                 CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld, listField.GetDefinition()),
                     milestone, InjectLineOrder.Before);
-                var getLengthMethod = _methodDefinition.Module.ImportReference(new TypeDefinitionWrapper(listField.GetDefinition().FieldType.Resolve()).GetMethod("get_Length").GetDefinition()).Resolve();
+                var getLengthMethod = _methodDefinition.Module.ImportReference(listField.GetDefinition().FieldType.Resolve().AsWrapper().GetMethod("get_Length").GetDefinition()).Resolve();
                 var genericGetLengthMethod = getLengthMethod.MakeGeneric(itemType.GetDefinition());
                 CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericGetLengthMethod)), milestone, InjectLineOrder.Before);
                 CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldc_I4, value), milestone,
@@ -108,7 +107,7 @@ namespace CodeInjection
                 }
             }
 
-            var resizeMethod = _methodDefinition.Module.ImportReference(new TypeDefinitionWrapper(listField.GetDefinition().FieldType.Resolve()).GetMethod("ResizeIds", typeof(int)).GetDefinition()).Resolve();
+            var resizeMethod = _methodDefinition.Module.ImportReference(listField.GetDefinition().FieldType.Resolve().AsWrapper().GetMethod("ResizeIds", typeof(int)).GetDefinition()).Resolve();
             var genericResizeMethod = resizeMethod.MakeGeneric(itemType.GetDefinition());
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericResizeMethod)), milestone, InjectLineOrder.Before);

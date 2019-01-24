@@ -1,4 +1,5 @@
-﻿using ECS;
+﻿using System.ComponentModel;
+using ECS;
 using Math.Vectors;
 using NEngine.Editor.Components;
 using NEngine.Editor.Contexts;

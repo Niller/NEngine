@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil;
 
 namespace CodeInjection
@@ -25,7 +26,7 @@ namespace CodeInjection
 
         public TypeDefinitionWrapper GetType(string fullname)
         {
-            return new TypeDefinitionWrapper(_moduleDefinition.GetType(fullname));
+            return _moduleDefinition.GetType(fullname).AsWrapper();
         }
 
         public TypeDefinitionWrapper AddClass(string @namespace, string name, Type baseClass = null)
@@ -37,7 +38,12 @@ namespace CodeInjection
             _moduleDefinition.Types.Add(newType);
             InjectionCache.Types.Add(newType.FullName, newType);
 
-            return new TypeDefinitionWrapper(newType);
+            return newType.AsWrapper();
+        }
+
+        public List<TypeDefinitionWrapper> GetAllTypes()
+        {
+            return _moduleDefinition.Types.Select(t => t.AsWrapper()).ToList();
         }
 
         public List<TypeDefinitionWrapper> GetTypesByAttribute(Type targetAttribute)
@@ -45,22 +51,24 @@ namespace CodeInjection
             var result = new List<TypeDefinitionWrapper>();
             foreach (var type in _moduleDefinition.Types)
             {
-                bool hasAttribute = false;
+                var hasAttribute = false;
                 if (type.HasCustomAttributes)
                 {
                     foreach (var customAttribute in type.CustomAttributes)
                     {
-                        if (customAttribute.AttributeType.FullName == targetAttribute.FullName)
+                        if (customAttribute.AttributeType.FullName != targetAttribute.FullName)
                         {
-                            hasAttribute = true;
-                            break;
+                            continue;
                         }
+
+                        hasAttribute = true;
+                        break;
                     }
                 }
 
                 if (hasAttribute)
                 {
-                    result.Add(new TypeDefinitionWrapper(type));
+                    result.Add(type.AsWrapper());
                 }
             }
 

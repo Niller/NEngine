@@ -76,7 +76,7 @@ namespace ECS.CodeInjection
                     {
                         var field = context.InjectComponentsListField(typeof(ComponentsList<>), componentType,
                             ComponentsArrayPrefix + ECSInjectionUtilities.GetTypeName(componentType));
-                        //TODO fix hardcode (100)
+                        //TODO fix hardcode (16, 128)
                         ctor.InjectComponentsListInitialization(field, ECSInjectionCache.Components[componentType], 16, 128, ctor.GetEndLineIndex(), InjectLineOrder.Before);
                         resizeMethod.InjectComponentsListResize(field, ECSInjectionCache.Components[componentType], 128, Operation.Add, resizeMethod.GetEndLineIndex(),
                             InjectLineOrder.Before);
@@ -88,6 +88,9 @@ namespace ECS.CodeInjection
                     managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext), context);
 
                 }
+
+                nEngineEditor.
+
                 nEngineEditor.Save();
             }
         }
