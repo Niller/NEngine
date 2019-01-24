@@ -82,11 +82,11 @@ namespace ECS.CodeInjection
                             InjectLineOrder.Before);
                         context.InjectHasEntityMethod(field, ECSInjectionCache.Components[componentType]);
                         context.InjectGetEntityMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
-                        context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);
+                        context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);                    
                     }
 
-                    //TODO Inject adding contexts to dictionary
-                    //managerCtor.InjectComponentsListInitialization();
+                    managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext), context);
+
                 }
                 nEngineEditor.Save();
             }

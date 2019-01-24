@@ -22,7 +22,27 @@ namespace CodeInjection
             return _methodDefinition;
         }
 
-        //public void InjectDictionaryAdd(FieldDefinitionWrapper dictionaryField, )
+        public void InjectDictionaryAdd(FieldDefinitionWrapper dictionaryField, Type baseContextType, TypeDefinitionWrapper contextType)
+        {
+            var dictionaryFieldDefinition = _methodDefinition.Module.ImportReference(dictionaryField.GetDefinition());
+
+            var il = _methodDefinition.Body.GetILProcessor();
+            var milestone = _methodDefinition.Body.Instructions.Last();
+
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld, dictionaryFieldDefinition), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldtoken, contextType.GetDefinition()), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Call, _methodDefinition.Module.ImportReference(typeof(Type).GetMethod("GetTypeFromHandle"))), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj, contextType.GetConstructor().GetDefinition()), milestone, InjectLineOrder.Before);
+
+            //TODO Refactor GetMethod
+            var addMethod = new TypeDefinitionWrapper(dictionaryFieldDefinition.FieldType.Resolve()).GetMethod("Add", typeof(Type), typeof(Type)).GetDefinition();
+            var genericAddMethod =_methodDefinition.Module.ImportReference(
+                addMethod.MakeGeneric(_methodDefinition.Module.ImportReference(typeof(Type)),
+                    InjectionCache.GetType(baseContextType.FullName)));
+
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, genericAddMethod), milestone, InjectLineOrder.Before);
+        }
 
         public void InjectComponentsListInitialization(FieldDefinitionWrapper listField, TypeDefinitionWrapper itemType, int capacityItems, int capacityIds, int lineIndex, InjectLineOrder orderType)
         {
@@ -90,8 +110,6 @@ namespace CodeInjection
 
             var resizeMethod = _methodDefinition.Module.ImportReference(new TypeDefinitionWrapper(listField.GetDefinition().FieldType.Resolve()).GetMethod("ResizeIds", typeof(int)).GetDefinition()).Resolve();
             var genericResizeMethod = resizeMethod.MakeGeneric(itemType.GetDefinition());
-            //var genericMethod = new GenericInstanceMethod(resizeMethod);
-            //genericMethod.GenericArguments.Add(listField.GetDefinition().FieldType.GetElementType());
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericResizeMethod)), milestone, InjectLineOrder.Before);
         }

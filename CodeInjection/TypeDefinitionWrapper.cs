@@ -45,6 +45,11 @@ namespace CodeInjection
             throw new Exception($"Attribute {targetAttribute.FullName} doesn't belong type {_typeDefinition.FullName}");
         }
 
+        public TypeDefinitionWrapper GetBaseType()
+        {
+            return new TypeDefinitionWrapper(_typeDefinition.BaseType.Resolve());
+        }
+
         public FieldDefinitionWrapper InjectComponentsListField(Type componentsList, string type, string name)
         {
             var fieldType = new GenericInstanceType(_typeDefinition.Module.ImportReference(InjectionCache.GetType(componentsList.FullName)));

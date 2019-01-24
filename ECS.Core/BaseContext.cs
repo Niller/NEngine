@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace ECS
 {
-    public interface IComponent
+    public class TestManager : ECSManager
     {
-        bool HasValue
+        public TestManager() : base()
         {
-            get;
-            set;
+            Contexts.Add(typeof(TestContext), new TestContext());
         }
+
     }
 
     public class TestContext : BaseContext

@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 using Math.Vectors;
 using NEngine.Editor;
 using NEngine.Editor.Components;
-using NEngine.Rendering;
+using NEngine.Editor.Contexts;
 
 namespace NEngine
 {
@@ -24,7 +24,7 @@ namespace NEngine
             _editor = new Editor.Editor();
             _editor.Initialize();
 
-            var context = Services.ECS.GetContext("Main");
+            var context = Services.ECS.GetContext<MainContext>();
             var deviceEntity = context.AddEntity();
 
             var bmp = BitmapFactory.New(640, 480);
