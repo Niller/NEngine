@@ -132,19 +132,31 @@ namespace CodeInjection
 
                 switch (method.Name)
                 {
+                    case "HasEntity":
+                        ReplaceContextCall("HasEntity", componentContextMapping, contexts, method, instruction);
+                        break;
                     case "GetEntity":
-                        if (!(method is GenericInstanceMethod genericInstanceMethod))
-                        {
-                            continue;
-                        }
-
-                        var componentType = genericInstanceMethod.GenericArguments.First();
-                        var contextType = contexts[componentContextMapping[componentType.FullName]];
-                        var newMethod = contextType.GetMethod("GetEntity_" + componentType.Name).GetDefinition();
-                        instruction.Operand = newMethod;
+                        ReplaceContextCall("GetEntity", componentContextMapping, contexts, method, instruction);
+                        break;
+                    case "GetAllEntities":
+                        ReplaceContextCall("GetAllEntities", componentContextMapping, contexts, method, instruction);
                         break;
                 }
 ;            }
+        }
+
+        private void ReplaceContextCall(string methodName, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts, MethodReference method,
+            Instruction instruction)
+        { 
+            if (!(method is GenericInstanceMethod genericInstanceMethod))
+            {
+                return;
+            }
+
+            var componentType = genericInstanceMethod.GenericArguments.First();
+            var contextType = contexts[componentContextMapping[componentType.FullName]];
+            var newMethod = contextType.GetMethod(methodName + "_" + componentType.Name).GetDefinition();
+            instruction.Operand = newMethod;
         }
 
         public int GetEndLineIndex()

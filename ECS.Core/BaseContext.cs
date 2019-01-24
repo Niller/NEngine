@@ -145,7 +145,7 @@ namespace ECS
             throw new Exception("You cannot use directly GetEntity method. It must be replaced by code injection!");
         }
 
-        public  IEnumerable<int> GetAllEntities<T>() where T : struct
+        public  List<int> GetAllEntities<T>() where T : struct
         {
             throw new Exception("You cannot use directly GetAllEntities method. It must be replaced by code injection!");
         }
