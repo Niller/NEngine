@@ -15,7 +15,17 @@ namespace ECS
     public class TestContext : BaseContext
     {
         public ComponentsList<TestComponent> _TestComponents = new ComponentsList<TestComponent>(16, 128);
-        
+
+        public void AddComponent_TestComponent(TestComponent testComponent, int entityId)
+        {
+            _TestComponents.Add(ref testComponent, entityId);
+        }
+
+        public ref TestComponent AddComponent_TestComponent(ref TestComponent testComponent, int entityId)
+        {
+            _TestComponents.Add(ref testComponent, entityId);
+            return ref testComponent;
+        }
 
         public bool HasEntity_TestComponent<T>() where T : struct
         {
