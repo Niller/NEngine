@@ -16,15 +16,25 @@ namespace ECS
     {
         public ComponentsList<TestComponent> _TestComponents = new ComponentsList<TestComponent>(16, 128);
 
-        public void AddComponent_TestComponent(TestComponent testComponent, int entityId)
+        public void AddComponent_TestComponent(ref Entity entity, TestComponent testComponent)
         {
-            _TestComponents.Add(ref testComponent, entityId);
+            _TestComponents.Add(ref testComponent, entity.Id);
         }
 
-        public ref TestComponent AddComponent_TestComponent(ref TestComponent testComponent, int entityId)
+        public ref TestComponent AddComponent_TestComponent(ref Entity entity, ref TestComponent testComponent)
         {
-            _TestComponents.Add(ref testComponent, entityId);
+            _TestComponents.Add(ref testComponent, entity.Id);
             return ref testComponent;
+        }
+
+        public bool HasComponent_TestComponent(ref Entity entity)
+        {
+            return _TestComponents[entity.Id].HasValue;
+        }
+
+        public ref TestComponent GetComponent_TestComponent(ref Entity entity)
+        {
+            return ref _TestComponents[entity.Id];
         }
 
         public bool HasEntity_TestComponent<T>() where T : struct

@@ -141,9 +141,23 @@ namespace CodeInjection
                     case "GetAllEntities":
                         ReplaceContextCall("GetAllEntities", componentContextMapping, contexts, method, instruction);
                         break;
+                    /*
+                    case "HasComponent":
+                        if(!(method is GenericInstanceMethod genericInstanceMethod))
+                        {
+                            return;
+                        }
+                        var componentType = genericInstanceMethod.GenericArguments.First();
+                        var contextType = contexts[componentContextMapping[componentType.FullName]];
+                        var newMethod = contextType.GetMethod("HasComponent" + "_" + componentType.Name).GetDefinition();
+                        instruction.Operand = newMethod;
+                        break;
+                        */
                 }
 ;            }
         }
+
+
 
         private void ReplaceContextCall(string methodName, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts, MethodReference method,
             Instruction instruction)

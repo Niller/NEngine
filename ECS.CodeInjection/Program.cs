@@ -91,7 +91,11 @@ namespace ECS.CodeInjection
                             InjectLineOrder.Before);
                         context.InjectHasEntityMethod(field, ECSInjectionCache.Components[componentType]);
                         context.InjectGetEntityMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
-                        context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);                    
+                        context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);     
+                        context.InjectHasComponentMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
+                        context.InjectAddComponentVoidMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
+                        context.InjectAddComponentMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
+                        context.InjectGetComponentMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
                     }
 
                     managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext), context);

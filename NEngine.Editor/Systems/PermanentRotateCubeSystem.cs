@@ -12,6 +12,7 @@ namespace NEngine.Editor.Systems
             var context = Services.ECS.GetContext<MainContext>();
             foreach (var entityId in context.GetAllEntities<StartCubeComponent>())
             {
+                var b = context.HasEntity<TransformComponent>();
                 var entity = context.GetEntity(entityId);
                 var transform = entity.GetComponent<TransformComponent>();
 

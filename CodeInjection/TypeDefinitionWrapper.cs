@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Lifetime;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -172,6 +173,128 @@ namespace CodeInjection
             method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
             _typeDefinition.Methods.Add(method);
             return method.AsWrapper();
+        }
+
+        public void InjectHasComponentMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper, string entityTypeName)
+        {
+            var module = _typeDefinition.Module;
+            var boolType = module.ImportReference(typeof(bool));
+            var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
+            var entityType = module.ImportReference(InjectionCache.GetType(entityTypeName));
+
+            var methodAttributes = MethodAttributes.Public;
+            var method = new MethodDefinition("HasComponent_" + componentType.Name, methodAttributes, boolType);
+            method.Parameters.Add(new ParameterDefinition(new ByReferenceType(entityType)));
+
+            var il = method.Body.GetILProcessor();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, arrayField.GetDefinition());
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, _typeDefinition.Module.ImportReference(entityType.AsWrapper().GetMethod("get_Id").GetDefinition()));
+            var getItemGenericMethod = listFieldTypeWrapper.GetMethod("get_Item", typeof(int)).GetDefinition()
+                .MakeGeneric(componentTypeWrapper.GetDefinition());
+            il.Emit(OpCodes.Callvirt, _typeDefinition.Module.ImportReference(getItemGenericMethod));
+            
+            il.Emit(OpCodes.Call, _typeDefinition.Module.ImportReference(componentType.AsWrapper().GetMethod("get_HasValue").GetDefinition()));
+            il.Emit(OpCodes.Ret);
+
+            _typeDefinition.Methods.Add(method);
+        }
+
+        public void InjectAddComponentVoidMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper, string entityTypeName)
+        {
+            var module = _typeDefinition.Module;
+            var voidType = module.ImportReference(typeof(void));
+            var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
+            var entityType = module.ImportReference(InjectionCache.GetType(entityTypeName));
+
+            var methodAttributes = MethodAttributes.Public;
+            var method = new MethodDefinition("AddComponentVoid_" + componentType.Name, methodAttributes, voidType);
+            var parameter1 = new ParameterDefinition(new ByReferenceType(entityType));
+            var parameter2 = new ParameterDefinition(componentType);
+            method.Parameters.Add(parameter1);
+            method.Parameters.Add(parameter2);
+
+            var il = method.Body.GetILProcessor();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, arrayField.GetDefinition());
+            il.Emit(OpCodes.Ldarga_S, parameter2);
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, _typeDefinition.Module.ImportReference(entityType.AsWrapper().GetMethod("get_Id").GetDefinition()));
+            var getItemGenericMethod = listFieldTypeWrapper.GetMethod("Add", typeof(int)).GetDefinition()
+                .MakeGeneric(componentTypeWrapper.GetDefinition());
+            il.Emit(OpCodes.Callvirt, _typeDefinition.Module.ImportReference(getItemGenericMethod));
+
+            il.Emit(OpCodes.Ret);
+
+            _typeDefinition.Methods.Add(method);
+        }
+
+        public void InjectAddComponentMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper, string entityTypeName)
+        {
+            var module = _typeDefinition.Module;
+            var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
+            var entityType = module.ImportReference(InjectionCache.GetType(entityTypeName));
+
+            var methodAttributes = MethodAttributes.Public;
+            var method = new MethodDefinition("AddComponent_" + componentType.Name, methodAttributes, new ByReferenceType(componentType));
+            var parameter1 = new ParameterDefinition(new ByReferenceType(entityType));
+            var parameter2 = new ParameterDefinition(new ByReferenceType(componentType));
+            method.Parameters.Add(parameter1);
+            method.Parameters.Add(parameter2);
+
+            method.Body.InitLocals = true;
+            var tempVar1 = new VariableDefinition(new ByReferenceType(componentType));
+            method.Body.Variables.Add(tempVar1);
+
+            var il = method.Body.GetILProcessor();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, arrayField.GetDefinition());
+            il.Emit(OpCodes.Ldarg_2);
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, _typeDefinition.Module.ImportReference(entityType.AsWrapper().GetMethod("get_Id").GetDefinition()));
+            var getItemGenericMethod = listFieldTypeWrapper.GetMethod("Add", typeof(int)).GetDefinition()
+                .MakeGeneric(componentTypeWrapper.GetDefinition());
+            il.Emit(OpCodes.Callvirt, _typeDefinition.Module.ImportReference(getItemGenericMethod));
+            il.Emit(OpCodes.Ldarg_2);
+            il.Emit(OpCodes.Stloc_0);
+
+            il.Emit(OpCodes.Ldloc_0);
+            il.Emit(OpCodes.Ret);
+
+            _typeDefinition.Methods.Add(method);
+        }
+
+        public void InjectGetComponentMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper, string entityTypeName)
+        {
+            var module = _typeDefinition.Module;
+            var componentType = module.ImportReference(componentTypeWrapper._typeDefinition);
+            var listFieldTypeWrapper = arrayField.GetDefinition().FieldType.AsWrapper();
+            var entityType = module.ImportReference(InjectionCache.GetType(entityTypeName));
+
+            var methodAttributes = MethodAttributes.Public;
+            var method = new MethodDefinition("GetComponent_" + componentType.Name, methodAttributes, new ByReferenceType(componentType));
+            var parameter1 = new ParameterDefinition(new ByReferenceType(entityType));
+            method.Parameters.Add(parameter1);
+
+            var il = method.Body.GetILProcessor();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, arrayField.GetDefinition());
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, _typeDefinition.Module.ImportReference(entityType.AsWrapper().GetMethod("get_Id").GetDefinition()));
+            var getItemGenericMethod = listFieldTypeWrapper.GetMethod("get_Item", typeof(int)).GetDefinition()
+                .MakeGeneric(componentTypeWrapper.GetDefinition());
+            il.Emit(OpCodes.Callvirt, _typeDefinition.Module.ImportReference(getItemGenericMethod));
+            il.Emit(OpCodes.Ret);
+
+            _typeDefinition.Methods.Add(method);
         }
 
         public void InjectGetAllEntitiesMethod(FieldDefinitionWrapper arrayField, TypeDefinitionWrapper componentTypeWrapper)
@@ -491,14 +614,14 @@ namespace CodeInjection
                 var index = 0;
                 var isMatch = true;
 
-                if (method.Parameters.Count != argumentTypes.Length)
-                {
-                    continue;
-                }
-
                 foreach (var parameter in method.Parameters)
                 {
-                    if (parameter.ParameterType.FullName != argumentTypes[index++].FullName && !parameter.ParameterType.IsGenericParameter)
+                    if (parameter.ParameterType.ContainsGenericParameter)
+                    {
+                        continue;
+                    }
+
+                    if (argumentTypes.Length <= index || parameter.ParameterType.FullName != argumentTypes[index++].FullName)
                     {
                         isMatch = false;
                         break;
