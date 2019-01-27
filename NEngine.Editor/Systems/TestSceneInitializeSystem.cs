@@ -47,8 +47,6 @@ namespace NEngine.Editor.Systems
             };
             meshEntity.AddComponent(new MeshRendererComponent(mesh));
 
-            context.AddEntity();
-
             var cameraEntity = context.AddEntity();
 
             cameraEntity.AddComponent(new CameraComponent());
