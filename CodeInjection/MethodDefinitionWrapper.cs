@@ -113,7 +113,79 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(genericResizeMethod)), milestone, InjectLineOrder.Before);
         }
 
-        public void ReplaceCalls(Type baseContextType, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts)
+        public void ReplaceEntityCalls(Type baseContextType, Dictionary<string, string> componentContextMapping,
+            Dictionary<string, TypeDefinitionWrapper> contexts, Type entityType)
+        {
+            var entityTypeWrapper = InjectionCache.GetType(entityType.FullName).AsWrapper();
+
+            _methodDefinition.Body.SimplifyMacros();
+
+            for (int i = 0, ilen = _methodDefinition.Body.Instructions.Count; i < ilen; ++i)
+            {
+                var instruction = _methodDefinition.Body.Instructions[i];
+                if (instruction.OpCode != OpCodes.Call)
+                {
+                    continue;
+                }
+
+                var method = ((MethodReference) instruction.Operand);
+
+                if (method.DeclaringType.FullName != entityType.FullName)
+                {
+                    continue;
+                }
+
+                var tempVar1 = new VariableDefinition(
+                    _methodDefinition.Module.ImportReference(new ByReferenceType(entityTypeWrapper.GetDefinition())));
+                _methodDefinition.Body.Variables.Add(tempVar1);
+
+                switch (method.Name)
+                {
+                    case "HasComponent":
+
+                        if (!(method is GenericInstanceMethod genericInstanceMethod))
+                        {
+                            return;
+                        }
+
+                        var componentType = genericInstanceMethod.GenericArguments.First();
+                        var contextType = contexts[componentContextMapping[componentType.FullName]];
+                        var newMethod = contextType.GetMethod("HasComponent" + "_" + componentType.Name, entityType)
+                            .GetDefinition();
+                        instruction.Operand = newMethod;
+
+                        var il = _methodDefinition.Body.GetILProcessor();
+
+                        CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stloc, tempVar1), instruction,
+                            InjectLineOrder.Before);
+
+                        CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldloc, tempVar1), instruction,
+                            InjectLineOrder.Before);
+
+                        CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
+                                _methodDefinition.Module.ImportReference(
+                                    entityTypeWrapper.GetField("CurrentContext").GetDefinition())), instruction,
+                            InjectLineOrder.Before);
+
+                        CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldloc, tempVar1), instruction,
+                            InjectLineOrder.Before);
+
+                        CodeInjectionUtilities.Inject(il,
+                            il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(newMethod)),
+                            instruction,
+                            InjectLineOrder.Before);
+
+                        _methodDefinition.Body.Instructions.Remove(instruction);
+                      
+                        break;
+                }
+     
+            }
+
+            _methodDefinition.Body.SimplifyMacros();
+        }
+
+        public void ReplaceContextCalls(Type baseContextType, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts)
         {
             for (int i = 0, ilen = _methodDefinition.Body.Instructions.Count; i < ilen; ++i)
             {
@@ -141,23 +213,12 @@ namespace CodeInjection
                     case "GetAllEntities":
                         ReplaceContextCall("GetAllEntities", componentContextMapping, contexts, method, instruction);
                         break;
-                    /*
-                    case "HasComponent":
-                        if(!(method is GenericInstanceMethod genericInstanceMethod))
-                        {
-                            return;
-                        }
-                        var componentType = genericInstanceMethod.GenericArguments.First();
-                        var contextType = contexts[componentContextMapping[componentType.FullName]];
-                        var newMethod = contextType.GetMethod("HasComponent" + "_" + componentType.Name).GetDefinition();
-                        instruction.Operand = newMethod;
-                        break;
-                        */
+                    
+                    
+                        
                 }
 ;            }
         }
-
-
 
         private void ReplaceContextCall(string methodName, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts, MethodReference method,
             Instruction instruction)

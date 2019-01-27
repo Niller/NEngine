@@ -621,7 +621,9 @@ namespace CodeInjection
                         continue;
                     }
 
-                    if (argumentTypes.Length <= index || parameter.ParameterType.FullName != argumentTypes[index++].FullName)
+                    var parameterName = parameter.ParameterType.FullName.Trim('&');
+
+                    if (argumentTypes.Length <= index || parameterName != argumentTypes[index++].FullName)
                     {
                         isMatch = false;
                         break;

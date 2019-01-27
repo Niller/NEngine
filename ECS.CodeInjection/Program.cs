@@ -106,7 +106,8 @@ namespace ECS.CodeInjection
                 {
                     foreach (var method in type.GetAllMethods())
                     {
-                        method.ReplaceCalls(typeof(BaseContext), componentContextMapping, contexts);
+                        method.ReplaceContextCalls(typeof(BaseContext), componentContextMapping, contexts);
+                        method.ReplaceEntityCalls(typeof(BaseContext), componentContextMapping, contexts, typeof(Entity));
                     }
                 }
 

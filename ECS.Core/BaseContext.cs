@@ -12,6 +12,19 @@ namespace ECS
 
     }
 
+    public class TestSystem
+    {
+        void Execute()
+        {
+            TestManager manager = new TestManager();
+            var context = manager.GetContext<TestContext>();
+
+            var entity = context.GetEntity(0);
+
+            var b = ((TestContext) entity.CurrentContext).HasComponent_TestComponent(ref entity);
+        }
+    }
+
     public class TestContext : BaseContext
     {
         public ComponentsList<TestComponent> _TestComponents = new ComponentsList<TestComponent>(16, 128);
@@ -37,7 +50,7 @@ namespace ECS
             return ref _TestComponents[entity.Id];
         }
 
-        public bool HasEntity_TestComponent<T>() where T : struct
+        public bool HasEntity_TestComponent()
         {
             for (int i = 0, ilen = _TestComponents.Length; i < ilen; ++i)
             {
@@ -50,7 +63,7 @@ namespace ECS
             return false;
         }
 
-        public ref Entity GetEntity_TestComponent<T>() where T : struct
+        public ref Entity GetEntity_TestComponent()
         {
             for (int i = 0, ilen = _TestComponents.Length; i < ilen; ++i)
             {
@@ -63,7 +76,7 @@ namespace ECS
             return ref DefaultEntity;
         }
 
-        public List<int> GetAllEntities_TestComponent<T>() where T : struct
+        public List<int> GetAllEntities_TestComponent()
         {
             AllEntitiesRequestPool.Clear();
             for (int i = 0, ilen = _TestComponents.Length; i < ilen; ++i)
