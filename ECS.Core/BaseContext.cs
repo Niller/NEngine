@@ -113,6 +113,24 @@ namespace ECS
 
     public abstract class BaseContext
     {
+        internal class ContextGenericMethods
+        {
+            internal delegate ref Entity GetEntityDelegate();
+            internal delegate bool HasEntityDelegate();
+            internal delegate List<int> GetAllEntitiesDelegate();
+
+            public readonly GetEntityDelegate GetEntityMethod;
+            public readonly HasEntityDelegate HasEntityMethod;
+            public readonly GetAllEntitiesDelegate GetAllEntitiesMethod;
+
+            public ContextGenericMethods(GetEntityDelegate getEntityMethod, HasEntityDelegate hasEntityMethod, GetAllEntitiesDelegate getAllEntitiesDelegate)
+            {
+                GetEntityMethod = getEntityMethod;
+                HasEntityMethod = hasEntityMethod;
+                GetAllEntitiesMethod = getAllEntitiesDelegate;
+            }
+        }
+
         protected const int CapacityStep = 32;
         
         private readonly Queue<int> _freeIds = new Queue<int>(64);
@@ -124,6 +142,9 @@ namespace ECS
         protected Entity DefaultEntity;
 
         public Entity[] Entities = new Entity[CapacityStep];
+
+        // ReSharper disable once CollectionNeverUpdated.Local
+        private readonly Dictionary<Type, ContextGenericMethods> _genericMethods = new Dictionary<Type, ContextGenericMethods>();
 
         public ref Entity AddEntity()
         {
@@ -160,27 +181,34 @@ namespace ECS
             return Entities[id].HasValue;
         }
 
-        public void Test()
-        {
-            var l = 10;
-            for (int i = 0; i < 10; ++i)
-            {
-            }
-        }
-
         public bool HasEntity<T>() where T : struct
         {
-            throw new Exception("You cannot use directly HasEntity method. It must be replaced by code injection!");
+            if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
+            {
+                return genericMethods.HasEntityMethod();
+            }
+
+            throw new Exception("Code injection went wrong!");
         }
 
         public ref Entity GetEntity<T>() where T : struct
         {
-            throw new Exception("You cannot use directly GetEntity method. It must be replaced by code injection!");
+            if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
+            {
+                return ref genericMethods.GetEntityMethod();
+            }
+
+            throw new Exception("Code injection went wrong!");
         }
 
-        public  List<int> GetAllEntities<T>() where T : struct
+        public List<int> GetAllEntities<T>() where T : struct
         {
-            throw new Exception("You cannot use directly GetAllEntities method. It must be replaced by code injection!");
+            if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
+            {
+                return genericMethods.GetAllEntitiesMethod();
+            }
+
+            throw new Exception("Code injection went wrong!");
         }
     }
 }
