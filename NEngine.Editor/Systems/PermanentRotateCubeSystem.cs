@@ -13,10 +13,6 @@ namespace NEngine.Editor.Systems
             foreach (var entityId in context.GetAllEntities<StartCubeComponent>())
             {
                 var entity = context.GetEntity(entityId);
-
-                var c = entity.CurrentContext;
-                var b = entity.HasComponent<TransformComponent>();
-
                 var transform = entity.GetComponent<TransformComponent>();
 
                 transform.Rotation = new Vector3(transform.Rotation.X + 0.01f, transform.Rotation.Y + 0.01f, transform.Rotation.Z);

@@ -24,14 +24,11 @@ namespace NEngine
             _editor = new Editor.Editor();
             _editor.Initialize();
 
-            var context = Services.ECS.GetContext<MainContext>();
-            var deviceEntity = context.AddEntity();
-
             var bmp = BitmapFactory.New(640, 480);
 
             FrontBuffer.Source = bmp;
 
-            deviceEntity.AddComponent(new DeviceComponent(new Vector2(640, 480), new byte[640 * 480 * 4], bmp));
+            Services.EditorContext.RenderBitmap = bmp;
 
             InitializeComponent();
 

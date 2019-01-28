@@ -181,13 +181,121 @@ namespace CodeInjection
             _methodDefinition.Body.SimplifyMacros();
         }
 
+        public void ReplaceGetComponentCall(Type baseContextType, Dictionary<string, string> componentContextMapping,
+            Dictionary<string, TypeDefinitionWrapper> contexts, Type entityType)
+        {
+            var entityTypeWrapper = InjectionCache.GetType(entityType.FullName).AsWrapper();
+
+            _methodDefinition.Body.SimplifyMacros();
+
+            for (int i = 0; i < _methodDefinition.Body.Instructions.Count; ++i)
+            {
+                var instruction = _methodDefinition.Body.Instructions[i];
+                if (instruction.OpCode != OpCodes.Call)
+                {
+                    continue;
+                }
+
+                var method = ((MethodReference)instruction.Operand);
+
+                if (method.DeclaringType.FullName != entityType.FullName)
+                {
+                    continue;
+                }
+
+                var tempVar1 = new VariableDefinition(
+                    _methodDefinition.Module.ImportReference(new ByReferenceType(entityTypeWrapper.GetDefinition())));
+                _methodDefinition.Body.Variables.Add(tempVar1);
+
+
+                if (method.Name == "GetComponent")
+                {
+                    if (!(method is GenericInstanceMethod genericInstanceMethod))
+                    {
+                        continue;
+                    }
+
+                    var componentType = genericInstanceMethod.GenericArguments.First();
+                    var contextType = contexts[componentContextMapping[componentType.FullName]];
+                    var newMethod = contextType.GetMethod("GetComponent" + "_" + componentType.Name, entityType)
+                        .GetDefinition();
+                    instruction.Operand = newMethod;
+
+                    var il = _methodDefinition.Body.GetILProcessor();
+
+                    CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stloc, tempVar1), instruction,
+                        InjectLineOrder.Before);
+
+                    CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldloc, tempVar1), instruction,
+                        InjectLineOrder.Before);
+
+                    CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
+                            _methodDefinition.Module.ImportReference(
+                                entityTypeWrapper.GetField("CurrentContext").GetDefinition())), instruction,
+                        InjectLineOrder.Before);
+
+                    CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldloc, tempVar1), instruction,
+                        InjectLineOrder.Before);
+
+                    CodeInjectionUtilities.Inject(il,
+                        il.Create(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(newMethod)),
+                        instruction,
+                        InjectLineOrder.Before);
+
+                    _methodDefinition.Body.Instructions.Remove(instruction);
+                }
+            }
+
+            _methodDefinition.Body.SimplifyMacros();
+        }
+        /*
+        public void ReplaceGenericAddComponentVoidCall(Type baseContextType, Dictionary<string, string> componentContextMapping,
+            Dictionary<string, TypeDefinitionWrapper> contexts, Type entityType)
+        {
+            var entityTypeWrapper = InjectionCache.GetType(entityType.FullName).AsWrapper();
+            var voidType = _methodDefinition.Module.ImportReference(typeof(void));
+
+            var genericInstanceMethod = new GenericInstanceMethod(_methodDefinition);
+
+            !var componentType = genericInstanceMethod.GenericArguments.First();
+
+            var contextType = contexts[componentContextMapping[componentType.FullName]];
+            var newMethod = contextType.GetDefinition().Methods
+                .First(m => m.Name == "AddComponentVoid" + "_" + componentType.Name);
+
+            _methodDefinition.Body.Variables.Clear();
+
+            _methodDefinition.Body.InitLocals = true;
+            var tempVar1 = new VariableDefinition(
+                _methodDefinition.Module.ImportReference(contextType.GetDefinition()));
+            _methodDefinition.Body.Variables.Add(tempVar1);
+
+            _methodDefinition.Body.Instructions.Clear();
+
+            var il = _methodDefinition.Body.GetILProcessor();
+            
+            il.Emit(OpCodes.Ldarg_0);
+
+            il.Emit(OpCodes.Ldfld, _methodDefinition.Module.ImportReference(entityTypeWrapper.GetField("CurrentContext").GetDefinition()));
+
+            il.Emit(OpCodes.Castclass, contextType.GetDefinition());
+            
+            il.Emit(OpCodes.Stloc_0);
+
+            il.Emit(OpCodes.Ldarg_1);
+
+            il.Emit(OpCodes.Ldarg_0);
+
+            il.Emit(OpCodes.Callvirt, _methodDefinition.Module.ImportReference(newMethod));
+        }
+        */
         public void ReplaceAddComponentVoidCall(Type baseContextType, Dictionary<string, string> componentContextMapping,
             Dictionary<string, TypeDefinitionWrapper> contexts, Type entityType)
         {
             var entityTypeWrapper = InjectionCache.GetType(entityType.FullName).AsWrapper();
             var voidType = _methodDefinition.Module.ImportReference(typeof(void));
 
-            //_methodDefinition.Body.SimplifyMacros();
+            _methodDefinition.Body.SimplifyMacros();
 
             for (int i = 0; i < _methodDefinition.Body.Instructions.Count; ++i)
             {
@@ -252,6 +360,8 @@ namespace CodeInjection
                                 entityTypeWrapper.GetField("CurrentContext").GetDefinition())), instruction,
                         InjectLineOrder.Before);
 
+                    CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Castclass, contextType.GetDefinition()), instruction, InjectLineOrder.Before);
+
                     CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stloc, tempVar3), instruction,
                         InjectLineOrder.Before);
 
@@ -274,7 +384,7 @@ namespace CodeInjection
                 }
             }
 
-            //_methodDefinition.Body.SimplifyMacros();
+            _methodDefinition.Body.SimplifyMacros();
         }
 
         public void ReplaceContextCalls(Type baseContextType, Dictionary<string, string> componentContextMapping, Dictionary<string, TypeDefinitionWrapper> contexts)
@@ -304,10 +414,7 @@ namespace CodeInjection
                         break;
                     case "GetAllEntities":
                         ReplaceContextCall("GetAllEntities", componentContextMapping, contexts, method, instruction);
-                        break;
-                    
-                    
-                        
+                        break;     
                 }
 ;            }
         }

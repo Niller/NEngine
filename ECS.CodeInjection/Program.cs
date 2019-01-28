@@ -109,6 +109,7 @@ namespace ECS.CodeInjection
                         method.ReplaceContextCalls(typeof(BaseContext), componentContextMapping, contexts);
                         method.ReplaceHasComponentCall(typeof(BaseContext), componentContextMapping, contexts, typeof(Entity));
                         method.ReplaceAddComponentVoidCall(typeof(BaseContext), componentContextMapping, contexts, typeof(Entity));
+                        method.ReplaceGetComponentCall(typeof(BaseContext), componentContextMapping, contexts, typeof(Entity));
                     }
                 }
 

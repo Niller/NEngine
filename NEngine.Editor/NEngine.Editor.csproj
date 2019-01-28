@@ -53,6 +53,7 @@
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Contexts\MainContext.cs" />
     <Compile Include="Editor.cs" />
+    <Compile Include="EditorContext.cs" />
     <Compile Include="NEngineECSManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services.cs" />
