@@ -93,7 +93,7 @@ namespace ECS.Hardcode.Tests
             _contextIndex = contextIndex;
 
             //Generated
-            _genericMethods[typeof(TestComponent1)] = new ContextGenericMethods(GetEntity_TestComponent);
+            _genericMethods[typeof(TestComponent1)] = new ContextGenericMethods(_data.GetEntity_TestComponent);
         }
 
         public ref Entity AddEntity()

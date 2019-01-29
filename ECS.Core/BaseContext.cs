@@ -111,25 +111,27 @@ namespace ECS
         public bool HasValue { get; set; }
     }
 
+    public class ContextGenericMethods
+    {
+        public delegate ref Entity GetEntityDelegate();
+        public delegate bool HasEntityDelegate();
+        public delegate List<int> GetAllEntitiesDelegate();
+
+        public readonly GetEntityDelegate GetEntityMethod;
+        public readonly HasEntityDelegate HasEntityMethod;
+        public readonly GetAllEntitiesDelegate GetAllEntitiesMethod;
+
+        public ContextGenericMethods(GetEntityDelegate getEntityMethod, HasEntityDelegate hasEntityMethod, GetAllEntitiesDelegate getAllEntitiesDelegate)
+        {
+            GetEntityMethod = getEntityMethod;
+            HasEntityMethod = hasEntityMethod;
+            GetAllEntitiesMethod = getAllEntitiesDelegate;
+        }
+    }
+
     public abstract class BaseContext
     {
-        internal class ContextGenericMethods
-        {
-            internal delegate ref Entity GetEntityDelegate();
-            internal delegate bool HasEntityDelegate();
-            internal delegate List<int> GetAllEntitiesDelegate();
-
-            public readonly GetEntityDelegate GetEntityMethod;
-            public readonly HasEntityDelegate HasEntityMethod;
-            public readonly GetAllEntitiesDelegate GetAllEntitiesMethod;
-
-            public ContextGenericMethods(GetEntityDelegate getEntityMethod, HasEntityDelegate hasEntityMethod, GetAllEntitiesDelegate getAllEntitiesDelegate)
-            {
-                GetEntityMethod = getEntityMethod;
-                HasEntityMethod = hasEntityMethod;
-                GetAllEntitiesMethod = getAllEntitiesDelegate;
-            }
-        }
+        
 
         protected const int CapacityStep = 32;
         
@@ -144,7 +146,7 @@ namespace ECS
         public Entity[] Entities = new Entity[CapacityStep];
 
         // ReSharper disable once CollectionNeverUpdated.Local
-        private readonly Dictionary<Type, ContextGenericMethods> _genericMethods = new Dictionary<Type, ContextGenericMethods>();
+        protected readonly Dictionary<Type, ContextGenericMethods> GenericMethods = new Dictionary<Type, ContextGenericMethods>();
 
         public ref Entity AddEntity()
         {
@@ -183,7 +185,7 @@ namespace ECS
 
         public bool HasEntity<T>() where T : struct
         {
-            if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
+            if (GenericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
                 return genericMethods.HasEntityMethod();
             }
@@ -193,7 +195,7 @@ namespace ECS
 
         public ref Entity GetEntity<T>() where T : struct
         {
-            if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
+            if (GenericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
                 return ref genericMethods.GetEntityMethod();
             }
@@ -203,7 +205,7 @@ namespace ECS
 
         public List<int> GetAllEntities<T>() where T : struct
         {
-            if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
+            if (GenericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
                 return genericMethods.GetAllEntitiesMethod();
             }

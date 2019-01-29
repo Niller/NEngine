@@ -85,23 +85,28 @@ namespace ECS.CodeInjection
                     {
                         var field = context.InjectComponentsListField(typeof(ComponentsList<>), componentType,
                             ComponentsArrayPrefix + ECSInjectionUtilities.GetTypeName(componentType));
-                        //TODO fix hardcode (16, 128)
-                        ctor.InjectComponentsListInitialization(field, ECSInjectionCache.Components[componentType], 16, 128, ctor.GetEndLineIndex(), InjectLineOrder.Before);
-                        resizeMethod.InjectComponentsListResize(field, ECSInjectionCache.Components[componentType], 128, Operation.Add, resizeMethod.GetEndLineIndex(),
+
+                        var componentTypeWrapper = ECSInjectionCache.Components[componentType];
+                        ctor.InjectComponentsListInitialization(field, componentTypeWrapper, 16, 128, ctor.GetEndLineIndex(), InjectLineOrder.Before);
+                        
+                        resizeMethod.InjectComponentsListResize(field, componentTypeWrapper, 128, Operation.Add, resizeMethod.GetEndLineIndex(),
                             InjectLineOrder.Before);
-                        context.InjectHasEntityMethod(field, ECSInjectionCache.Components[componentType]);
-                        context.InjectGetEntityMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
-                        context.InjectGetAllEntitiesMethod(field, ECSInjectionCache.Components[componentType]);     
-                        context.InjectHasComponentMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
-                        context.InjectAddComponentVoidMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
-                        context.InjectAddComponentMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
-                        context.InjectGetComponentMethod(field, ECSInjectionCache.Components[componentType], typeof(Entity).FullName);
+                        context.InjectHasEntityMethod(field, componentTypeWrapper);
+                        context.InjectGetEntityMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                        context.InjectGetAllEntitiesMethod(field, componentTypeWrapper);     
+                        context.InjectHasComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                        context.InjectAddComponentVoidMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                        context.InjectAddComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                        context.InjectGetComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+
+                        ctor.InjectContextGenericMethods(componentTypeWrapper, typeof(ContextGenericMethods));
                     }
 
                     managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext), context);
 
                 }
 
+#if !DEBUG
                 foreach (var type in nEngineEditor.GetAllTypes())
                 {
                     foreach (var method in type.GetAllMethods())
@@ -112,6 +117,7 @@ namespace ECS.CodeInjection
                         method.ReplaceGetComponentCall(typeof(BaseContext), componentContextMapping, contexts, typeof(Entity));
                     }
                 }
+#endif
 
                 nEngineEditor.Save();
             }
