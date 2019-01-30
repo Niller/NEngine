@@ -111,27 +111,25 @@ namespace ECS
         public bool HasValue { get; set; }
     }
 
-    public class ContextGenericMethods
-    {
-        public delegate ref Entity GetEntityDelegate();
-        public delegate bool HasEntityDelegate();
-        public delegate List<int> GetAllEntitiesDelegate();
-
-        public readonly GetEntityDelegate GetEntityMethod;
-        public readonly HasEntityDelegate HasEntityMethod;
-        public readonly GetAllEntitiesDelegate GetAllEntitiesMethod;
-
-        public ContextGenericMethods(GetEntityDelegate getEntityMethod, HasEntityDelegate hasEntityMethod, GetAllEntitiesDelegate getAllEntitiesDelegate)
-        {
-            GetEntityMethod = getEntityMethod;
-            HasEntityMethod = hasEntityMethod;
-            GetAllEntitiesMethod = getAllEntitiesDelegate;
-        }
-    }
-
     public abstract class BaseContext
     {
-        
+        public class ContextGenericMethods
+        {
+            public delegate ref Entity GetEntityDelegate();
+            public delegate bool HasEntityDelegate();
+            public delegate List<int> GetAllEntitiesDelegate();
+
+            public readonly GetEntityDelegate GetEntityMethod;
+            public readonly HasEntityDelegate HasEntityMethod;
+            public readonly GetAllEntitiesDelegate GetAllEntitiesMethod;
+
+            public ContextGenericMethods(GetEntityDelegate getEntityMethod, HasEntityDelegate hasEntityMethod, GetAllEntitiesDelegate getAllEntitiesDelegate)
+            {
+                GetEntityMethod = getEntityMethod;
+                HasEntityMethod = hasEntityMethod;
+                GetAllEntitiesMethod = getAllEntitiesDelegate;
+            }
+        }
 
         protected const int CapacityStep = 32;
         

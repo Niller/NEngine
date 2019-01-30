@@ -99,7 +99,8 @@ namespace ECS.CodeInjection
                         context.InjectAddComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
                         context.InjectGetComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
 
-                        ctor.InjectContextGenericMethods(componentTypeWrapper, typeof(ContextGenericMethods));
+                        ctor.InjectContextGenericMethods(componentTypeWrapper, typeof(BaseContext.ContextGenericMethods));
+                        ctor.InjectEntityGenericMethods(componentTypeWrapper, typeof(Entity.EntityGenericMethods<>));
                     }
 
                     managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext), context);

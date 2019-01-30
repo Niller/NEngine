@@ -6,12 +6,12 @@ namespace ECS
 {
     public struct Entity
     {
-        internal class EntityGenericMethods<T>
+        public class EntityGenericMethods<T>
         {
-            internal delegate ref T GetComponentDelegate();
-            internal delegate bool HasComponentDelegate();
-            internal delegate void AddComponentVoidDelegate(T component);
-            internal delegate ref T AddComponentDelegate(ref T component);
+            public delegate ref T GetComponentDelegate();
+            public delegate bool HasComponentDelegate();
+            public delegate void AddComponentVoidDelegate(T component);
+            public delegate ref T AddComponentDelegate(ref T component);
 
             public readonly GetComponentDelegate GetComponentMethod;
             public readonly HasComponentDelegate HasComponentMethod;
