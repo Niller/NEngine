@@ -14,5 +14,11 @@ namespace ECS.CodeInjection
             get;
             set;
         }
+
+        public static TypeDefinitionWrapper EntityType
+        {
+            get;
+            set;
+        }
     }
 }

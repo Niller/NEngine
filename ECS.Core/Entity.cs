@@ -8,10 +8,10 @@ namespace ECS
     {
         public class EntityGenericMethods<T>
         {
-            public delegate ref T GetComponentDelegate();
-            public delegate bool HasComponentDelegate();
-            public delegate void AddComponentVoidDelegate(T component);
-            public delegate ref T AddComponentDelegate(ref T component);
+            public delegate ref T GetComponentDelegate(int entityId);
+            public delegate bool HasComponentDelegate(int entityId);
+            public delegate void AddComponentVoidDelegate(int entityId, T component);
+            public delegate ref T AddComponentDelegate(int entityId, ref T component);
 
             public readonly GetComponentDelegate GetComponentMethod;
             public readonly HasComponentDelegate HasComponentMethod;
@@ -54,7 +54,7 @@ namespace ECS
         {
             if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
-                return ((EntityGenericMethods<T>)genericMethods).HasComponentMethod();
+                return ((EntityGenericMethods<T>)genericMethods).HasComponentMethod(ref this);
             }
 
             throw new Exception("Code injection went wrong!");
@@ -64,7 +64,7 @@ namespace ECS
         {
             if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
-                return ref ((EntityGenericMethods<T>)genericMethods).GetComponentMethod();
+                return ref ((EntityGenericMethods<T>)genericMethods).GetComponentMethod(ref this);
             }
 
             throw new Exception("Code injection went wrong!");

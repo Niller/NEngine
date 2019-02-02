@@ -29,25 +29,25 @@ namespace ECS
     {
         public ComponentsList<TestComponent> _TestComponents = new ComponentsList<TestComponent>(16, 128);
 
-        public void AddComponent_TestComponent(ref Entity entity, TestComponent testComponent)
+        public void AddComponent_TestComponent(int id, TestComponent testComponent)
         {
-            _TestComponents.Add(ref testComponent, entity.Id);
+            _TestComponents.Add(ref testComponent, id);
         }
 
-        public ref TestComponent AddComponent_TestComponent(ref Entity entity, ref TestComponent testComponent)
+        public ref TestComponent AddComponent_TestComponent(int id, ref TestComponent testComponent)
         {
-            _TestComponents.Add(ref testComponent, entity.Id);
+            _TestComponents.Add(ref testComponent, id);
             return ref testComponent;
         }
 
-        public bool HasComponent_TestComponent(ref Entity entity)
+        public bool HasComponent_TestComponent(int id)
         {
-            return _TestComponents[entity.Id].HasValue;
+            return _TestComponents[id].HasValue;
         }
 
-        public ref TestComponent GetComponent_TestComponent(ref Entity entity)
+        public ref TestComponent GetComponent_TestComponent(int id)
         {
-            return ref _TestComponents[entity.Id];
+            return ref _TestComponents[id];
         }
 
         public bool HasEntity_TestComponent()

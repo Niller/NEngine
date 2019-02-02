@@ -62,7 +62,7 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stfld, listField.GetDefinition()), milestone, InjectLineOrder.Before);
         }
 
-        public void InjectEntityGenericMethods(TypeDefinitionWrapper componentTypeWrapper, Type genericMethodsType)
+        public void InjectEntityGenericMethods(TypeDefinitionWrapper componentTypeWrapper, TypeDefinitionWrapper contextType, Type genericMethodsType)
         {
             var il = _methodDefinition.Body.GetILProcessor();
 
@@ -70,7 +70,7 @@ namespace CodeInjection
             var module = _methodDefinition.Module;
 
             FieldDefinitionWrapper genericMethodsDictField =
-                module.ImportReference(_methodDefinition.DeclaringType.BaseType.AsWrapper().GetField("GenericMethods").GetDefinition()).Resolve().AsWrapper();
+                module.ImportReference(_methodDefinition.DeclaringType.AsWrapper().GetField("_genericMethods").GetDefinition()).Resolve().AsWrapper();
 
             var entityGenericMethodsType = module.ImportReference(module.ImportReference(genericMethodsType).Resolve().MakeGenericType(componentTypeWrapper.GetDefinition())).Resolve();
             var getComponentDelegateType = module.ImportReference(entityGenericMethodsType.NestedTypes.First(t => t.Name == "GetComponentDelegate").Resolve());
@@ -83,10 +83,12 @@ namespace CodeInjection
             var tempVar2 = new VariableDefinition(hasComponentDelegateType);
             var tempVar3 = new VariableDefinition(addComponentVoidDelegateType);
             var tempVar4 = new VariableDefinition(addComponentDelegateType);
+            var tempVar5 = new VariableDefinition(module.ImportReference(contextType.GetDefinition()));
             _methodDefinition.Body.Variables.Add(tempVar1);
             _methodDefinition.Body.Variables.Add(tempVar2);
             _methodDefinition.Body.Variables.Add(tempVar3);
             _methodDefinition.Body.Variables.Add(tempVar4);
+            _methodDefinition.Body.Variables.Add(tempVar5);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld, module.ImportReference(genericMethodsDictField.GetDefinition())), milestone, InjectLineOrder.Before);
@@ -94,32 +96,50 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Call, module.ImportReference(typeof(Type).GetMethod("GetTypeFromHandle"))), milestone, InjectLineOrder.Before);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
-            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldftn,
-                _methodDefinition.DeclaringType.AsWrapper().GetMethod("GetComponent_" + componentTypeWrapper.GetDefinition().Name).GetDefinition()),
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
+                    _methodDefinition.DeclaringType.AsWrapper().GetField("CurrentContext").GetDefinition()),
                 milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Castclass, module.ImportReference(contextType.GetDefinition())), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldftn, 
+                module.ImportReference(contextType.GetDefinition().Methods.First(m => m.Name == "GetComponent_" + componentTypeWrapper.GetDefinition().Name))), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj,
                 module.ImportReference(getComponentDelegateType.Resolve().Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 2))), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stloc, tempVar1), milestone, InjectLineOrder.Before);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
+                    _methodDefinition.DeclaringType.AsWrapper().GetField("CurrentContext").GetDefinition()),
+                milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Castclass, module.ImportReference(contextType.GetDefinition())), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldftn,
-                    _methodDefinition.DeclaringType.AsWrapper().GetMethod("HasComponent_" + componentTypeWrapper.GetDefinition().Name).GetDefinition()),
+                module.ImportReference(contextType.GetDefinition().Methods.First(m => m.Name == "HasComponent_" + componentTypeWrapper.GetDefinition().Name))),
                 milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj,
                 _methodDefinition.Module.ImportReference(module.ImportReference(hasComponentDelegateType.Resolve().Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 2)))), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stloc, tempVar2), milestone, InjectLineOrder.Before);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
+                    _methodDefinition.DeclaringType.AsWrapper().GetField("CurrentContext").GetDefinition()),
+                milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Castclass, module.ImportReference(contextType.GetDefinition())), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldftn,
-                    _methodDefinition.DeclaringType.AsWrapper().GetMethod("AddComponentVoid_" + componentTypeWrapper.GetDefinition().Name).GetDefinition()),
+                    module.ImportReference(contextType.GetDefinition().Methods.First(m => m.Name == "AddComponentVoid_" + componentTypeWrapper.GetDefinition().Name))),
                 milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj,
                 _methodDefinition.Module.ImportReference(module.ImportReference(addComponentVoidDelegateType.Resolve().Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 2)))), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Stloc, tempVar3), milestone, InjectLineOrder.Before);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
+                    _methodDefinition.DeclaringType.AsWrapper().GetMethod("get_CurrentContext").GetDefinition()),
+                milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Castclass, module.ImportReference(contextType.GetDefinition())), milestone, InjectLineOrder.Before);
+            CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldftn,
-                    _methodDefinition.DeclaringType.AsWrapper().GetMethod("AddComponent_" + componentTypeWrapper.GetDefinition().Name).GetDefinition()),
+                    contextType.GetMethod("AddComponent_" + componentTypeWrapper.GetDefinition().Name).GetDefinition()),
                 milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj,
                 _methodDefinition.Module.ImportReference(module.ImportReference(hasComponentDelegateType.Resolve().Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 2)))), milestone, InjectLineOrder.Before);

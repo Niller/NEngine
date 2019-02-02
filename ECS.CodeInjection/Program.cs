@@ -29,83 +29,90 @@ namespace ECS.CodeInjection
             using (var ecsCore = new ModuleDefinitionWrapper(args[0]))
             {
                 ECSInjectionCache.BaseContextType = ecsCore.GetType(typeof(BaseContext));
-            }
+                ECSInjectionCache.EntityType = ecsCore.GetType(typeof(Entity));
 
-            using (var nEngineEditor = new ModuleDefinitionWrapper(args[1]))
-            {
-                var componentContextMapping = new Dictionary<string, string>();
-                var contexts = new Dictionary<string, TypeDefinitionWrapper>();
 
-                //Find all components
-                var targetAttribute = typeof(ComponentAttribute);
-                var componentTypes = nEngineEditor.GetTypesByAttribute(targetAttribute);
-                foreach (var componentType in componentTypes)
+                using (var nEngineEditor = new ModuleDefinitionWrapper(args[1]))
                 {
-                    if (!(componentType.GetAttributeParameters(targetAttribute, 0) is string context))
+                    var componentContextMapping = new Dictionary<string, string>();
+                    var contexts = new Dictionary<string, TypeDefinitionWrapper>();
+
+                    //Find all components
+                    var targetAttribute = typeof(ComponentAttribute);
+                    var componentTypes = nEngineEditor.GetTypesByAttribute(targetAttribute);
+                    foreach (var componentType in componentTypes)
                     {
-                        throw new Exception(
-                            $"Wrong attribute value in component attribute for component {componentType.FullName}");
+                        if (!(componentType.GetAttributeParameters(targetAttribute, 0) is string context))
+                        {
+                            throw new Exception(
+                                $"Wrong attribute value in component attribute for component {componentType.FullName}");
+                        }
+
+                        if (!ECSInjectionCache.ComponentsForContexts.TryGetValue(context, out var components))
+                        {
+                            components = new List<string>();
+                            ECSInjectionCache.ComponentsForContexts.Add(context, components);
+                        }
+
+                        components.Add(componentType.FullName);
+                        ECSInjectionCache.Components.Add(componentType.FullName, componentType);
+                        componentContextMapping.Add(componentType.FullName, context);
+
+
                     }
 
-                    if (!ECSInjectionCache.ComponentsForContexts.TryGetValue(context, out var components))
+                    var managerAttribute = typeof(ECSManagerAttribute);
+                    var ecsManagers = nEngineEditor.GetTypesByAttribute(managerAttribute);
+
+                    if (ecsManagers.Count > 1)
                     {
-                        components = new List<string>();
-                        ECSInjectionCache.ComponentsForContexts.Add(context, components);
+                        throw new NotImplementedException();
                     }
 
-                    components.Add(componentType.FullName);
-                    ECSInjectionCache.Components.Add(componentType.FullName, componentType);
-                    componentContextMapping.Add(componentType.FullName, context);
+                    var manager = ecsManagers.First();
+                    var managerCtor = manager.GetConstructor();
+                    var entityCtor = ECSInjectionCache.EntityType.GetConstructor(typeof(BaseContext), typeof(int));
 
-                    
-                }
-
-                var managerAttribute = typeof(ECSManagerAttribute);
-                var ecsManagers = nEngineEditor.GetTypesByAttribute(managerAttribute);
-
-                if (ecsManagers.Count > 1)
-                {
-                    throw new NotImplementedException();
-                }
-
-                var manager = ecsManagers.First();
-                var managerCtor = manager.GetConstructor();
-                
-                foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
-                {
-                    var context = nEngineEditor.GetType(componentsForContext.Key);
-
-                    contexts[context.FullName] = context;
-
-                    var ctor = context.GetConstructor();
-                    var resizeMethod =
-                        context.InjectOverrideMethod(ECSInjectionCache.BaseContextType.GetMethod("Resize"), true);
-
-                    foreach (var componentType in componentsForContext.Value)
+                    foreach (var componentsForContext in ECSInjectionCache.ComponentsForContexts)
                     {
-                        var field = context.InjectComponentsListField(typeof(ComponentsList<>), componentType,
-                            ComponentsArrayPrefix + ECSInjectionUtilities.GetTypeName(componentType));
+                        var context = nEngineEditor.GetType(componentsForContext.Key);
 
-                        var componentTypeWrapper = ECSInjectionCache.Components[componentType];
-                        ctor.InjectComponentsListInitialization(field, componentTypeWrapper, 16, 128, ctor.GetEndLineIndex(), InjectLineOrder.Before);
-                        
-                        resizeMethod.InjectComponentsListResize(field, componentTypeWrapper, 128, Operation.Add, resizeMethod.GetEndLineIndex(),
-                            InjectLineOrder.Before);
-                        context.InjectHasEntityMethod(field, componentTypeWrapper);
-                        context.InjectGetEntityMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                        context.InjectGetAllEntitiesMethod(field, componentTypeWrapper);     
-                        context.InjectHasComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                        context.InjectAddComponentVoidMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                        context.InjectAddComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                        context.InjectGetComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                        contexts[context.FullName] = context;
 
-                        ctor.InjectContextGenericMethods(componentTypeWrapper, typeof(BaseContext.ContextGenericMethods));
-                        ctor.InjectEntityGenericMethods(componentTypeWrapper, typeof(Entity.EntityGenericMethods<>));
+                        var contextCtor = context.GetConstructor();
+                        var resizeMethod =
+                            context.InjectOverrideMethod(ECSInjectionCache.BaseContextType.GetMethod("Resize"), true);
+
+                        foreach (var componentType in componentsForContext.Value)
+                        {
+                            var field = context.InjectComponentsListField(typeof(ComponentsList<>), componentType,
+                                ComponentsArrayPrefix + ECSInjectionUtilities.GetTypeName(componentType));
+
+                            var componentTypeWrapper = ECSInjectionCache.Components[componentType];
+                            contextCtor.InjectComponentsListInitialization(field, componentTypeWrapper, 16, 128,
+                                contextCtor.GetEndLineIndex(), InjectLineOrder.Before);
+
+                            resizeMethod.InjectComponentsListResize(field, componentTypeWrapper, 128, Operation.Add,
+                                resizeMethod.GetEndLineIndex(),
+                                InjectLineOrder.Before);
+                            context.InjectHasEntityMethod(field, componentTypeWrapper);
+                            context.InjectGetEntityMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                            context.InjectGetAllEntitiesMethod(field, componentTypeWrapper);
+                            context.InjectHasComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                            context.InjectAddComponentVoidMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                            context.InjectAddComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                            context.InjectGetComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+
+                            contextCtor.InjectContextGenericMethods(componentTypeWrapper,
+                                typeof(BaseContext.ContextGenericMethods));
+                            entityCtor.InjectEntityGenericMethods(componentTypeWrapper, context,
+                                typeof(Entity.EntityGenericMethods<>));
+                        }
+
+                        managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext),
+                            context);
+
                     }
-
-                    managerCtor.InjectDictionaryAdd(manager.GetBaseType().GetField("Contexts"), typeof(BaseContext), context);
-
-                }
 
 #if !DEBUG
                 foreach (var type in nEngineEditor.GetAllTypes())
@@ -120,9 +127,12 @@ namespace ECS.CodeInjection
                 }
 #endif
 
-                nEngineEditor.Save();
-            }
-        }
+                    nEngineEditor.Save();
+                }
 
+                ecsCore.Save();
+            }
+            
+        }
     }
 }
