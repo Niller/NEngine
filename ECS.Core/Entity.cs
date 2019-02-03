@@ -54,7 +54,7 @@ namespace ECS
         {
             if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
-                return ((EntityGenericMethods<T>)genericMethods).HasComponentMethod(ref this);
+                return ((EntityGenericMethods<T>)genericMethods).HasComponentMethod(Id);
             }
 
             throw new Exception("Code injection went wrong!");
@@ -64,7 +64,7 @@ namespace ECS
         {
             if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
-                return ref ((EntityGenericMethods<T>)genericMethods).GetComponentMethod(ref this);
+                return ref ((EntityGenericMethods<T>)genericMethods).GetComponentMethod(Id);
             }
 
             throw new Exception("Code injection went wrong!");
@@ -74,7 +74,7 @@ namespace ECS
         {
             if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
-                return ref ((EntityGenericMethods<T>)genericMethods).AddComponentMethod(ref component);
+                return ref ((EntityGenericMethods<T>)genericMethods).AddComponentMethod(Id, ref component);
             }
 
             throw new Exception("Code injection went wrong!");
@@ -84,7 +84,7 @@ namespace ECS
         {
             if (_genericMethods.TryGetValue(typeof(T), out var genericMethods))
             {
-                ((EntityGenericMethods<T>)genericMethods).AddComponentVoidMethod(component);
+                ((EntityGenericMethods<T>)genericMethods).AddComponentVoidMethod(Id, component);
             }
 
             throw new Exception("Code injection went wrong!");

@@ -21,7 +21,7 @@ namespace ECS
 
             var entity = context.GetEntity(0);
 
-            var b = ((TestContext) entity.CurrentContext).HasComponent_TestComponent(ref entity);
+            var b = ((TestContext) entity.CurrentContext).HasComponent_TestComponent(entity.Id);
         }
     }
 

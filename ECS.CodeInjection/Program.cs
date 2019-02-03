@@ -18,7 +18,7 @@ namespace ECS.CodeInjection
             {
                 args = new[]
                 {
-                    "G:\\projects\\NEngine\\ECS.Core\\bin\\Debug\\ECS.Core.dll",
+                    "G:\\projects\\NEngine\\NEngine\\bin\\Debug\\ECS.Core.dll",
                     "G:\\projects\\NEngine\\NEngine\\bin\\Debug\\NEngine.Editor.dll",
                 };
             }
@@ -98,10 +98,10 @@ namespace ECS.CodeInjection
                             context.InjectHasEntityMethod(field, componentTypeWrapper);
                             context.InjectGetEntityMethod(field, componentTypeWrapper, typeof(Entity).FullName);
                             context.InjectGetAllEntitiesMethod(field, componentTypeWrapper);
-                            context.InjectHasComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                            context.InjectAddComponentVoidMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                            context.InjectAddComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
-                            context.InjectGetComponentMethod(field, componentTypeWrapper, typeof(Entity).FullName);
+                            context.InjectHasComponentMethod(field, componentTypeWrapper);
+                            context.InjectAddComponentVoidMethod(field, componentTypeWrapper);
+                            context.InjectAddComponentMethod(field, componentTypeWrapper);
+                            context.InjectGetComponentMethod(field, componentTypeWrapper);
 
                             contextCtor.InjectContextGenericMethods(componentTypeWrapper,
                                 typeof(BaseContext.ContextGenericMethods));

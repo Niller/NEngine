@@ -134,12 +134,12 @@ namespace CodeInjection
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldfld,
-                    _methodDefinition.DeclaringType.AsWrapper().GetMethod("get_CurrentContext").GetDefinition()),
+                    _methodDefinition.DeclaringType.AsWrapper().GetField("CurrentContext").GetDefinition()),
                 milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Castclass, module.ImportReference(contextType.GetDefinition())), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldarg_0), milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldftn,
-                    contextType.GetMethod("AddComponent_" + componentTypeWrapper.GetDefinition().Name).GetDefinition()),
+                    module.ImportReference(contextType.GetDefinition().Methods.First(m => m.Name == "AddComponent_" + componentTypeWrapper.GetDefinition().Name))),
                 milestone, InjectLineOrder.Before);
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj,
                 _methodDefinition.Module.ImportReference(module.ImportReference(hasComponentDelegateType.Resolve().Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 2)))), milestone, InjectLineOrder.Before);
@@ -150,7 +150,7 @@ namespace CodeInjection
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Ldloc, tempVar3), milestone, InjectLineOrder.Before);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Newobj,
-                _methodDefinition.Module.ImportReference(entityGenericMethodsType.Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 3))), milestone, InjectLineOrder.Before);
+                _methodDefinition.Module.ImportReference(entityGenericMethodsType.Methods.First(m => m.Name == ".ctor" && m.Parameters.Count == 4))), milestone, InjectLineOrder.Before);
 
             CodeInjectionUtilities.Inject(il, il.Create(OpCodes.Callvirt,
                 _methodDefinition.Module.ImportReference(genericMethodsDictField.GetDefinition().FieldType.AsWrapper().GetMethod("set_Item").GetDefinition().
