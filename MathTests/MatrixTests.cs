@@ -84,7 +84,7 @@ namespace MathTests
             {
                 matrix1.GetValue(3, 4);
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
                 return;
             }

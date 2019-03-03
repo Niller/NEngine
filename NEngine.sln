@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Rendering", "NEngin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Hardcode.Tests", "ECS.Hardcode.Tests\ECS.Hardcode.Tests.csproj", "{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeInjection.Experimental", "CodeInjection.Experimental\CodeInjection.Experimental.csproj", "{447A56D6-721A-406F-BC00-37542D676D1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{447A56D6-721A-406F-BC00-37542D676D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{447A56D6-721A-406F-BC00-37542D676D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{447A56D6-721A-406F-BC00-37542D676D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{447A56D6-721A-406F-BC00-37542D676D1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
