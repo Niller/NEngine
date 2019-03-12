@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
 {
@@ -12,13 +9,33 @@ namespace CodeInjection.Experimental
     {
         private int _freeStackPosition;
 
-        private MethodVariable[] _variables;
+        private List<MethodVariable> _variables;
 
         private int _instructionIndex;
 
+        private MethodDefinition _method;
+
+        public MethodState(MethodDefinition method, int instructionIndex)
+        {
+            _method = method;
+            _instructionIndex = instructionIndex;
+
+            _variables = new List<MethodVariable>();
+            foreach (var methodVariable in method.Body.Variables)
+            {
+                _variables.Add(new MethodVariable(string.Empty, methodVariable));
+            }
+
+            _freeStackPosition = method.Body.MaxStackSize;
+
+        }
+
         public MethodState AddVariable(string name, Type t)
         {
-            throw new NotImplementedException();
+            var newVariable = new VariableDefinition(t.GetDefinition());
+            _method.Body.Variables.Add(newVariable);
+            _variables.Add(new MethodVariable(name, newVariable));
+            return this;
         }
 
         public MethodState AddVariableSet(string name, MethodValue value)

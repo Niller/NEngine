@@ -11,15 +11,19 @@
         {
             None,
             In,
-            Out
+            Out,
+            Ref
         }
 
-        private ParameterModifier _modifier;
+        public ParameterModifier Modifier
+        {
+            get;
+        }
 
         public ParameterType(Type t, ParameterModifier m = ParameterModifier.None)
         {
             Type = t;
-            _modifier = m;
+            Modifier = m;
         }
     }
 }

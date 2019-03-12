@@ -1,17 +1,28 @@
 ﻿using System;
+using Mono.Cecil;
 
 namespace CodeInjection.Experimental
 {
     public class Assembly
     {
-        public Type GetType(string name)
+        private readonly ModuleDefinition _moduleDefinition;
+
+        public Assembly(string assemblyPath)
         {
-            throw new NotImplementedException();
+            _moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, new ReaderParameters { ReadWrite = true });
         }
 
-        public Type AddType(string name)
+        public Type GetType(string fullname)
         {
-            throw new NotImplementedException();
+            return new Type(_moduleDefinition.GetType(fullname));
+        }
+
+        public Type AddType(string fullname, TypeAttributes typeAttributes)
+        {
+            var typeDefinition = new TypeDefinition(NameUtilities.GetNamespace(fullname),
+                NameUtilities.GetName(fullname), typeAttributes);
+
+            return new Type(typeDefinition);
         }
     }
 }

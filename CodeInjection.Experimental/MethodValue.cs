@@ -19,6 +19,13 @@ namespace CodeInjection.Experimental
             get;
         }
 
+        protected MethodValue(string name, int index, Type type)
+        {
+            Name = name;
+            Index = index;
+            Type = type;
+        }
+
         internal int ToStack()
         {
             throw new NotImplementedException();
