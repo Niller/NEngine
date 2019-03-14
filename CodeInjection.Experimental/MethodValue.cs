@@ -26,12 +26,12 @@ namespace CodeInjection.Experimental
             Type = type;
         }
 
-        internal int ToStack()
+        internal virtual int ToStack()
         {
             throw new NotImplementedException();
         }
 
-        internal int FromStack()
+        internal virtual int FromStack()
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -9,11 +10,11 @@ namespace CodeInjection.Experimental
     {
         private int _freeStackPosition;
 
-        private List<MethodVariable> _variables;
+        private readonly List<MethodVariable> _variables;
 
         private int _instructionIndex;
 
-        private MethodDefinition _method;
+        private readonly MethodDefinition _method;
 
         public MethodState(MethodDefinition method, int instructionIndex)
         {
@@ -23,7 +24,7 @@ namespace CodeInjection.Experimental
             _variables = new List<MethodVariable>();
             foreach (var methodVariable in method.Body.Variables)
             {
-                _variables.Add(new MethodVariable(string.Empty, methodVariable));
+                _variables.Add(new MethodVariable(string.Empty, _variables.Count, methodVariable));
             }
 
             _freeStackPosition = method.Body.MaxStackSize;
@@ -34,13 +35,21 @@ namespace CodeInjection.Experimental
         {
             var newVariable = new VariableDefinition(t.GetDefinition());
             _method.Body.Variables.Add(newVariable);
-            _variables.Add(new MethodVariable(name, newVariable));
+            _variables.Add(new MethodVariable(name, _variables.Count, newVariable));
             return this;
         }
 
         public MethodState AddVariableSet(string name, MethodValue value)
         {
-            throw new NotImplementedException();
+            var il = _method.Body.GetILProcessor();
+            var variable = _variables.FirstOrDefault(v => v.Name == name);
+            if (variable != null)
+            {
+                variable.ToStack();
+                il.Create(OpCodes.Stloc, variable.Index);
+            }
+
+            return this;
         }
 
         public MethodState AddVariableSet(string name, int value)
