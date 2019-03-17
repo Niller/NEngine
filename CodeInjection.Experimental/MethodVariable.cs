@@ -1,27 +1,24 @@
-﻿using System;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
 {
     public class MethodVariable : MethodValue
     {
-        private VariableDefinition _variable;
+        private readonly VariableDefinition _variable;
 
         public MethodVariable(string name, int index, VariableDefinition variable) : base(name, index, variable.VariableType.ToWrapper())
         {
             _variable = variable;
         }
 
-        internal override int ToStack()
+        internal override Instruction ToStack()
         {
-
-
-            throw new NotImplementedException();
+            return Instruction.Create(OpCodes.Ldloc, _variable);
         }
 
-        internal override int FromStack()
+        internal override Instruction FromStack()
         {
-            throw new NotImplementedException();
+            return Instruction.Create(OpCodes.Stloc, _variable);
         }
     }
 }

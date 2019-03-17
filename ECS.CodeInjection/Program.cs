@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using CodeInjection;
+﻿#define V2
+
+
+using CodeInjection.Experimental;
+using Mono.Cecil;
 
 namespace ECS.CodeInjection
 {
@@ -23,8 +23,30 @@ namespace ECS.CodeInjection
                 };
             }
 
-            InjectionCache.Initialize(args);
+#if V2
+            using (var assembly = new Assembly(args[0]))
+            {
+                //var type1 = assembly.AddType("Test.TestClass", TypeAttributes.Class);
+                var type1 = assembly.GetType("ECS.TestContext");
+                var intType = assembly.ImportType<int>();
 
+                type1.AddField("field1", intType, FieldAttributes.Private);
+                type1.AddField("field2", type1, FieldAttributes.Private);
+
+                var method1 = type1.AddMethod("method1", MethodAttributes.Private, intType,
+                    new ParameterType("arg1", intType), new ParameterType("arg2", intType));
+
+                var method1State = method1.GetState(Method.DefaultStates.MethodStart);
+
+                method1State.AddVariable("v1", intType)
+                    .MathOperation(MathOperation.Add, method1State.GetArgument(0), method1State.GetArgument(1))
+                    .AddVariableSet("v1").ReturnValue(method1State.GetVariable("v1"));
+
+
+                assembly.Save();
+            }
+#else
+            InjectionCache.Initialize(args);
 
             using (var ecsCore = new ModuleDefinitionWrapper(args[0]))
             {
@@ -132,7 +154,9 @@ namespace ECS.CodeInjection
 
                 ecsCore.Save();
             }
-            
+
+#endif
         }
+
     }
 }

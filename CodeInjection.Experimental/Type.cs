@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Linq;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 
 namespace CodeInjection.Experimental
@@ -56,7 +57,7 @@ namespace CodeInjection.Experimental
 
                     var targetParameter = parameters[index++];
                     var targetParameterName = targetParameter.Type.FullName;
-                    targetParameterName = targetParameter.Modifier == ParameterType.ParameterModifier.Ref
+                    targetParameterName = targetParameter.ByRef
                         ? "&" + targetParameterName
                         : targetParameterName;
 
@@ -76,10 +77,25 @@ namespace CodeInjection.Experimental
             return null;
         }
 
-        public Method AddMethod(string name, Type returnType, params ParameterType[] parameters)
+        public Method GetMethod(string name, Type returnType, params ParameterType[] parameters)
         {
             var method = GetMethod(name, parameters);
             return method.ReturnType == returnType ? method : null;
+        }
+
+        public Method AddMethod(string name, MethodAttributes attributes, Type returnType, params ParameterType[] parameters)
+        {
+            var method = new MethodDefinition(name, attributes, returnType.GetDefinition());
+            foreach (var parameterType in parameters)
+            {
+                method.Parameters.Add(parameterType.ToDefinition());
+            }
+            method.Body.Instructions.Add(Instruction.Create(OpCodes.Nop));
+            method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+
+            _type.Methods.Add(method);
+            
+            return method.ToWrapper();
         }
 
         public override int GetHashCode()
@@ -89,7 +105,22 @@ namespace CodeInjection.Experimental
 
         public static bool operator ==(Type type1, Type type2)
         {
-            return type1?.Equals(type2) ?? type2 == null;
+            if (ReferenceEquals(type1, type2))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(type1, null))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(type2, null))
+            {
+                return false;
+            }
+
+            return type1.Equals(type2);
         }
 
         public static bool operator !=(Type type1, Type type2)

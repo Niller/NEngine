@@ -1,4 +1,5 @@
 ﻿using System;
+using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
 {
@@ -26,14 +27,7 @@ namespace CodeInjection.Experimental
             Type = type;
         }
 
-        internal virtual int ToStack()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal virtual int FromStack()
-        {
-            throw new NotImplementedException();
-        }
+        internal abstract Instruction ToStack();
+        internal abstract Instruction FromStack();
     }
 }

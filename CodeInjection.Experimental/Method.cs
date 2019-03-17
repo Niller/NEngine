@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
 {
@@ -34,9 +36,19 @@ namespace CodeInjection.Experimental
             var i = 0;
             foreach (var parameter in methodDefinition.Parameters)
             {
-                ParameterTypes[i++] = new ParameterType(parameter.ParameterType.ToWrapper(), 
-                    parameter.Name[0] == '&' ? ParameterType.ParameterModifier.Ref : ParameterType.ParameterModifier.None);
+                ParameterTypes[i++] = new ParameterType(parameter.Name, parameter.ParameterType.ToWrapper(),
+                    parameter.Name[0] == '&', parameter.Attributes);
             }
+        }
+
+        public Instruction Call()
+        {
+            return Instruction.Create(_method.DeclaringType.IsClass ? OpCodes.Callvirt : OpCodes.Call, _method);
+        }
+
+        public MethodDefinition GetDefinition()
+        {
+            return _method;
         }
 
         public MethodState GetState(DefaultStates state)
@@ -44,10 +56,10 @@ namespace CodeInjection.Experimental
             switch (state)
             {
                 case DefaultStates.MethodStart:
-                    return new MethodState(_method, 0);
+                    return new MethodState(_method, _method.Body.Instructions.First());
                 case DefaultStates.MethodEnd:
                     //Before RET
-                    return new MethodState(_method, _method.Body.Instructions.Count - 2);
+                    return new MethodState(_method, _method.Body.Instructions[_method.Body.Instructions.Count - 2]);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
