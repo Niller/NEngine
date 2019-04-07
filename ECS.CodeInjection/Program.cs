@@ -1,6 +1,7 @@
 ﻿#define V2
 
 
+using CodeInjection;
 using CodeInjection.Experimental;
 using Mono.Cecil;
 
@@ -22,12 +23,14 @@ namespace ECS.CodeInjection
                     "G:\\projects\\NEngine\\NEngine\\bin\\Debug\\NEngine.Editor.dll",
                 };
             }
+            InjectionCache.Initialize(args);
 
 #if V2
-            using (var assembly = new Assembly(args[0]))
+            Assembly assembly;
+            using (assembly = new Assembly(args[0]))
             {
-                //var type1 = assembly.AddType("Test.TestClass", TypeAttributes.Class);
-                var type1 = assembly.GetType("ECS.TestContext");
+                var type1 = assembly.AddType("Test.TestClass", TypeAttributes.Class);
+                //var type1 = assembly.GetType("ECS.TestContext");
                 var intType = assembly.ImportType<int>();
 
                 type1.AddField("field1", intType, FieldAttributes.Private);
@@ -41,7 +44,6 @@ namespace ECS.CodeInjection
                 method1State.AddVariable("v1", intType)
                     .MathOperation(MathOperation.Add, method1State.GetArgument(0), method1State.GetArgument(1))
                     .AddVariableSet("v1").ReturnValue(method1State.GetVariable("v1"));
-
 
                 assembly.Save();
             }

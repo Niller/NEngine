@@ -12,6 +12,11 @@ namespace CodeInjection.Experimental
             _moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, new ReaderParameters { ReadWrite = true });
         }
 
+        public Assembly(ModuleDefinition moduleDefinition)
+        {
+            _moduleDefinition = moduleDefinition;
+        }
+
         public Type GetType(string fullname)
         {
             return _moduleDefinition.GetType(fullname).ToWrapper();
@@ -40,6 +45,11 @@ namespace CodeInjection.Experimental
         public void Save()
         {
             _moduleDefinition.Write();
+        }
+
+        public void Save(string filePath)
+        {
+            _moduleDefinition.Write(filePath);
         }
 
         public void Dispose()

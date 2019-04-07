@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{447A56D6-721A-406F-BC00-37542D676D1C}</ProjectGuid>
+    <ProjectGuid>{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeInjection.Experimental</RootNamespace>
-    <AssemblyName>CodeInjection.Experimental</AssemblyName>
+    <RootNamespace>ECS.CodeInjection.Fody</RootNamespace>
+    <AssemblyName>ECS.CodeInjection.Fody</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Tools\ECS.CodeInjection.Fody\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -59,32 +59,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assembly.cs" />
-    <Compile Include="ConstantIntValue.cs" />
-    <Compile Include="MethodState.cs" />
-    <Compile Include="Field.cs" />
-    <Compile Include="Method.cs" />
-    <Compile Include="MethodArgument.cs" />
-    <Compile Include="MethodValue.cs" />
-    <Compile Include="MethodVariable.cs" />
-    <Compile Include="MonoCecilExtensions.cs" />
-    <Compile Include="MonoCecilUtilities.cs" />
-    <Compile Include="NameUtilities.cs" />
-    <Compile Include="ParameterType.cs" />
+    <Compile Include="ModuleWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MathOperation.cs" />
-    <Compile Include="Type.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeInjection.Experimental\CodeInjection.Experimental.csproj">
+      <Project>{447a56d6-721a-406f-bc00-37542d676d1c}</Project>
+      <Name>CodeInjection.Experimental</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <!-- <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)\Tools\ECS.CodeInjection.Fody" />
+    
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)\NuGet" />
+    -->
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\FodyHelpers.4.2.1\build\FodyHelpers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\FodyHelpers.4.2.1\build\FodyHelpers.props'))" />
-    <Error Condition="!Exists('..\packages\FodyHelpers.4.2.1\build\FodyHelpers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\FodyHelpers.4.2.1\build\FodyHelpers.targets'))" />
   </Target>
-  <Import Project="..\packages\FodyHelpers.4.2.1\build\FodyHelpers.targets" Condition="Exists('..\packages\FodyHelpers.4.2.1\build\FodyHelpers.targets')" />
 </Project>

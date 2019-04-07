@@ -16,12 +16,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Core", "ECS.Core\ECS.Core.csproj", "{1ED917B4-7865-4669-8E28-66F08EE1C297}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Editor", "NEngine.Editor\NEngine.Editor.csproj", "{2621FA89-19AA-4952-9728-A36F17F2C61F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789} = {7EAF6F3A-13EC-452F-BA72-8C2D2552F789}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Rendering", "NEngine.Rendering\NEngine.Rendering.csproj", "{0827E44D-F722-40C6-A69A-0E8BE82E2126}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Hardcode.Tests", "ECS.Hardcode.Tests\ECS.Hardcode.Tests.csproj", "{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeInjection.Experimental", "CodeInjection.Experimental\CodeInjection.Experimental.csproj", "{447A56D6-721A-406F-BC00-37542D676D1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.CodeInjection.Fody", "ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.csproj", "{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +74,10 @@ Global
 		{447A56D6-721A-406F-BC00-37542D676D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{447A56D6-721A-406F-BC00-37542D676D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{447A56D6-721A-406F-BC00-37542D676D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
