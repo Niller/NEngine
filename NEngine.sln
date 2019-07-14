@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeInjection.Experimental"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.CodeInjection.Fody", "ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.csproj", "{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Experimental", "ECS.Experimental\ECS.Experimental.csproj", "{4257056A-5D3D-4887-829C-0F80FB109BBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4257056A-5D3D-4887-829C-0F80FB109BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4257056A-5D3D-4887-829C-0F80FB109BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4257056A-5D3D-4887-829C-0F80FB109BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4257056A-5D3D-4887-829C-0F80FB109BBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

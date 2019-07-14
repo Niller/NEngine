@@ -12,14 +12,14 @@ namespace ECS.CodeInjection
         public override void Execute()
         {
             var assembly = new Assembly(ModuleDefinition);
-            var type1 = assembly.AddType("Test.TestClass", TypeAttributes.Class);
-            //var type1 = assembly.GetType("ECS.TestContext");
+            //var type1 = assembly.AddType("Test.TestClass", TypeAttributes.Class);
+            var type1 = assembly.GetType("NEngine.Editor.Editor");
             var intType = assembly.ImportType<int>();
 
             type1.AddField("field1", intType, FieldAttributes.Private);
             type1.AddField("field2", type1, FieldAttributes.Private);
 
-            var method1 = type1.AddMethod("method1", MethodAttributes.Private, intType,
+            var method1 = type1.AddMethod("method1", MethodAttributes.Public, intType,
                 new ParameterType("arg1", intType), new ParameterType("arg2", intType));
 
             var method1State = method1.GetState(Method.DefaultStates.MethodStart);

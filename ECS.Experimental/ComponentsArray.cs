@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ECS
+namespace ECS.Experimental
 {
-    public struct ComponentsList<T> where T : struct, IComponent
+    public interface IComponentsList
     {
-        private readonly Queue<int> _freeIds;
+        void Resize(int newCapacity);
+    }
 
+    public class ComponentsArray<T> : IComponentsList where T : struct
+    {
         private T[] _items;
         private int[] _idMapping;
+
         public int Length
         {
             get;
@@ -21,36 +25,41 @@ namespace ECS
             private set;
         }
 
-        public ref T this[int index] => ref _items[index];
-
-        public ComponentsList(int itemsCapacity, int idCapacity)
+        public ComponentsArray(int itemsCapacity, int idCapacity)
         {
             IdCapacity = idCapacity;
 
             _items = new T[itemsCapacity];
-            _freeIds = new Queue<int>(itemsCapacity);
-
             _idMapping = new int[idCapacity];
+
             Length = 0;
         }
 
-        public void ResizeIds(int newCapacity)
+        public bool GetValue(int id, ref T value)
+        {
+            var index = _idMapping[id];
+
+            if (index < 0)
+            {
+                return false;
+            }
+
+            value = _items[index];
+            return true;
+        }
+
+        public void Resize(int newCapacity)
         {
             IdCapacity = newCapacity;
             Array.Resize(ref _idMapping, IdCapacity);
         }
 
-        public void Add(ref T item, int id)
+        public void Add(int id, ref T item)
         {
             var index = Length;
-            if (_freeIds.Count > 0)
-            {
-                index = _freeIds.Dequeue();
-            }
 
             _items[index] = item;
             _idMapping[id] = index;
-            item.HasValue = true;
 
             Length++;
 
@@ -62,13 +71,21 @@ namespace ECS
 
         public void Remove(int id)
         {
-            _items[_idMapping[id]].HasValue = false;
-            _freeIds.Enqueue(id);
+            var index = _idMapping[id];
+
+            if (index < 0)
+            {
+                return;
+            }
+
+            _items[index] = _items[Length - 1];
+            --Length;
+            _idMapping[id] = -1;
         }
 
         private void ResizeItems()
         {
-            Array.Resize(ref _items, _items.Length*2);
+            Array.Resize(ref _items, _items.Length * 2);
         }
     }
 }
