@@ -4,6 +4,7 @@ using System.Linq;
 using CodeInjection.Experimental;
 using Fody;
 using Mono.Cecil;
+using Type = CodeInjection.Experimental.Type;
 
 namespace ECS.CodeInjection
 {
@@ -13,7 +14,17 @@ namespace ECS.CodeInjection
         {
             var assembly = new Assembly(ModuleDefinition);
             //var type1 = assembly.AddType("Test.TestClass", TypeAttributes.Class);
-            var type1 = assembly.GetType("NEngine.Editor.Editor");
+            Type type1;
+            try
+            {
+                type1 = assembly.GetType("NEngine.Editor.Editor");
+            }
+            catch
+            {
+                Console.WriteLine("Cannot find class NEngine.Editor.Editor");
+                return;
+            }
+
             var intType = assembly.ImportType<int>();
 
             type1.AddField("field1", intType, FieldAttributes.Private);

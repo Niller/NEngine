@@ -160,16 +160,6 @@
             should be removed by Fody after a successful execution
             </summary>
         </member>
-        <member name="T:Fody.ConfigReader">
-            <summary>
-            Helper methods for reading from <see cref="P:Fody.BaseModuleWeaver.Config"/>.
-            </summary>
-        </member>
-        <member name="M:Fody.ConfigReader.ReadBool(System.Xml.Linq.XElement,System.String,System.Boolean)">
-            <summary>
-            Read a bool from an attribute named <paramref name="name"/>.
-            </summary>
-        </member>
         <member name="T:Fody.MessageImportance">
             <summary>
             Abstraction for the MSBuild MessageImportance.
@@ -178,11 +168,7 @@
         <member name="T:Fody.MessageImportanceDefaults">
             <summary>
             Defaults for <see cref="T:Fody.MessageImportance"/> when writing to <see cref="P:Fody.BaseModuleWeaver.LogDebug"/> and <see cref="P:Fody.BaseModuleWeaver.LogInfo"/>.
-            </summary>
-        </member>
-        <member name="T:Fody.CodeBaseLocation">
-            <summary>
-            Uses <see cref="P:System.Reflection.Assembly.CodeBase"/> to derive the current directory.
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
             </summary>
         </member>
         <member name="T:Fody.Ildasm">
@@ -190,14 +176,41 @@
             Decompile assemblies using ildasm.exe.
             </summary>
         </member>
+        <member name="T:Fody.LogMessage">
+            <summary>
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
+            </summary>
+        </member>
         <member name="T:Fody.PeVerifier">
             <summary>
             Verifies assemblies using peverify.exe.
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
+            </summary>
+        </member>
+        <member name="T:Fody.SequencePointMessage">
+            <summary>
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
+            </summary>
+        </member>
+        <member name="T:Fody.TestAssemblyResolver">
+            <summary>
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
+            </summary>
+        </member>
+        <member name="T:Fody.TestResult">
+            <summary>
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
             </summary>
         </member>
         <member name="T:Fody.WeaverTestHelper">
             <summary>
             Uses <see cref="P:System.Reflection.Assembly.CodeBase"/> to derive the current directory.
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
+            </summary>
+        </member>
+        <member name="T:Fody.TypeCache">
+            <summary>
+            Only for test usage. Only for development purposes when building Fody addins. The API may change in minor releases.
             </summary>
         </member>
         <member name="T:Fody.TypeSystem">
