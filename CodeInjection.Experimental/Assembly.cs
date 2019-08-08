@@ -47,9 +47,9 @@ namespace CodeInjection.Experimental
             return Import(typeof(T));
         }
 
-        public Field Import(Field field)
+        public Field Import(Field field, MethodValue source)
         {
-            return _moduleDefinition.ImportReference(field.GetDefinition()).ToWrapper();
+            return _moduleDefinition.ImportReference(field.GetDefinition()).ToWrapper(source);
         }
 
         public Method Import(Method method)

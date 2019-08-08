@@ -38,7 +38,6 @@ namespace CodeInjection.Experimental
             }
 
             _freeStackPosition = method.Body.MaxStackSize;
-
         }
 
         public MethodArgument GetArgument(int index)
@@ -92,22 +91,13 @@ namespace CodeInjection.Experimental
             return this;
         }
 
-        public MethodState Call(Method method, params MethodValue[] parameters)
-        {
-            foreach (var methodValue in parameters)
-            {
-                Insert(methodValue.ToStack());
-            }
-
-            Insert(method.Call());
-
-            return this;
-        }
-
         public MethodState Call(Method method, MethodValue returnValue, params MethodValue[] parameters)
         {
             Call(method, parameters);
-            Insert(returnValue.FromStack());
+            if (returnValue != null)
+            {
+                Insert(returnValue.FromStack());
+            }
             return this;
         }
 
@@ -145,6 +135,26 @@ namespace CodeInjection.Experimental
         public MethodState EndIf(MethodValue condition)
         {
             throw new NotImplementedException();
+        }
+
+        private MethodState Call(Method method, params MethodValue[] parameters)
+        {
+            foreach (var methodValue in parameters)
+            {
+                Insert(methodValue.ToStack());
+            }
+
+            Insert(method.Call());
+
+            return this;
+        }
+
+        private void Insert(IEnumerable<Instruction> instructions)
+        {
+            foreach (var instruction in instructions)
+            {
+                Insert(instruction);
+            }
         }
 
         private void Insert(Instruction instruction)

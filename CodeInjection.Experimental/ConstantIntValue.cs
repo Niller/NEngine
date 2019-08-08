@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
@@ -12,12 +13,12 @@ namespace CodeInjection.Experimental
             _value = value;
         }
 
-        internal override Instruction ToStack()
+        internal override IEnumerable<Instruction> ToStack()
         {
-            return Instruction.Create(OpCodes.Stloc, _value);
+            yield return Instruction.Create(OpCodes.Stloc, _value);
         }
 
-        internal override Instruction FromStack()
+        internal override IEnumerable<Instruction> FromStack()
         {
             throw new NotSupportedException();
         }

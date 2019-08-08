@@ -27,8 +27,8 @@ namespace ECS.CodeInjection
 
             var intType = assembly.Import<int>();
 
-            type1.AddField("field1", intType, FieldAttributes.Private);
-            type1.AddField("field2", type1, FieldAttributes.Private);
+            type1.AddField("field1", intType, FieldAttributes.Private, new This(type1));
+            type1.AddField("field2", type1, FieldAttributes.Private, new This(type1));
 
             var method1 = type1.AddMethod("method1", MethodAttributes.Public, intType,
                 new ParameterType("arg1", intType), new ParameterType("arg2", intType));

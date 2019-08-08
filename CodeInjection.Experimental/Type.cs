@@ -32,24 +32,24 @@ namespace CodeInjection.Experimental
             return _reference;
         }
 
-        public Field GetField(string name)
+        public Field GetField(string name, MethodValue source)
         {
             var field = _definition.Fields.FirstOrDefault(f => f.Name == name);
-            return field?.ToWrapper();
+            return field?.ToWrapper(source);
         }
 
-        public Field AddField(string name, Type type, FieldAttributes attributes)
+        public Field AddField(string name, Type type, FieldAttributes attributes, MethodValue source)
         {
             var newField = new FieldDefinition(name, attributes, type.GetReference());
             _definition.Fields.Add(newField);
-            return newField.ToWrapper();
+            return newField.ToWrapper(source);
         }
 
-        public Field AddField(string name, TypeReference type, FieldAttributes attributes)
+        public Field AddField(string name, TypeReference type, FieldAttributes attributes, MethodValue source)
         {
             var newField = new FieldDefinition(name, attributes, type);
             _definition.Fields.Add(newField);
-            return newField.ToWrapper();
+            return newField.ToWrapper(source);
         }
 
         public bool HasAttribute(Type type)

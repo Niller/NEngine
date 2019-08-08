@@ -1,4 +1,5 @@
-﻿using Mono.Cecil;
+﻿using System.Collections.Generic;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
@@ -7,11 +8,13 @@ namespace CodeInjection.Experimental
     {
         private readonly FieldDefinition _definition;
         private readonly FieldReference _reference;
+        private readonly MethodValue _source;
 
-        public Field(FieldReference reference) : base(reference.Name, 0, reference.FieldType.ToWrapper())
+        public Field(FieldReference reference, MethodValue source) : base(reference.Name, 0, reference.FieldType.ToWrapper())
         {
             _definition = reference.Resolve();
             _reference = reference;
+            _source = source;
         }
 
         public FieldDefinition GetDefinition()
@@ -24,14 +27,18 @@ namespace CodeInjection.Experimental
             return _reference;
         }
 
-        internal override Instruction ToStack()
+        internal override IEnumerable<Instruction> ToStack()
         {
-            return Instruction.Create(OpCodes.Stfld, _definition);
+            foreach (var instruction in _source.ToStack())
+            {
+                yield return instruction;
+            }
+            yield return Instruction.Create(OpCodes.Ldfld, _definition);
         }
 
-        internal override Instruction FromStack()
+        internal override IEnumerable<Instruction> FromStack()
         {
-            return Instruction.Create(OpCodes.Ldfld, _definition);
+            yield return Instruction.Create(OpCodes.Stfld, _definition);
         }
     }
 }

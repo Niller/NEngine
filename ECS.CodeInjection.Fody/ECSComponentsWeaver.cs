@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeInjection.Experimental;
 using ECS.Experimental;
 using Fody;
-using Logger;
 using Mono.Cecil;
-using Type = CodeInjection.Experimental.Type;
 
 // ReSharper disable AccessToDisposedClosure
 
@@ -31,9 +27,9 @@ namespace ECS.CodeInjection
 
             foreach (var component in components)
             {
-                var contextField = component.AddField(ContextFieldName, contextType, FieldAttributes.Public);
-                var entityIdField = component.AddField(SourceEntityIdFieldName, intType, FieldAttributes.Public);
-                var typeField = component.AddField(TypeFieldName, systemType, FieldAttributes.Public);
+                var contextField = component.AddField(ContextFieldName, contextType, FieldAttributes.Public, new This(component));
+                var entityIdField = component.AddField(SourceEntityIdFieldName, intType, FieldAttributes.Public, new This(component));
+                var typeField = component.AddField(TypeFieldName, systemType, FieldAttributes.Public, new This(component));
 
                 var properties = component.GetProperties()
                     .Where(p => p.HasAttribute(assembly.Import<NotifyPropertyChangedAttribute>()));
@@ -49,11 +45,9 @@ namespace ECS.CodeInjection
                     var setDirtyMethod = assembly.Import(contextType.GetMethod(MarkDirtyMethodName, intType.ToParameterType(), systemType.ToParameterType()));
 
                     var setMethodState = setMethod.GetState(Method.DefaultStates.MethodEnd);
-                    setMethodState.Call(setDirtyMethod, assembly.Import(contextField), entityIdField, typeField);
+                    setMethodState.Call(setDirtyMethod, null, contextField, entityIdField, typeField);
                 }
             }
-
-            //ExceptionLogger.Save();
         }
 
         public override IEnumerable<string> GetAssembliesForScanning()

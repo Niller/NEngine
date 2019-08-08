@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mono.Cecil.Cil;
 
 namespace CodeInjection.Experimental
@@ -27,7 +28,7 @@ namespace CodeInjection.Experimental
             Type = type;
         }
 
-        internal abstract Instruction ToStack();
-        internal abstract Instruction FromStack();
+        internal abstract IEnumerable<Instruction> ToStack();
+        internal abstract IEnumerable<Instruction> FromStack();
     }
 }
