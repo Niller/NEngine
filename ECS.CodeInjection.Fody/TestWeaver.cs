@@ -25,7 +25,7 @@ namespace ECS.CodeInjection
                 return;
             }
 
-            var intType = assembly.ImportType<int>();
+            var intType = assembly.Import<int>();
 
             type1.AddField("field1", intType, FieldAttributes.Private);
             type1.AddField("field2", type1, FieldAttributes.Private);

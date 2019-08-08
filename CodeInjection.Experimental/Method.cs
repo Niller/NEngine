@@ -13,9 +13,10 @@ namespace CodeInjection.Experimental
             MethodEnd,
         }
 
-        private readonly MethodDefinition _method;
+        private readonly MethodDefinition _definition;
+        private readonly MethodReference _reference;
 
-        public string Name => _method.Name;
+        public string Name => _definition.Name;
 
         public Type ReturnType
         {
@@ -27,28 +28,34 @@ namespace CodeInjection.Experimental
             get;
         }
 
-        public Method(MethodDefinition methodDefinition)
+        public Method(MethodReference reference)
         {
-            _method = methodDefinition;
-            ReturnType = methodDefinition.ReturnType.ToWrapper();
+            _definition = reference.Resolve();
+            _reference = reference;
+            ReturnType = _definition.ReturnType.ToWrapper();
 
-            ParameterTypes = new ParameterType[methodDefinition.Parameters.Count];
+            ParameterTypes = new ParameterType[_definition.Parameters.Count];
             var i = 0;
-            foreach (var parameter in methodDefinition.Parameters)
+            foreach (var parameter in _definition.Parameters)
             {
                 ParameterTypes[i++] = new ParameterType(parameter.Name, parameter.ParameterType.ToWrapper(),
                     parameter.Name[0] == '&', parameter.Attributes);
             }
         }
 
-        public Instruction Call()
-        {
-            return Instruction.Create(_method.DeclaringType.IsClass ? OpCodes.Callvirt : OpCodes.Call, _method);
-        }
-
         public MethodDefinition GetDefinition()
         {
-            return _method;
+            return _definition;
+        }
+
+        public MethodReference GetReference()
+        {
+            return _reference;
+        }
+
+        public Instruction Call()
+        {
+            return Instruction.Create(_definition.DeclaringType.IsClass ? OpCodes.Callvirt : OpCodes.Call, _reference);
         }
 
         public MethodState GetState(DefaultStates state)
@@ -56,10 +63,10 @@ namespace CodeInjection.Experimental
             switch (state)
             {
                 case DefaultStates.MethodStart:
-                    return new MethodState(_method, _method.Body.Instructions.First());
+                    return new MethodState(_definition, _definition.Body.Instructions.First());
                 case DefaultStates.MethodEnd:
                     //Before RET
-                    return new MethodState(_method, _method.Body.Instructions[_method.Body.Instructions.Count - 2]);
+                    return new MethodState(_definition, _definition.Body.Instructions[_definition.Body.Instructions.Count - 1]);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }

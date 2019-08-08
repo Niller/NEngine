@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using CodeInjection.Experimental;
 using ECS.Experimental;
 using Fody;
+using Logger;
 using Mono.Cecil;
+using Type = CodeInjection.Experimental.Type;
 
 // ReSharper disable AccessToDisposedClosure
 
@@ -19,11 +23,11 @@ namespace ECS.CodeInjection
         public override void Execute()
         {
             var assembly = new Assembly(ModuleDefinition);
-            var components = assembly.GetAllTypesByAttribute(assembly.ImportType<ComponentAttribute>());
+            var components = assembly.GetAllTypesByAttribute(assembly.Import<ComponentAttribute>());
 
-            var contextType = assembly.ImportType<Context>();
-            var intType = assembly.ImportType<int>();
-            var systemType = assembly.ImportType<Type>();
+            var contextType = assembly.Import<Context>();
+            var intType = assembly.Import<int>();
+            var systemType = assembly.Import<System.Type>();
 
             foreach (var component in components)
             {
@@ -32,7 +36,7 @@ namespace ECS.CodeInjection
                 var typeField = component.AddField(TypeFieldName, systemType, FieldAttributes.Public);
 
                 var properties = component.GetProperties()
-                    .Where(p => p.HasAttribute(assembly.ImportType<NotifyPropertyChangedAttribute>()));
+                    .Where(p => p.HasAttribute(assembly.Import<NotifyPropertyChangedAttribute>()));
 
                 foreach (var property in properties)
                 {
@@ -42,13 +46,14 @@ namespace ECS.CodeInjection
                         continue;
                     }
 
-                    var setDirtyMethod = contextType.GetMethod(MarkDirtyMethodName,
-                        intType.ToParameterType(), intType.ToParameterType(), systemType.ToParameterType());
+                    var setDirtyMethod = assembly.Import(contextType.GetMethod(MarkDirtyMethodName, intType.ToParameterType(), systemType.ToParameterType()));
 
                     var setMethodState = setMethod.GetState(Method.DefaultStates.MethodEnd);
-                    setMethodState.Call(setDirtyMethod, contextField, entityIdField, typeField);
+                    setMethodState.Call(setDirtyMethod, assembly.Import(contextField), entityIdField, typeField);
                 }
             }
+
+            //ExceptionLogger.Save();
         }
 
         public override IEnumerable<string> GetAssembliesForScanning()

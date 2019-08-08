@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using Logger;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -10,46 +11,60 @@ namespace CodeInjection.Experimental
 {
     public class Type
     {
-        private readonly TypeDefinition _type;
+        private readonly TypeDefinition _definition;
+        private readonly TypeReference _reference;
 
-        public string FullName => _type.FullName;
+        public string FullName => _definition.FullName;
 
-        public Type(TypeDefinition t)
+        public Type(TypeReference reference)
         {
-            _type = t;
+            _definition = reference.Resolve();
+            _reference = reference;
         }
 
         internal TypeDefinition GetDefinition()
         {
-            return _type;
+            return _definition;
+        }
+
+        public TypeReference GetReference()
+        {
+            return _reference;
         }
 
         public Field GetField(string name)
         {
-            var field = _type.Fields.FirstOrDefault(f => f.Name == name);
+            var field = _definition.Fields.FirstOrDefault(f => f.Name == name);
             return field?.ToWrapper();
         }
 
         public Field AddField(string name, Type type, FieldAttributes attributes)
         {
-            var newField = new FieldDefinition(name, attributes, type._type);
-            _type.Fields.Add(newField);
+            var newField = new FieldDefinition(name, attributes, type.GetReference());
+            _definition.Fields.Add(newField);
+            return newField.ToWrapper();
+        }
+
+        public Field AddField(string name, TypeReference type, FieldAttributes attributes)
+        {
+            var newField = new FieldDefinition(name, attributes, type);
+            _definition.Fields.Add(newField);
             return newField.ToWrapper();
         }
 
         public bool HasAttribute(Type type)
         {
-            return _type.CustomAttributes.Any(attr => attr.AttributeType.FullName == FullName);
+            return _definition.HasCustomAttributes && _definition.CustomAttributes.Any(attr => attr.AttributeType.FullName == type.FullName);
         }
 
         public IEnumerable<Property> GetProperties()
         {
-            return _type.Properties.Select(p => p.ToWrapper());
+            return _definition.Properties.Select(p => p.ToWrapper());
         }
 
         public Method GetMethod(string name, params ParameterType[] parameters)
         {
-            foreach (var method in _type.Methods)
+            foreach (var method in _definition.Methods)
             {
                 if (method.Name != name)
                 {
@@ -66,7 +81,7 @@ namespace CodeInjection.Experimental
                         continue;
                     }
 
-                    var targetParameter = parameters[index++];
+                    var targetParameter = parameters[index];
                     var targetParameterName = targetParameter.Type.FullName;
                     targetParameterName = targetParameter.ByRef
                         ? "&" + targetParameterName
@@ -77,6 +92,8 @@ namespace CodeInjection.Experimental
                         isMatch = false;
                         break;
                     }
+
+                    index++;
                 }
 
                 if (isMatch)
@@ -104,7 +121,7 @@ namespace CodeInjection.Experimental
             method.Body.Instructions.Add(Instruction.Create(OpCodes.Nop));
             method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
 
-            _type.Methods.Add(method);
+            _definition.Methods.Add(method);
             
             return method.ToWrapper();
         }
@@ -116,7 +133,7 @@ namespace CodeInjection.Experimental
 
         public override int GetHashCode()
         {
-            return _type.FullName.GetHashCode();
+            return _definition.FullName.GetHashCode();
         }
 
         public static bool operator ==(Type type1, Type type2)

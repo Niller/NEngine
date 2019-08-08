@@ -71,6 +71,10 @@
       <Project>{4257056a-5d3d-4887-829c-0f80fb109bbb}</Project>
       <Name>ECS.Experimental</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{624CC7D3-0834-4975-A60D-9DE2233DD4AC}</Project>
+      <Name>Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

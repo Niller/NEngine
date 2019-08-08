@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Logger;
 using Mono.Cecil;
 
 namespace CodeInjection.Experimental
@@ -36,20 +37,30 @@ namespace CodeInjection.Experimental
             }
         }
 
-        public Type ImportType(System.Type type)
+        public Type Import(System.Type type)
         {
             return _moduleDefinition.ImportReference(type).ToWrapper();
         }
 
-        public Type ImportType<T>()
+        public Type Import<T>()
         {
-            return ImportType(typeof(T));
+            return Import(typeof(T));
+        }
+
+        public Field Import(Field field)
+        {
+            return _moduleDefinition.ImportReference(field.GetDefinition()).ToWrapper();
+        }
+
+        public Method Import(Method method)
+        {
+            return _moduleDefinition.ImportReference(method.GetDefinition()).ToWrapper();
         }
 
         public Type AddType(string fullname, TypeAttributes typeAttributes, Type baseType = null)
         {
             var typeDefinition = new TypeDefinition(NameUtilities.GetNamespace(fullname),
-                NameUtilities.GetName(fullname), typeAttributes, baseType == null ? ImportType<object>().GetDefinition() : baseType.GetDefinition());
+                NameUtilities.GetName(fullname), typeAttributes, baseType == null ? Import<object>().GetDefinition() : baseType.GetDefinition());
 
             _moduleDefinition.Types.Add(typeDefinition);
 
