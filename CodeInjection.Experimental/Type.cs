@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -34,6 +35,16 @@ namespace CodeInjection.Experimental
             var newField = new FieldDefinition(name, attributes, type._type);
             _type.Fields.Add(newField);
             return newField.ToWrapper();
+        }
+
+        public bool HasAttribute(Type type)
+        {
+            return _type.CustomAttributes.Any(attr => attr.AttributeType.FullName == FullName);
+        }
+
+        public IEnumerable<Property> GetProperties()
+        {
+            return _type.Properties.Select(p => p.ToWrapper());
         }
 
         public Method GetMethod(string name, params ParameterType[] parameters)
@@ -96,6 +107,11 @@ namespace CodeInjection.Experimental
             _type.Methods.Add(method);
             
             return method.ToWrapper();
+        }
+
+        public ParameterType ToParameterType(string name = "", bool byRef = false, ParameterAttributes attributes = ParameterAttributes.None)
+        {
+            return new ParameterType(name, this, byRef, attributes);
         }
 
         public override int GetHashCode()

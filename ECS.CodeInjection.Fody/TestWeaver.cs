@@ -8,7 +8,7 @@ using Type = CodeInjection.Experimental.Type;
 
 namespace ECS.CodeInjection
 {
-    public class ModuleWeaver : BaseModuleWeaver
+    public class TestWeaver : BaseModuleWeaver
     {
         public override void Execute()
         {

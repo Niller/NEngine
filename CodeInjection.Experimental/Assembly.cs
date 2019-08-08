@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil;
 
 namespace CodeInjection.Experimental
@@ -20,6 +22,18 @@ namespace CodeInjection.Experimental
         public Type GetType(string fullname)
         {
             return _moduleDefinition.GetType(fullname).ToWrapper();
+        }
+
+        public IEnumerable<Type> GetAllTypesByAttribute(Type attributeType)
+        {
+            foreach (var moduleDefinitionType in _moduleDefinition.Types)
+            {
+                var typeWrapper = moduleDefinitionType.ToWrapper();
+                if (typeWrapper.HasAttribute(attributeType))
+                {
+                    yield return moduleDefinitionType.ToWrapper();
+                }
+            }
         }
 
         public Type ImportType(System.Type type)

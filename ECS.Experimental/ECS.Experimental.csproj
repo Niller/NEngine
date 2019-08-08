@@ -44,10 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComponentAttribute.cs" />
     <Compile Include="EntityUtilities.cs" />
     <Compile Include="ComponentsArray.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="NotifyPropertyChangedAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

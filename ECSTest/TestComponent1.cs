@@ -3,6 +3,7 @@ using ECS.Experimental;
 
 namespace ECSTest
 {
+    [Component(typeof(MainContext))]
     public struct TestComponent1
     {
         private Context _context;

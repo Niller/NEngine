@@ -81,10 +81,16 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <WeaverFiles Include="$(SolutionDir)Tools\ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.dll" WeaverClassNames="ModuleWeaver" />
+    <WeaverFiles Include="$(SolutionDir)Tools\ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.dll" WeaverClassNames="TestWeaver" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FodyWeavers.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="..\packages\Fody.5.1.1\build\Fody.targets" Condition="Exists('..\packages\Fody.5.1.1\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -18,5 +18,10 @@ namespace CodeInjection.Experimental
         {
             return new Field(field.Resolve());
         }
+
+        public static Property ToWrapper(this PropertyDefinition property)
+        {
+            return new Property(property.Resolve());
+        }
     }
 }

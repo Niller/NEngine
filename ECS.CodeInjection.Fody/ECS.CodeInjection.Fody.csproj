@@ -58,13 +58,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleWeaver.cs" />
+    <Compile Include="ECSComponentsWeaver.cs" />
+    <Compile Include="TestWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeInjection.Experimental\CodeInjection.Experimental.csproj">
       <Project>{447a56d6-721a-406f-bc00-37542d676d1c}</Project>
       <Name>CodeInjection.Experimental</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ECS.Experimental\ECS.Experimental.csproj">
+      <Project>{4257056a-5d3d-4887-829c-0f80fb109bbb}</Project>
+      <Name>ECS.Experimental</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
