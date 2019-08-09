@@ -2,6 +2,7 @@
 
 namespace ECS.Experimental
 {
+
     [AttributeUsage(AttributeTargets.Struct)]
     public class ComponentAttribute : Attribute
     {

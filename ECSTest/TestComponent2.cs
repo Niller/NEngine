@@ -1,10 +1,27 @@
-﻿using ECS.Experimental;
+﻿using System;
+using ECS.Experimental;
 
 namespace ECSTest
 {
     [Component(typeof(MainContext))]
     public struct TestComponent2
     {
+        /*
+        public Context Context
+        {
+            get;
+            set;
+        }
+
+        public int EntityId
+        {
+            get;
+            set;
+        }
+
+        public Type Type => typeof(TestComponent2);
+        */
+
         public bool Y1;
 
         [NotifyPropertyChanged]

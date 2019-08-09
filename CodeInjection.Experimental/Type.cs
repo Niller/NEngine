@@ -52,14 +52,23 @@ namespace CodeInjection.Experimental
             return newField.ToWrapper(source);
         }
 
+        public Property AddProperty(string name, Type type, PropertyAttributes attributes, MethodValue source)
+        {
+            var newProperty = new PropertyDefinition(name, attributes, type.GetReference());
+            newProperty.GetMethod = AddMethod($"get_{name}", MethodAttributes.Public, type).GetDefinition();
+            newProperty.SetMethod = AddMethod($"set_{name}", MethodAttributes.Public, null, type.ToParameterType()).GetDefinition();
+            _definition.Properties.Add(newProperty);
+            return newProperty.ToWrapper(source);
+        }
+
         public bool HasAttribute(Type type)
         {
             return _definition.HasCustomAttributes && _definition.CustomAttributes.Any(attr => attr.AttributeType.FullName == type.FullName);
         }
 
-        public IEnumerable<Property> GetProperties()
+        public IEnumerable<Property> GetProperties(MethodValue source)
         {
-            return _definition.Properties.Select(p => p.ToWrapper());
+            return _definition.Properties.Select(p => p.ToWrapper(source));
         }
 
         public Method GetMethod(string name, params ParameterType[] parameters)

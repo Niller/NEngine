@@ -49,6 +49,7 @@
     <Compile Include="ComponentsArray.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="IComponent.cs" />
     <Compile Include="NotifyPropertyChangedAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

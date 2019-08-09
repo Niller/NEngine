@@ -3,12 +3,14 @@ using ECS.Experimental;
 
 namespace ECSTest
 {
-    [Component(typeof(MainContext))]
+    //[Component(typeof(MainContext))]
     public struct TestComponent1
     {
         private Context _context;
         private int _sourceEntityId;
         private Type _type;
+
+        public Type Type => typeof(TestComponent2);
 
         private int _x;
         public int X
@@ -17,7 +19,7 @@ namespace ECSTest
             set
             {
                 _x = value;
-                _context.MarkComponentDirty(_sourceEntityId, _type);
+                _context.MarkComponentDirty(_sourceEntityId, typeof(TestComponent1));
             }
         }
     }

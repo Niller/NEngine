@@ -31,7 +31,7 @@ namespace ECS.CodeInjection
                 var entityIdField = component.AddField(SourceEntityIdFieldName, intType, FieldAttributes.Public, new This(component));
                 var typeField = component.AddField(TypeFieldName, systemType, FieldAttributes.Public, new This(component));
 
-                var properties = component.GetProperties()
+                var properties = component.GetProperties(new This(component))
                     .Where(p => p.HasAttribute(assembly.Import<NotifyPropertyChangedAttribute>()));
 
                 foreach (var property in properties)
@@ -43,6 +43,7 @@ namespace ECS.CodeInjection
                     }
 
                     var setDirtyMethod = assembly.Import(contextType.GetMethod(MarkDirtyMethodName, intType.ToParameterType(), systemType.ToParameterType()));
+                    
 
                     var setMethodState = setMethod.GetState(Method.DefaultStates.MethodEnd);
                     setMethodState.Call(setDirtyMethod, null, contextField, entityIdField, typeField);

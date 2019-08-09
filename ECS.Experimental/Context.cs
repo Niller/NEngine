@@ -84,5 +84,15 @@ namespace ECS.Experimental
             entity = result;
             return true;
         }
+
+        protected virtual void UpdateComponentInfo(ref Entity entity)
+        {
+            
+        }
+
+        protected virtual void UpdateComponentInfo1(ref Entity entity)
+        {
+
+        }
     }
 }

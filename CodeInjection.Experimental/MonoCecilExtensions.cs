@@ -19,9 +19,9 @@ namespace CodeInjection.Experimental
             return new Field(field, source);
         }
 
-        public static Property ToWrapper(this PropertyDefinition property)
+        public static Property ToWrapper(this PropertyDefinition property, MethodValue source)
         {
-            return new Property(property);
+            return new Property(property, source);
         }
     }
 }
