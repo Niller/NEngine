@@ -58,7 +58,6 @@
     <Compile Include="Contexts\MainContext.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="EditorContext.cs" />
-    <Compile Include="NEngineECSManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services.cs" />
     <Compile Include="Systems\PermanentRotateCubeSystem.cs" />
@@ -66,9 +65,9 @@
     <Compile Include="Systems\TestSceneInitializeSystem.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ECS.Core\ECS.Core.csproj">
-      <Project>{1ED917B4-7865-4669-8E28-66F08EE1C297}</Project>
-      <Name>ECS.Core</Name>
+    <ProjectReference Include="..\ECS.Experimental\ECS.Experimental.csproj">
+      <Project>{4257056A-5D3D-4887-829C-0F80FB109BBB}</Project>
+      <Name>ECS.Experimental</Name>
     </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{1A950A35-ED0D-4EDB-BF78-49F0256C485A}</Project>
@@ -81,7 +80,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <WeaverFiles Include="$(SolutionDir)Tools\ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.dll" WeaverClassNames="TestWeaver" />
+    <WeaverFiles Include="$(SolutionDir)Tools\ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.dll" WeaverClassNames="ECSComponentsWeaver" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xsd">

@@ -14,6 +14,7 @@ namespace ECS.Experimental
             iComponent.SetEntityId(entity.Id);
             iComponent.SetType(typeof(T));
 
+            entity.CurrentContext.MarkComponentDirty(entity.Id, typeof(T));
             componentArray.Add(entity.Id, ref component);
         }
 
@@ -30,14 +31,20 @@ namespace ECS.Experimental
             component = (T) iComponent;
 
             componentArray.Add(entity.Id, ref component);
-
-            return ref componentArray.GetValueUnsafe(entity.Id);
+            entity.CurrentContext.MarkComponentDirty(entity.Id, typeof(T));
+            return ref componentArray.GetValue(entity.Id);
         }
 
-        public static bool GetComponent<T>(this in Entity entity, ref T component) where T : struct
+        public static bool TryGetComponent<T>(this in Entity entity, ref T component) where T : struct
         {
             var componentArray = entity.CurrentContext.GetComponentsArray<T>();
-            return componentArray.GetValue(entity.Id, ref component);
+            return componentArray.TryGetValue(entity.Id, ref component);
+        }
+
+        public static ref T GetComponent<T>(this in Entity entity) where T : struct
+        {
+            var componentArray = entity.CurrentContext.GetComponentsArray<T>();
+            return ref componentArray.GetValue(entity.Id);
         }
 
         public static void RemoveComponent<T>(this in Entity entity) where T : struct

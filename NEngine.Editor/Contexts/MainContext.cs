@@ -1,9 +1,10 @@
 ﻿using ECS;
+using ECS.Experimental;
 
 namespace NEngine.Editor.Contexts
 {
     
-    public class MainContext : BaseContext
+    public class MainContext : Context
     {
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using ECS;
+using ECS.Experimental;
 using Math.Vectors;
 using NEngine.Editor.Components;
 using NEngine.Editor.Contexts;
@@ -12,9 +13,10 @@ namespace NEngine.Editor.Systems
         public void Execute()
         {
             var context = Services.ECS.GetContext<MainContext>();
-            var meshEntity = context.AddEntity();
+            var meshEntity = context.CreateEntity();
 
-            meshEntity.AddComponent(new TransformComponent(Vector3.One));
+            var transform = new TransformComponent(Vector3.One);
+            meshEntity.AddComponent(ref transform);
 
             var mesh = new Mesh("Cube", 8, 12)
             {
@@ -45,12 +47,13 @@ namespace NEngine.Editor.Systems
                     [11] = new Triangle {A = 4, B = 6, C = 7}
                 }
             };
-            meshEntity.AddComponent(new MeshRendererComponent(mesh));
+            var meshRenderer = new MeshRendererComponent(mesh);
+            meshEntity.AddComponent(ref meshRenderer);
 
-            var cameraEntity = context.AddEntity();
+            var cameraEntity = context.CreateEntity();
 
-            cameraEntity.AddComponent(new CameraComponent());
-            cameraEntity.AddComponent(new MainCameraComponent());
+            cameraEntity.AddComponent<CameraComponent>();
+            cameraEntity.AddComponent<MainCameraComponent>();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace ECS.Experimental
             _freeIds.Enqueue(id);
         }
 
-        public bool GetEntity(int id, ref Entity entity)
+        public bool TryGetEntity(int id, ref Entity entity)
         {
             if (id >= _entitiesCount)
             {
@@ -83,6 +83,36 @@ namespace ECS.Experimental
 
             entity = result;
             return true;
+        }
+
+        public ref Entity GetEntity(int id)
+        {
+            return ref _entities[id];
+        }
+
+        public bool TryGetEntity<T>(ref Entity entity) where T : struct
+        {
+            var componentArray = GetComponentsArray<T>();
+
+            var entityId = 0;
+            if (!componentArray.TryGetFirstEntity(ref entityId))
+            {
+                return false;
+            }
+
+            entity = _entities[entityId];
+            return true;
+        }
+
+        public ref Entity GetEntity<T>() where T : struct
+        {
+            return ref _entities[GetComponentsArray<T>().GetFirstEntity()];
+        }
+
+        public int[] GetAllEntities<T>() where T : struct
+        {
+            var componentArray = GetComponentsArray<T>();
+            return componentArray.GetEntityIds();
         }
 
         protected virtual void UpdateComponentInfo(ref Entity entity)

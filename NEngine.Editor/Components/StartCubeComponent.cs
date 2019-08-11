@@ -1,15 +1,12 @@
 ﻿using ECS;
+using ECS.Experimental;
 using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Components
 {
     [Component(typeof(MainContext))]
-    public struct StartCubeComponent : IComponent
+    public struct StartCubeComponent
     {
-        public bool HasValue
-        {
-            get;
-            set;
-        }
+
     }
 }

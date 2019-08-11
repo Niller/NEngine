@@ -15,7 +15,7 @@ namespace ECSTest
             var entity = context.CreateEntity();
             ref var testComponent2 = ref entity.AddComponent<TestComponent2>();
             testComponent2.Y2 = true;
-            entity.GetComponent(ref testComponent2);
+            entity.TryGetComponent(ref testComponent2);
             Console.WriteLine(testComponent2.Y2);
             Console.ReadKey();
         }

@@ -1,24 +1,18 @@
 ﻿using ECS;
+using ECS.Experimental;
 using Math.Vectors;
 using NEngine.Editor.Contexts;
 
 namespace NEngine.Editor.Components
 {
     [Component(typeof(MainContext))]
-    public struct TransformComponent : IComponent
+    public struct TransformComponent
     {
-        public bool HasValue
-        {
-            get;
-            set;
-        }
-
         public TransformComponent(Vector3 position, Vector3 rotation, Vector3 scale)
         {
             Position = position;
             Rotation = rotation;
             Scale = scale;
-            HasValue = true;
         }
 
         public TransformComponent(Vector3 scale)
@@ -26,7 +20,6 @@ namespace NEngine.Editor.Components
             Position = Vector3.Zero;
             Rotation = Vector3.Zero;
             Scale = scale;
-            HasValue = true;
         }
 
         public Vector3 Position;

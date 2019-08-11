@@ -68,10 +68,6 @@
     <Compile Include="VectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ECS.Core\ECS.Core.csproj">
-      <Project>{1ED917B4-7865-4669-8E28-66F08EE1C297}</Project>
-      <Name>ECS.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Math\Math.csproj">
       <Project>{1A950A35-ED0D-4EDB-BF78-49F0256C485A}</Project>
       <Name>Math</Name>

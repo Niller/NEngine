@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using ECS;
+using ECS.Experimental;
 using Math.Matrices;
 using Math.Vectors;
 using NEngine.Editor.Components;
@@ -13,24 +14,21 @@ namespace NEngine.Editor.Systems
         public void Execute()
         {
             var context = Services.ECS.GetContext<MainContext>();
-            
-            var mainCameraEntity = context.GetEntity<MainCameraComponent>();
 
-            if (!mainCameraEntity.HasValue)
+            Entity mainCameraEntity = new Entity();
+            if (!context.TryGetEntity<MainCameraComponent>(ref mainCameraEntity))
             {
                 return;
             }
 
-            var cameraComponent = mainCameraEntity.GetComponent<CameraComponent>();
-
-            if (!cameraComponent.HasValue)
+            var cameraComponent = new CameraComponent();
+            if (!mainCameraEntity.TryGetComponent<CameraComponent>(ref cameraComponent))
             {
                 return;
             }
 
             var deviceEntity = context.GetEntity<DeviceComponent>();
-
-            if (!deviceEntity.HasValue)
+            if (!context.TryGetEntity<DeviceComponent>(ref deviceEntity))
             {
                 return;
             }
@@ -45,13 +43,13 @@ namespace NEngine.Editor.Systems
                 (float)deviceComponent.Bmp.PixelWidth / deviceComponent.Bmp.PixelHeight,
                 0.01f, 1.0f);
 
+            var emptyTransformComponent = new TransformComponent();
             foreach (var entityId in context.GetAllEntities<MeshRendererComponent>())
             {
                 var entity = context.GetEntity(entityId);
 
-                var transform = entity.GetComponent<TransformComponent>();
-
-                if (!transform.HasValue)
+                var transform = emptyTransformComponent;
+                if (!entity.TryGetComponent<TransformComponent>(ref transform))
                 {
                     continue;
                 }

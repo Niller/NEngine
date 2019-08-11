@@ -9,12 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Math", "Math\Math.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathTests", "MathTests\MathTests.csproj", "{B2862479-91EC-4565-AB3F-AC55CF69E54E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.CodeInjection", "ECS.CodeInjection\ECS.CodeInjection.csproj", "{42C73813-F045-439C-9C71-536CAD8547D4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeInjection", "CodeInjection\CodeInjection.csproj", "{E9B30D80-224C-4879-BFB5-510FEE2B32CA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Core", "ECS.Core\ECS.Core.csproj", "{1ED917B4-7865-4669-8E28-66F08EE1C297}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Editor", "NEngine.Editor\NEngine.Editor.csproj", "{2621FA89-19AA-4952-9728-A36F17F2C61F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789} = {7EAF6F3A-13EC-452F-BA72-8C2D2552F789}
@@ -37,6 +31,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{624CC7D3-0834-4975-A60D-9DE2233DD4AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Experimental.ConsoleApplication", "ECS.Experimental.ConsoleApplication\ECS.Experimental.ConsoleApplication.csproj", "{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5BB397E0-02B8-4771-92C4-3539E94D4F45} = {5BB397E0-02B8-4771-92C4-3539E94D4F45}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,18 +53,6 @@ Global
 		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2862479-91EC-4565-AB3F-AC55CF69E54E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42C73813-F045-439C-9C71-536CAD8547D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42C73813-F045-439C-9C71-536CAD8547D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42C73813-F045-439C-9C71-536CAD8547D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42C73813-F045-439C-9C71-536CAD8547D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9B30D80-224C-4879-BFB5-510FEE2B32CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9B30D80-224C-4879-BFB5-510FEE2B32CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9B30D80-224C-4879-BFB5-510FEE2B32CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9B30D80-224C-4879-BFB5-510FEE2B32CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1ED917B4-7865-4669-8E28-66F08EE1C297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1ED917B4-7865-4669-8E28-66F08EE1C297}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1ED917B4-7865-4669-8E28-66F08EE1C297}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1ED917B4-7865-4669-8E28-66F08EE1C297}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2621FA89-19AA-4952-9728-A36F17F2C61F}.Release|Any CPU.ActiveCfg = Release|Any CPU

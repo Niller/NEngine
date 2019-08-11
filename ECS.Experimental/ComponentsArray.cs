@@ -3,14 +3,10 @@ using System.Collections.Generic;
 
 namespace ECS.Experimental
 {
-    public interface IComponentsList
-    {
-        void Resize(int newCapacity);
-    }
-
     public class ComponentsArray<T> : IComponentsList where T : struct
     {
         private T[] _items;
+        private int[] _entities;
         private int[] _idMapping;
 
         public int Length
@@ -30,12 +26,13 @@ namespace ECS.Experimental
             IdCapacity = idCapacity;
 
             _items = new T[itemsCapacity];
+            _entities = new int[itemsCapacity];
             _idMapping = new int[idCapacity];
 
             Length = 0;
         }
 
-        public bool GetValue(int id, ref T value)
+        public bool TryGetValue(int id, ref T value)
         {
             var index = _idMapping[id];
 
@@ -48,7 +45,23 @@ namespace ECS.Experimental
             return true;
         }
 
-        public ref T GetValueUnsafe(int id)
+        public bool TryGetFirstEntity(ref int value)
+        {
+            if (Length <= 0)
+            {
+                return false;
+            }
+
+            value = _entities[0];
+            return true;
+        }
+
+        public ref int GetFirstEntity()
+        {
+            return ref _entities[0];
+        }
+
+        public ref T GetValue(int id)
         {
             var index = _idMapping[id];
             return ref _items[index];
@@ -65,6 +78,7 @@ namespace ECS.Experimental
             var index = Length;
 
             _items[index] = item;
+            _entities[index] = id;
             _idMapping[id] = index;
 
             Length++;
@@ -85,13 +99,22 @@ namespace ECS.Experimental
             }
 
             _items[index] = _items[Length - 1];
+            _entities[index] = _entities[Length - 1];
+
             --Length;
             _idMapping[id] = -1;
         }
 
+        public int[] GetEntityIds()
+        {
+            return _entities;
+        }
+
         private void ResizeItems()
         {
-            Array.Resize(ref _items, _items.Length * 2);
+            var newLength = _items.Length * 2;
+            Array.Resize(ref _items, newLength);
+            Array.Resize(ref _entities, newLength);
         }
     }
 }
