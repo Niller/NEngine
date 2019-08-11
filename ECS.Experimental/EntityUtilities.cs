@@ -10,6 +10,7 @@
             var iComponent = (IComponent) component;
             iComponent.SetContext(entity.CurrentContext);
             iComponent.SetEntityId(entity.Id);
+            iComponent.SetType(typeof(T));
 
             componentArray.Add(entity.Id, ref component);
         }

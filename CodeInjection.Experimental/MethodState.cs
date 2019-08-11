@@ -85,6 +85,20 @@ namespace CodeInjection.Experimental
             return this;
         }
 
+        public MethodState AddFieldSet(Field field, MethodValue value = null)
+        {
+            Insert(Instruction.Create(OpCodes.Ldarg_0));
+
+            if (value != null)
+            {
+                Insert(value.ToStack());
+            }
+            
+            Insert(field.FromStack());
+
+            return this;
+        }
+
         public MethodState ReturnValue(MethodValue value)
         {
             Insert(value.ToStack());

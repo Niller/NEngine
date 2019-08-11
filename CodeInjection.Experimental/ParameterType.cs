@@ -34,7 +34,7 @@ namespace CodeInjection.Experimental
 
         public ParameterDefinition ToDefinition()
         {
-            return new ParameterDefinition(Name, Attributes, Type.GetDefinition());
+            return new ParameterDefinition(Name, Attributes, Type.GetReference());
         }
     }
 }

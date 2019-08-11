@@ -122,7 +122,7 @@ namespace CodeInjection.Experimental
 
         public Method AddMethod(string name, MethodAttributes attributes, Type returnType, params ParameterType[] parameters)
         {
-            var method = new MethodDefinition(name, attributes, returnType.GetDefinition());
+            var method = new MethodDefinition(name, attributes, returnType.GetReference());
             foreach (var parameterType in parameters)
             {
                 method.Parameters.Add(parameterType.ToDefinition());
@@ -133,6 +133,11 @@ namespace CodeInjection.Experimental
             _definition.Methods.Add(method);
             
             return method.ToWrapper();
+        }
+
+        public void ImplementInterface(Type interfaceType)
+        {
+            _definition.Interfaces.Add(new InterfaceImplementation(interfaceType.GetReference()));
         }
 
         public ParameterType ToParameterType(string name = "", bool byRef = false, ParameterAttributes attributes = ParameterAttributes.None)

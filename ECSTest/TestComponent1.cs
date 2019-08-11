@@ -22,5 +22,10 @@ namespace ECSTest
                 _context.MarkComponentDirty(_sourceEntityId, typeof(TestComponent1));
             }
         }
+
+        public void SetContext(Context context)
+        {
+            _context = context;
+        }
     }
 }
