@@ -10,6 +10,12 @@ namespace CodeInjection.Experimental
 {
     public static class MonoCecilUtilities
     {
+        public static MethodAttributes GetPublicInterfaceMethodAttributes()
+        {
+            return MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final |
+                   MethodAttributes.NewSlot | MethodAttributes.Virtual;
+        }
+
         /*
         public static Instruction Create(OpCode opcode)
         {

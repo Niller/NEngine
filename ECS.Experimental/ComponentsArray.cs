@@ -48,6 +48,12 @@ namespace ECS.Experimental
             return true;
         }
 
+        public ref T GetValueUnsafe(int id)
+        {
+            var index = _idMapping[id];
+            return ref _items[index];
+        }
+
         public void Resize(int newCapacity)
         {
             IdCapacity = newCapacity;

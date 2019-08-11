@@ -34,9 +34,9 @@ namespace ECS.CodeInjection
                 var entityIdField = component.AddField(SourceEntityIdFieldName, intType, FieldAttributes.Private, new This(component));
                 var typeField = component.AddField(TypeFieldName, systemType, FieldAttributes.Private, new This(component));
 
-                var setContextMethod = component.AddMethod("SetContext", MethodAttributes.Public, voidType, contextType.ToParameterType("context"));
-                var setEntityIdMethod = component.AddMethod("SetEntityId", MethodAttributes.Public, voidType, intType.ToParameterType("entityId"));
-                var setTypeMethod = component.AddMethod("SetType", MethodAttributes.Public, voidType, systemType.ToParameterType("type"));
+                var setContextMethod = component.AddMethod("SetContext", MonoCecilUtilities.GetPublicInterfaceMethodAttributes(), voidType, contextType.ToParameterType("context"));
+                var setEntityIdMethod = component.AddMethod("SetEntityId", MonoCecilUtilities.GetPublicInterfaceMethodAttributes(), voidType, intType.ToParameterType("entityId"));
+                var setTypeMethod = component.AddMethod("SetType", MonoCecilUtilities.GetPublicInterfaceMethodAttributes(), voidType, systemType.ToParameterType("type"));
 
                 var setContextMethodState = setContextMethod.GetState(Method.DefaultStates.MethodStart);
                 setContextMethodState.AddFieldSet(contextField, setContextMethodState.GetArgument(0));

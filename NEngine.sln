@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Experimental", "Experimenta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{624CC7D3-0834-4975-A60D-9DE2233DD4AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Experimental.ConsoleApplication", "ECS.Experimental.ConsoleApplication\ECS.Experimental.ConsoleApplication.csproj", "{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{624CC7D3-0834-4975-A60D-9DE2233DD4AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{624CC7D3-0834-4975-A60D-9DE2233DD4AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{624CC7D3-0834-4975-A60D-9DE2233DD4AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{7EAF6F3A-13EC-452F-BA72-8C2D2552F789} = {B295277B-9843-4A9B-9576-9F39767F9145}
 		{4257056A-5D3D-4887-829C-0F80FB109BBB} = {B295277B-9843-4A9B-9576-9F39767F9145}
 		{5BB397E0-02B8-4771-92C4-3539E94D4F45} = {B295277B-9843-4A9B-9576-9F39767F9145}
+		{B3AF956D-F2BA-4BB3-9EDA-FCC587D63AC0} = {B295277B-9843-4A9B-9576-9F39767F9145}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45A964EB-3586-4D60-A6D1-BCF8C457A3C2}

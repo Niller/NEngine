@@ -4,7 +4,7 @@ using ECS.Experimental;
 namespace ECSTest
 {
     //[Component(typeof(MainContext))]
-    public struct TestComponent1
+    public struct TestComponent1 : IComponent
     {
         private Context _context;
         private int _sourceEntityId;
@@ -26,6 +26,16 @@ namespace ECSTest
         public void SetContext(Context context)
         {
             _context = context;
+        }
+
+        public void SetEntityId(int entityId)
+        {
+            _sourceEntityId = entityId;
+        }
+
+        public void SetType(Type type)
+        {
+            _type = type;
         }
     }
 }
