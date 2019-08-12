@@ -16,22 +16,28 @@ namespace ECS
 
         public T GetContext<T>() where T : Context
         {
-            if (Contexts.TryGetValue(typeof(T), out var context))
-            {
-                return (T)context;
-            }
-            throw new ArgumentException($"Context {typeof(T).FullName} could not be found");
+            return (T) GetContext(typeof(T));
         }
 
-        public void AddFeature(Feature feature)
+        public Context GetContext(Type type) 
         {
-            var name = feature.Name;
+            if (Contexts.TryGetValue(type, out var context))
+            {
+                return context;
+            }
+            throw new ArgumentException($"Context {type.FullName} could not be found");
+        }
+
+        public Feature AddFeature(string name)
+        {
+            var feature = new Feature(name, this);
             if (_features.ContainsKey(name))
             {
                 throw new ArgumentException($"Feature with name {name} already exists");
             }
 
             _features.Add(name, feature);
+            return feature;
         }
 
         public Feature GetFeature(string featureName)
@@ -63,6 +69,11 @@ namespace ECS
             foreach (var feature in _features.Values)
             {
                 feature.Execute();
+            }
+
+            foreach (var context in Contexts)
+            {
+                context.Value.ClearChanges();
             }
         }
     }

@@ -69,9 +69,11 @@
     <Compile Include="IComponentsList.cs" />
     <Compile Include="IExecuteSystem.cs" />
     <Compile Include="IInitializeSystem.cs" />
+    <Compile Include="IReactiveSystem.cs" />
     <Compile Include="ISystem.cs" />
     <Compile Include="NotifyPropertyChangedAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReactiveSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

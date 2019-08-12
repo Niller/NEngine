@@ -16,6 +16,7 @@ namespace ECS.Experimental
         private Entity[] _entities = new Entity[BaseEntityCount];
 
         internal Dictionary<Type, IComponentsList> ComponentsArrays = new Dictionary<Type, IComponentsList>();
+        internal Dictionary<Type, List<int>> Changes = new Dictionary<Type, List<int>>();
 
         public ComponentsArray<T> GetComponentsArray<T>() where T : struct 
         {
@@ -32,7 +33,20 @@ namespace ECS.Experimental
 
         public void MarkComponentDirty(int entityId, Type type)
         {
+            if (!Changes.TryGetValue(type, out var list))
+            {
+                Changes[type] = list = new List<int>(BaseEntityCount);
+            }
 
+            list.Add(entityId);
+        }
+
+        public void ClearChanges()
+        {
+            foreach (var change in Changes)
+            {
+                change.Value.Clear();
+            }
         }
 
         public Entity CreateEntity()

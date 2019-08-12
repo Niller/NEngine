@@ -7,17 +7,13 @@ namespace NEngine.Editor
     {
         public void Initialize()
         {
-            var feature = new Feature("Rendering");
+            var feature = Services.ECS.AddFeature("Rendering");
+            feature.AddSystem<RenderInitializeSystem>();
             feature.AddSystem<RenderSystem>();
 
-            Services.ECS.AddFeature(feature);
-
-            feature = new Feature("Editor");
-            feature.AddSystem<RenderInitializeSystem>();
+            feature = Services.ECS.AddFeature("Editor");
             feature.AddSystem<TestSceneInitializeSystem>();
             feature.AddSystem<PermanentRotateCubeSystem>();
-
-            Services.ECS.AddFeature(feature);
         }
     }
 }

@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Editor", "NEngine.E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEngine.Rendering", "NEngine.Rendering\NEngine.Rendering.csproj", "{0827E44D-F722-40C6-A69A-0E8BE82E2126}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.Hardcode.Tests", "ECS.Hardcode.Tests\ECS.Hardcode.Tests.csproj", "{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeInjection.Experimental", "CodeInjection.Experimental\CodeInjection.Experimental.csproj", "{447A56D6-721A-406F-BC00-37542D676D1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECS.CodeInjection.Fody", "ECS.CodeInjection.Fody\ECS.CodeInjection.Fody.csproj", "{7EAF6F3A-13EC-452F-BA72-8C2D2552F789}"
@@ -61,10 +59,6 @@ Global
 		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0827E44D-F722-40C6-A69A-0E8BE82E2126}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18ABA954-CFA8-4861-92CC-20A15AE3FF0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{447A56D6-721A-406F-BC00-37542D676D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{447A56D6-721A-406F-BC00-37542D676D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{447A56D6-721A-406F-BC00-37542D676D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU

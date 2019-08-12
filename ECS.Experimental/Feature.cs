@@ -19,10 +19,13 @@ namespace ECS
         private readonly List<IExecuteSystem> _executeSystems = new List<IExecuteSystem>();
         private readonly List<ICleanupSystem> _cleanupSystems = new List<ICleanupSystem>();
         private readonly List<IInitializeSystem> _initializeSystems = new List<IInitializeSystem>();
+        private readonly List<IReactiveSystem> _reactiveSystems = new List<IReactiveSystem>();
+        private readonly ECSManager _ecsManager;
 
-        public Feature(string name)
+        internal Feature(string name, ECSManager ecsManager)
         {
             Name = name;
+            _ecsManager = ecsManager;
         }
 
         public void AddSystem<T>() where T : ISystem, new()
@@ -50,6 +53,12 @@ namespace ECS
                 return;
             }
 
+            if (system is IReactiveSystem reactiveSystem)
+            {
+                _reactiveSystems.Add(reactiveSystem);
+                return;
+            }
+
             throw new NotImplementedException();
         }
 
@@ -70,6 +79,12 @@ namespace ECS
             if (system is ICleanupSystem cleanupSystem)
             {
                 _cleanupSystems.Remove(cleanupSystem);
+                return;
+            }
+
+            if (system is IReactiveSystem reactiveSystem)
+            {
+                _reactiveSystems.Remove(reactiveSystem);
                 return;
             }
 
@@ -96,6 +111,15 @@ namespace ECS
             foreach (var system in _executeSystems)
             {
                 system.Execute();
+            }
+
+            foreach (var system in _reactiveSystems)
+            {
+                var context = _ecsManager.GetContext(system.ContextType);
+                if (context.Changes.TryGetValue(system.SubscribeType, out var list))
+                {
+                    system.Execute(list);
+                }
             }
 
             foreach (var system in _cleanupSystems)
