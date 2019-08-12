@@ -27,7 +27,7 @@ namespace NEngine.Editor.Systems
                 return;
             }
 
-            var deviceEntity = context.GetEntity<DeviceComponent>();
+            var deviceEntity = new Entity();
             if (!context.TryGetEntity<DeviceComponent>(ref deviceEntity))
             {
                 return;
@@ -166,8 +166,8 @@ namespace NEngine.Editor.Systems
         {
             unsafe
             {
-                byte* backBuffer = (byte*)deviceComponent.BackBuffer[0];
-                for (int i = 0; i < deviceComponent.BackBuffer.Length; i++)
+                byte* backBuffer = (byte*)deviceComponent.Bmp.BackBuffer;
+                for (int i = 0, len = deviceComponent.BackBuffer.Length; i < len; ++i)
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     backBuffer[i] = deviceComponent.BackBuffer[i];

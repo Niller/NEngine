@@ -52,7 +52,8 @@ namespace NEngine.Editor.Systems
 
             var cameraEntity = context.CreateEntity();
 
-            cameraEntity.AddComponent<CameraComponent>();
+            var cameraComponent = new CameraComponent(new Vector3(0, 0, 10.0f), Vector3.Zero);
+            cameraEntity.AddComponent(ref cameraComponent);
             cameraEntity.AddComponent<MainCameraComponent>();
         }
     }
