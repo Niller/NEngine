@@ -16,7 +16,7 @@ namespace NEngine.Editor.Systems
             {
                 ref var entity = ref context.GetEntity(entityId);
                 ref var transform = ref entity.GetComponent<TransformComponent>();
-                transform.Rotation = new Vector3(transform.Rotation.X + 0.01f, transform.Rotation.Y + 0.01f, transform.Rotation.Z);
+                transform.Rotation = new Vector3(transform.Rotation.X + 0.001f, transform.Rotation.Y + 0.001f, transform.Rotation.Z);
             }
         }
     }

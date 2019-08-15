@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using ECS;
+using ECS.Experimental;
 using Math.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,17 +12,14 @@ namespace MathTests
     [TestClass]
     public class ListsTest
     {
-        private struct TestStruct : IComponent
+        private struct TestStruct
         {
-            public bool HasValue { get; set; }
-
             public TestStruct(bool delete)
             {
                 Delete = delete;
                 V1 = Vector3.Zero;
                 V2 = Vector3.Zero;
                 V3 = Vector3.Zero;
-                HasValue = false;
             }
 
             public bool Delete;
@@ -98,16 +97,16 @@ namespace MathTests
         {
             var sw = new Stopwatch();
 
-            ComponentsList<TestStruct> structs;
+            ComponentsArray<TestStruct> structs;
 
             sw.Restart();
             {
-                structs = new ComponentsList<TestStruct>(32, 100000);
+                structs = new ComponentsArray<TestStruct>(32, 100000);
 
                 for (int i = 0; i < 100000; ++i)
                 {
                     var x = new TestStruct(i % 3 == 0);
-                    structs.Add(ref x, i);
+                    structs.Add(i, ref x);
                 }
 
 
@@ -120,11 +119,7 @@ namespace MathTests
             {
                 for (int i = 0, ilen = structs.Length; i < ilen; ++i)
                 {
-                    var x = structs[i];
-                    if (x.HasValue)
-                    {
-
-                    }
+                    var x = structs.GetValue(i);
                 }
             }
             sw.Stop();
@@ -133,10 +128,10 @@ namespace MathTests
 
             sw.Restart();
             {
+                var x = new TestStruct();
                 for (int i = 0, ilen = structs.Length; i < ilen; ++i)
                 {
-                    var x = structs[i];
-                    if (x.HasValue)
+                    if (structs.TryGetValue(i, ref x))
                     {
                         if (x.Delete)
                         {
@@ -153,11 +148,7 @@ namespace MathTests
             {
                 for (int i = 0, ilen = structs.Length; i < ilen; ++i)
                 {
-                    var x = structs[i];
-                    if (x.HasValue)
-                    {
-
-                    }
+                    var x = structs.GetValue(i);
                 }
             }
             sw.Stop();

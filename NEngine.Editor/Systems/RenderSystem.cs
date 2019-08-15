@@ -49,7 +49,7 @@ namespace NEngine.Editor.Systems
                 var entity = context.GetEntity(entityId);
 
                 var transform = emptyTransformComponent;
-                if (!entity.TryGetComponent<TransformComponent>(ref transform))
+                if (!entity.TryGetComponent(ref transform))
                 {
                     continue;
                 }
@@ -96,8 +96,8 @@ namespace NEngine.Editor.Systems
             // The transformed coordinates will be based on coordinate system
             // starting on the center of the screen. But drawing on screen normally starts
             // from top left. We then need to transform them again to have x:0, y:0 on top left.
-            var x = point.X * (deviceComponent.Bmp.PixelWidth / 8f) + deviceComponent.Bmp.PixelWidth / 2.0f;
-            var y = -point.Y * (deviceComponent.Bmp.PixelHeight / 8f) + deviceComponent.Bmp.PixelHeight / 2.0f;
+            var x = point.X * deviceComponent.Bmp.PixelWidth + deviceComponent.Bmp.PixelWidth / 2.0f;
+            var y = -point.Y * deviceComponent.Bmp.PixelHeight + deviceComponent.Bmp.PixelHeight / 2.0f;
             return (new Vector2(x, y));
         }
 

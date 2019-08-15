@@ -39,12 +39,11 @@ namespace Math.Vectors
 
         public Vector3 TransformCoordinate(Matrix4X4 transformMatrix)
         {
-            var vectorMatrix = new Matrix(4, 1, new[]
-            {
-                X, Y, Z, 1f
-            });
-            var resultMatrix = transformMatrix.GetMatrix() * vectorMatrix;
-            return new Vector3(resultMatrix.GetValue(0, 0), resultMatrix.GetValue(1, 0), resultMatrix.GetValue(2, 0));
+            var vectorMatrix = new Matrix(1, 4, X, Y, Z, 1f);
+
+            var resultMatrix =  vectorMatrix * transformMatrix.GetMatrix();
+            var w = resultMatrix.GetValue(0, 3);
+            return new Vector3(resultMatrix.GetValue(0, 0) / w, resultMatrix.GetValue(0, 1) / w, resultMatrix.GetValue(0, 2) / w);
         }
 
         public float Dot(Vector3 v)

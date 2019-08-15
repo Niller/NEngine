@@ -15,7 +15,7 @@ namespace NEngine.Editor.Systems
             var context = Services.ECS.GetContext<MainContext>();
             var meshEntity = context.CreateEntity();
 
-            var transform = new TransformComponent(Vector3.One);
+            var transform = new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, Vector3.One);
             meshEntity.AddComponent(ref transform);
 
             var mesh = new Mesh("Cube", 8, 12)

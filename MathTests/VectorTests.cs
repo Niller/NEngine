@@ -1,6 +1,12 @@
-﻿using Math.Matrices;
+﻿using System;
+using System.Diagnostics;
+using Math.Matrices;
 using Math.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpDX;
+using Matrix = SharpDX.Matrix;
+using Vector2 = Math.Vectors.Vector2;
+using Vector3 = Math.Vectors.Vector3;
 
 namespace MathTests
 {
@@ -47,13 +53,20 @@ namespace MathTests
                 1f, 2f, 3f, 4f,
                 5f, 6f, 7f, 8f,
                 9f, 10f, 11f, 12f,
-                13f, 14f, 15f, 16f
+                0f, 0f, 0f, 1f
             };
             var matrix1 = new Matrix4X4(m);
 
             var result = vector3.TransformCoordinate(matrix1);
 
-            Assert.AreEqual(new Vector3(18, 46, 74), result);
+            var sharpDxResult = SharpDX.Vector3.TransformCoordinate(new SharpDX.Vector3(1, 2, 3), new Matrix(1f, 2f, 3f, 4f,
+                5f, 6f, 7f, 8f,
+                9f, 10f, 11f, 12f,
+                0f, 0f, 0f, 1f));
+
+            Debug.WriteLine(result);
+            Debug.WriteLine(sharpDxResult);
+            CompareDxVectorAndNEngineVector(sharpDxResult, result);
         }
 
         [TestMethod]
@@ -116,6 +129,13 @@ namespace MathTests
 
             Assert.AreEqual(new Vector(2, 2, 0), vector - vector1);
             Assert.AreEqual(new Vector(-2, -2, 0), vector1 - vector);
+        }
+
+        private void CompareDxVectorAndNEngineVector(SharpDX.Vector3 dxV, Vector3 v)
+        {
+            Assert.AreEqual(true, System.Math.Abs(dxV.X - v.X) < 0.00001f);
+            Assert.AreEqual(true, System.Math.Abs(dxV.Y - v.Y) < 0.00001f);
+            Assert.AreEqual(true, System.Math.Abs(dxV.Z - v.Z) < 0.00001f);
         }
     }
 }
