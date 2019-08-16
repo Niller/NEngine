@@ -54,9 +54,12 @@ namespace CodeInjection.Experimental
 
         public Property AddProperty(string name, Type type, PropertyAttributes attributes, MethodValue source)
         {
-            var newProperty = new PropertyDefinition(name, attributes, type.GetReference());
-            newProperty.GetMethod = AddMethod($"get_{name}", MethodAttributes.Public, type).GetDefinition();
-            newProperty.SetMethod = AddMethod($"set_{name}", MethodAttributes.Public, null, type.ToParameterType()).GetDefinition();
+            var newProperty = new PropertyDefinition(name, attributes, type.GetReference())
+            {
+                GetMethod = AddMethod($"get_{name}", MethodAttributes.Public, type).GetDefinition(),
+                SetMethod = AddMethod($"set_{name}", MethodAttributes.Public, null, type.ToParameterType())
+                    .GetDefinition()
+            };
             _definition.Properties.Add(newProperty);
             return newProperty.ToWrapper(source);
         }
@@ -64,6 +67,12 @@ namespace CodeInjection.Experimental
         public bool HasAttribute(Type type)
         {
             return _definition.HasCustomAttributes && _definition.CustomAttributes.Any(attr => attr.AttributeType.FullName == type.FullName);
+        }
+
+        public Attribute GetAttribute(Type type)
+        {
+            var attribute = _definition.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.FullName == type.FullName);
+            return attribute?.ToWrapper();
         }
 
         public IEnumerable<Property> GetProperties(MethodValue source)

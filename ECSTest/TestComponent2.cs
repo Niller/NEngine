@@ -26,5 +26,12 @@ namespace ECSTest
             get;
             set;
         }
+
+        [EntityIndex, NotifyPropertyChanged]
+        public int Id
+        {
+            get;
+            set;
+        }
     }
 }

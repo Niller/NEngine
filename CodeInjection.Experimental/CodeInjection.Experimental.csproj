@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembly.cs" />
+    <Compile Include="Attribute.cs" />
     <Compile Include="ConstantIntValue.cs" />
     <Compile Include="MethodState.cs" />
     <Compile Include="Field.cs" />

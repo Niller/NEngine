@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Permissions;
 
 namespace ECS.Experimental
 {
@@ -18,6 +21,10 @@ namespace ECS.Experimental
         internal Dictionary<Type, IComponentsList> ComponentsArrays = new Dictionary<Type, IComponentsList>();
         internal Dictionary<Type, List<int>> Changes = new Dictionary<Type, List<int>>();
 
+        // ReSharper disable once CollectionNeverUpdated.Local
+        //TODO Avoid using HashSet
+        private readonly Dictionary<IndexKey, HashSet<int>> _entitiesByIndex = new Dictionary<IndexKey, HashSet<int>>();
+
         public ComponentsArray<T> GetComponentsArray<T>() where T : struct 
         {
             var type = typeof(T);
@@ -29,6 +36,30 @@ namespace ECS.Experimental
             var newArray = new ComponentsArray<T>(10, BaseEntityCount);
             ComponentsArrays[type] = newArray;
             return newArray;
+        }
+
+        public void AddEntityWithIndex(Type componentType, Type indexType, ref Entity entity)
+        {
+            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, indexType), out var entities))
+            {
+                entities.Add(entity.Id);
+            }
+        }
+
+        public void RemoveEntityWithIndex(Type componentType, Type indexType, ref Entity entity)
+        {
+            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, indexType), out var entities))
+            {
+                entities.Remove(entity.Id);
+            }
+        }
+
+        public void UpdateEntityWithIndex(Type componentType, Type indexType, ref Entity entity)
+        {
+            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, indexType), out var entities))
+            {
+                entities.Remove(entity.Id);
+            }
         }
 
         public void MarkComponentDirty(int entityId, Type type)
@@ -129,14 +160,14 @@ namespace ECS.Experimental
             return componentArray.GetEntityIds();
         }
 
-        protected virtual void UpdateComponentInfo(ref Entity entity)
+        public IEnumerable<int> GetEntitiesByIndex<TComponent, TIndexType>(TIndexType indexValue)
         {
-            
-        }
+            if (_entitiesByIndex.TryGetValue(new IndexKey(typeof(TComponent), typeof(TIndexType)), out var entities))
+            {
+                return entities;
+            }
 
-        protected virtual void UpdateComponentInfo1(ref Entity entity)
-        {
-
+            return new int[0];
         }
     }
 }

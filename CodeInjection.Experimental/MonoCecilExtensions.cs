@@ -23,5 +23,10 @@ namespace CodeInjection.Experimental
         {
             return new Property(property, source);
         }
+
+        public static Attribute ToWrapper(this CustomAttribute attribute)
+        {
+            return new Attribute(attribute);
+        }
     }
 }

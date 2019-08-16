@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="ECSManager.cs" />
+    <Compile Include="EntityIndexAttribute.cs" />
     <Compile Include="EntityUtilities.cs" />
     <Compile Include="ComponentsArray.cs" />
     <Compile Include="Context.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="IComponentsList.cs" />
     <Compile Include="IExecuteSystem.cs" />
     <Compile Include="IInitializeSystem.cs" />
+    <Compile Include="IndexKey.cs" />
     <Compile Include="IReactiveSystem.cs" />
     <Compile Include="ISystem.cs" />
     <Compile Include="NotifyPropertyChangedAttribute.cs" />
