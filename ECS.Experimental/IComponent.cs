@@ -7,7 +7,8 @@ namespace ECS.Experimental
         void SetContext(Context context);
         void SetEntityId(int entityId);
         void SetType(Type type);
-        Type GetIndexType();
+        void AddEntityByIndex();
+        void RemoveEntityByIndex();
 
     }
 }

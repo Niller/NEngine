@@ -37,5 +37,15 @@ namespace ECSTest
         {
             _type = type;
         }
+
+        public void AddEntityByIndex()
+        {
+            _context.AddEntityWithIndex(Type, typeof(int), X.GetHashCode(), _sourceEntityId);
+        }
+
+        public void RemoveEntityByIndex()
+        {
+            _context.RemoveEntityWithIndex(Type, typeof(int), X.GetHashCode(), _sourceEntityId);
+        }
     }
 }

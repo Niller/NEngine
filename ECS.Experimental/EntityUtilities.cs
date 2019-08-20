@@ -13,6 +13,8 @@ namespace ECS.Experimental
             iComponent.SetContext(entity.CurrentContext);
             iComponent.SetEntityId(entity.Id);
             iComponent.SetType(typeof(T));
+            iComponent.AddEntityByIndex();
+            component = (T)iComponent;
 
             entity.CurrentContext.MarkComponentDirty(entity.Id, typeof(T));
             componentArray.Add(entity.Id, ref component);
@@ -28,6 +30,7 @@ namespace ECS.Experimental
             iComponent.SetContext(entity.CurrentContext);
             iComponent.SetEntityId(entity.Id);
             iComponent.SetType(typeof(T));
+            iComponent.AddEntityByIndex();
             component = (T) iComponent;
 
             componentArray.Add(entity.Id, ref component);
@@ -50,6 +53,11 @@ namespace ECS.Experimental
         public static void RemoveComponent<T>(this in Entity entity) where T : struct
         {
             var componentArray = entity.CurrentContext.GetComponentsArray<T>();
+
+            //TODO: Avoid casting to interface due to boxing
+            var component = (IComponent) componentArray.GetValue(entity.Id);
+            component.RemoveEntityByIndex();
+
             componentArray.Remove(entity.Id);
             entity.CurrentContext.MarkComponentDirty(entity.Id, typeof(T));
         }

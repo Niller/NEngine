@@ -67,6 +67,9 @@ namespace ECS.CodeInjection
                     setMethodState.Call(setDirtyMethod, null, contextField, entityIdField, typeField);
                 }
             }
+
+            var indexWeaver = new ECSIndexWeaver();
+            indexWeaver.Execute(ModuleDefinition);
         }
 
         public override IEnumerable<string> GetAssembliesForScanning()
