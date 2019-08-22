@@ -38,17 +38,17 @@ namespace ECS.Experimental
             return newArray;
         }
 
-        public void AddEntityWithIndex(Type componentType, Type indexType, int valueHashCode, int entityId)
+        public void AddEntityWithIndex(Type componentType, int valueHashCode, int entityId)
         {
-            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, indexType, valueHashCode), out var entities))
+            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, valueHashCode), out var entities))
             {
                 entities.Add(entityId);
             }
         }
 
-        public void RemoveEntityWithIndex(Type componentType, Type indexType, int valueHashCode, int entityId)
+        public void RemoveEntityWithIndex(Type componentType, int valueHashCode, int entityId)
         {
-            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, indexType, valueHashCode), out var entities))
+            if (_entitiesByIndex.TryGetValue(new IndexKey(componentType, valueHashCode), out var entities))
             {
                 entities.Remove(entityId);
             }
@@ -155,7 +155,7 @@ namespace ECS.Experimental
         public IEnumerable<int> GetEntitiesByIndex<TComponent>(object indexValue)
         {
             //TODO Get rid of GetType()
-            if (_entitiesByIndex.TryGetValue(new IndexKey(typeof(TComponent), indexValue.GetType(), indexValue.GetHashCode()), out var entities))
+            if (_entitiesByIndex.TryGetValue(new IndexKey(typeof(TComponent), indexValue.GetHashCode()), out var entities))
             {
                 return entities;
             }

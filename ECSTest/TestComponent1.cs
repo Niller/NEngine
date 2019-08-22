@@ -9,6 +9,7 @@ namespace ECSTest
         private Context _context;
         private int _sourceEntityId;
         private Type _type;
+        private Type _indexType;
 
         public Type Type => typeof(TestComponent2);
 
@@ -40,12 +41,13 @@ namespace ECSTest
 
         public void AddEntityByIndex()
         {
-            _context.AddEntityWithIndex(Type, typeof(int), X.GetHashCode(), _sourceEntityId);
+            var hashCode = X.GetHashCode();
+            _context.AddEntityWithIndex(Type, hashCode, _sourceEntityId);
         }
 
         public void RemoveEntityByIndex()
         {
-            _context.RemoveEntityWithIndex(Type, typeof(int), X.GetHashCode(), _sourceEntityId);
+            _context.RemoveEntityWithIndex(_type, X.GetHashCode(), _sourceEntityId);
         }
     }
 }

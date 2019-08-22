@@ -50,14 +50,18 @@ namespace CodeInjection.Experimental
             return _arguments.FirstOrDefault(a => a.Name == name);
         }
 
-        public MethodVariable GetVariable(int index)
+        public MethodVariable GetVariable(int index, bool byRef = false)
         {
-            return _variables[index];
+            var variable = _variables[index];
+            variable.ByRef = byRef;
+            return variable;
         }
 
-        public MethodVariable GetVariable(string name)
+        public MethodVariable GetVariable(string name, bool byRef = false)
         {
-            return _variables.FirstOrDefault(v => v.Name == name);
+            var variable = _variables.First(v => v.Name == name);
+            variable.ByRef = byRef;
+            return variable;
         }
 
         public MethodState AddVariable(string name, Type t)
@@ -68,21 +72,24 @@ namespace CodeInjection.Experimental
             return this;
         }
 
+        public MethodState AddVariable(int id, Type t)
+        {
+            var newVariable = new VariableDefinition(t.GetDefinition());
+            _method.Body.Variables.Add(newVariable);
+            _variables.Add(new MethodVariable(id.ToString(), _variables.Count, newVariable));
+            return this;
+        }
+
         public MethodState AddVariableSet(string name, MethodValue value = null)
         {
             var variable = _variables.FirstOrDefault(v => v.Name == name);
+            return AddVariableSet(variable, value);
+        }
 
-            if (variable != null)
-            {
-                if (value != null)
-                {
-                    Insert(value.ToStack());
-                }
-
-                Insert(variable.FromStack());
-            }
-
-            return this;
+        public MethodState AddVariableSet(int index, MethodValue value = null)
+        {
+            var variable = GetVariable(index);
+            return AddVariableSet(variable, value);
         }
 
         public MethodState AddFieldSet(Field field, MethodValue value = null)
@@ -174,6 +181,21 @@ namespace CodeInjection.Experimental
         private void Insert(Instruction instruction)
         {
             _ilProcessor.InsertBefore(_lastInstruction, instruction);
+        }
+
+        private MethodState AddVariableSet(MethodVariable variable, MethodValue value = null)
+        {
+            if (variable != null)
+            {
+                if (value != null)
+                {
+                    Insert(value.ToStack());
+                }
+
+                Insert(variable.FromStack());
+            }
+
+            return this;
         }
     }
 }

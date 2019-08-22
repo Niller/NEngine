@@ -80,6 +80,11 @@ namespace CodeInjection.Experimental
             return _definition.Properties.Select(p => p.ToWrapper(source));
         }
 
+        public Property GetProperty(MethodValue source, string name)
+        {
+            return _definition.Properties.FirstOrDefault(p => p.Name == name).ToWrapper(source);
+        }
+
         public Method GetMethod(string name, params ParameterType[] parameters)
         {
             foreach (var method in _definition.Methods)
@@ -99,13 +104,19 @@ namespace CodeInjection.Experimental
                         continue;
                     }
 
+                    if (parameters.Length <= index)
+                    {
+                        isMatch = false;
+                        break;
+                    }
+
                     var targetParameter = parameters[index];
                     var targetParameterName = targetParameter.Type.FullName;
                     targetParameterName = targetParameter.ByRef
                         ? "&" + targetParameterName
                         : targetParameterName;
 
-                    if (parameters.Length <= index || parameter.ParameterType.FullName != targetParameterName)
+                    if (parameter.ParameterType.FullName != targetParameterName)
                     {
                         isMatch = false;
                         break;

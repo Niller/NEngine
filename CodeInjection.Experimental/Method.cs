@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Logger;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -14,7 +15,7 @@ namespace CodeInjection.Experimental
         }
 
         private readonly MethodDefinition _definition;
-        private readonly MethodReference _reference;
+        private MethodReference _reference;
 
         public string Name => _definition.Name;
 
@@ -55,7 +56,7 @@ namespace CodeInjection.Experimental
 
         public Instruction Call()
         {
-            return Instruction.Create(_definition.DeclaringType.IsClass ? OpCodes.Callvirt : OpCodes.Call, _reference);
+            return Instruction.Create(_definition.DeclaringType.IsValueType ? OpCodes.Call : OpCodes.Callvirt, _reference);
         }
 
         public MethodState GetState(DefaultStates state)
@@ -71,6 +72,5 @@ namespace CodeInjection.Experimental
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
-        
     }
 }

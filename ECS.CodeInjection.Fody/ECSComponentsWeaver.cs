@@ -4,6 +4,7 @@ using System.Linq;
 using CodeInjection.Experimental;
 using ECS.Experimental;
 using Fody;
+using Logger;
 using Mono.Cecil;
 
 // ReSharper disable AccessToDisposedClosure
@@ -12,10 +13,10 @@ namespace ECS.CodeInjection
 {
     public class ECSComponentsWeaver : BaseModuleWeaver
     {
-        private const string ContextFieldName = "Context_generated";
-        private const string SourceEntityIdFieldName = "SourceEntityId_generated";
-        private const string TypeFieldName = "Type_generated";
-        private const string MarkDirtyMethodName = "MarkComponentDirty";
+        internal const string ContextFieldName = "Context_generated";
+        internal const string SourceEntityIdFieldName = "SourceEntityId_generated";
+        internal const string TypeFieldName = "Type_generated";
+        internal const string MarkDirtyMethodName = "MarkComponentDirty";
 
         public override void Execute()
         {
@@ -69,7 +70,15 @@ namespace ECS.CodeInjection
             }
 
             var indexWeaver = new ECSIndexWeaver();
-            indexWeaver.Execute(ModuleDefinition);
+            //try
+            //{
+                indexWeaver.Execute(ModuleDefinition);
+            //}
+            //catch (Exception e)
+           // {
+                //ExceptionLogger.Save();
+           // }
+            
         }
 
         public override IEnumerable<string> GetAssembliesForScanning()
