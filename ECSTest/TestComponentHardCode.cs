@@ -4,7 +4,7 @@ using ECS.Experimental;
 namespace ECSTest
 {
     //[Component(typeof(MainContext))]
-    public struct TestComponent1 : IComponent
+    public struct TestComponentHardCode : IComponent
     {
         private Context _context;
         private int _sourceEntityId;
@@ -20,7 +20,7 @@ namespace ECSTest
             set
             {
                 _x = value;
-                _context.MarkComponentDirty(_sourceEntityId, typeof(TestComponent1));
+                _context.MarkComponentDirty(_sourceEntityId, typeof(TestComponentHardCode));
             }
         }
 

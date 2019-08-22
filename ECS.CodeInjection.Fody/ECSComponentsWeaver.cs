@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeInjection.Experimental;
 using ECS.Experimental;
 using Fody;
-using Logger;
 using Mono.Cecil;
 
 // ReSharper disable AccessToDisposedClosure
-
 namespace ECS.CodeInjection
 {
     public class ECSComponentsWeaver : BaseModuleWeaver
@@ -70,15 +67,7 @@ namespace ECS.CodeInjection
             }
 
             var indexWeaver = new ECSIndexWeaver();
-            //try
-            //{
-                indexWeaver.Execute(ModuleDefinition);
-            //}
-            //catch (Exception e)
-           // {
-                //ExceptionLogger.Save();
-           // }
-            
+            indexWeaver.Execute(ModuleDefinition);
         }
 
         public override IEnumerable<string> GetAssembliesForScanning()

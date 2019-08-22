@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,9 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainContext.cs" />
+    <Compile Include="TestComponent3.cs" />
+    <Compile Include="TestComponent4.cs" />
+    <Compile Include="TestComponent5.cs" />
     <Compile Include="TestEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestComponent1.cs" />
+    <Compile Include="TestComponentHardCode.cs" />
     <Compile Include="TestComponent2.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -14,8 +14,6 @@ namespace ECS.CodeInjection
             var assembly = new Assembly(moduleDefinition);
             var components = assembly.GetAllTypesByAttribute(assembly.Import<ComponentAttribute>());
 
-            var componentAttributeType = assembly.Import<ComponentAttribute>();
-
             var voidType = assembly.Import(typeof(void));
             var contextType = assembly.Import<Context>();
             var intType = assembly.Import<int>();
@@ -70,10 +68,8 @@ namespace ECS.CodeInjection
                         continue;
                     }
 
-                    var setMethodState = setMethod.GetState(Method.DefaultStates.MethodEnd);
-                    setMethodState.
-                        Call(removeEntityByIndexMethod, null, new This(component)).
-                        Call(addEntityByIndexMethod, null, new This(component));
+                    setMethod.GetState(Method.DefaultStates.MethodStart).Call(removeEntityByIndexMethod, null, new This(component));
+                    setMethod.GetState(Method.DefaultStates.MethodEnd).Call(addEntityByIndexMethod, null, new This(component));
                 }
 
             }
