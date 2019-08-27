@@ -14,7 +14,7 @@
                 <Button Background="White" Content="2" />
                 <Button Background="Red" Content="3" />
             </StackPanel>
-        <TreeView DockPanel.Dock="Right" Background="Aquamarine" >
+        <TreeView Name="Hierarchy" DockPanel.Dock="Right" Background="Aquamarine" >
             <TextBox>Objects</TextBox>
             <TreeViewItem Header="Root">
                 <TreeViewItem Header="Camera" />

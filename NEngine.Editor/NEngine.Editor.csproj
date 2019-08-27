@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\DeviceComponent.cs" />
+    <Compile Include="Components\GameObjectComponent.cs" />
+    <Compile Include="Components\HierarchyComponent.cs" />
     <Compile Include="Components\MainCameraComponent.cs" />
     <Compile Include="Components\MeshRendererComponent.cs" />
     <Compile Include="Components\StartCubeComponent.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Systems\RenderInitializeSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\TestSceneInitializeSystem.cs" />
+    <Compile Include="Utilities\GameObjectUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ECS.Experimental\ECS.Experimental.csproj">

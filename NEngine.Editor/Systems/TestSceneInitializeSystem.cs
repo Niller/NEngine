@@ -4,16 +4,22 @@ using ECS.Experimental;
 using Math.Vectors;
 using NEngine.Editor.Components;
 using NEngine.Editor.Contexts;
+using NEngine.Editor.Utilities;
 using NEngine.Rendering;
 
 namespace NEngine.Editor.Systems
 {
+    public class HierarchyEditorSystem : ReactiveSystem<MainContext, GameObjectComponent>()
+    {
+
+    }
+
     public class TestSceneInitializeSystem : IInitializeSystem
     {
         public void Execute()
         {
-            var context = Services.ECS.GetContext<MainContext>();
-            var meshEntity = context.CreateEntity();
+            ref var root = ref GameObjectUtilities.CreateGameObject<MainContext>("Meshes");
+            var meshEntity = GameObjectUtilities.CreateGameObject<MainContext>("Cube", ref root);
 
             var transform = new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, Vector3.One);
             meshEntity.AddComponent(ref transform);
@@ -50,7 +56,7 @@ namespace NEngine.Editor.Systems
             var meshRenderer = new MeshRendererComponent(mesh);
             meshEntity.AddComponent(ref meshRenderer);
 
-            var cameraEntity = context.CreateEntity();
+            ref var cameraEntity = ref GameObjectUtilities.CreateGameObject<MainContext>("Camera");
 
             var cameraComponent = new CameraComponent(new Vector3(0, 0, 10.0f), Vector3.Zero);
             cameraEntity.AddComponent(ref cameraComponent);

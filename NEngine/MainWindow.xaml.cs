@@ -29,6 +29,7 @@ namespace NEngine
             FrontBuffer.Source = bmp;
 
             Services.EditorContext.RenderBitmap = bmp;
+            Services.EditorContext.HierarchyTreeView = Hierarchy;
 
             InitializeComponent();
 
