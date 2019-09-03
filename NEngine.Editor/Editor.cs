@@ -12,6 +12,7 @@ namespace NEngine.Editor
             feature.AddSystem<RenderSystem>();
 
             feature = Services.ECS.AddFeature("Editor");
+            feature.AddSystem<LoadAssetsSystem>();
             feature.AddSystem<TestSceneInitializeSystem>();
             feature.AddSystem<PermanentRotateCubeSystem>();
         }

@@ -9,11 +9,6 @@ using NEngine.Rendering;
 
 namespace NEngine.Editor.Systems
 {
-    public class HierarchyEditorSystem : ReactiveSystem<MainContext, GameObjectComponent>()
-    {
-
-    }
-
     public class TestSceneInitializeSystem : IInitializeSystem
     {
         public void Execute()

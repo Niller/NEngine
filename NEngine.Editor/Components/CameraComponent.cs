@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design.Serialization;
+using System.Runtime.CompilerServices;
 using ECS;
 using ECS.Experimental;
 using Math.Vectors;
