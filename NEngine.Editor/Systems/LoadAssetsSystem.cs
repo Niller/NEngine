@@ -20,12 +20,19 @@ namespace NEngine.Editor.Systems
                 switch (assetComponent.Type)
                 {
                     case AssetType.Fbx:
-
+                        HandleFbx(ref entity, assetComponent.Path);
                         break;
                     default:
                         continue;
                 }
             }
+        }
+
+        private void HandleFbx(ref Entity entity, string path)
+        {
+            var fbxAsset = FbxUtilities.Import(path);
+            var meshComponent = new MeshRendererComponent(fbxAsset.Mesh);
+            entity.AddComponent(ref meshComponent);
         }
     }
 }

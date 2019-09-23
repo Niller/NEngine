@@ -14,11 +14,13 @@ namespace NEngine.Editor.Systems
         public void Execute()
         {
             ref var root = ref GameObjectUtilities.CreateGameObject<MainContext>("Meshes");
+            
             var meshEntity = GameObjectUtilities.CreateGameObject<MainContext>("Cube", ref root);
 
-            var transform = new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, Vector3.One);
+            var transform = new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, new Vector3(.1f, .1f, .1f));
             meshEntity.AddComponent(ref transform);
 
+            /*
             var mesh = new Mesh("Cube", 8, 12)
             {
                 Vertices =
@@ -50,6 +52,10 @@ namespace NEngine.Editor.Systems
             };
             var meshRenderer = new MeshRendererComponent(mesh);
             meshEntity.AddComponent(ref meshRenderer);
+            */
+
+            var assetComponent = new AssetComponent("E:\\projects\\NEngineResources\\Glock.fbx");
+            meshEntity.AddComponent(ref assetComponent);
 
             ref var cameraEntity = ref GameObjectUtilities.CreateGameObject<MainContext>("Camera");
 

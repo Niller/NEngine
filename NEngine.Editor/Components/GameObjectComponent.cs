@@ -12,7 +12,7 @@ namespace NEngine.Editor.Components
             Name = name;
         }
 
-        [NotifyPropertyChanged, EntityIndex]
+        //[NotifyPropertyChanged, EntityIndex]
         public string Name
         {
             get;

@@ -22,6 +22,11 @@ namespace Math.Vectors
             _innerVector = new Vector(x, y, z);
         }
 
+        public Vector3(double x, double y, double z)
+        {
+            _innerVector = new Vector((float)x, (float)y, (float)z);
+        }
+
         public Vector3(Vector vector)
         {
             if (vector.Length != 3)

@@ -11,7 +11,7 @@ namespace NEngine.Editor.Components
             Parent = parentEntityId;
         }
 
-        [NotifyPropertyChanged, EntityIndex]
+        //[NotifyPropertyChanged, EntityIndex]
         public int Parent
         {
             get;

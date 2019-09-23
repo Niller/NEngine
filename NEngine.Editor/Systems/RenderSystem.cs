@@ -57,7 +57,7 @@ namespace NEngine.Editor.Systems
                 var mesh = entity.GetComponent<MeshRendererComponent>().Mesh;
 
                 // Beware to apply rotation before translation 
-                var worldMatrix = Matrix4X4.GetRotationYawPitchRollMatrix(transform.Rotation.Y,
+                var worldMatrix = Matrix4X4.GetScalingMatrix(transform.Scale) * Matrix4X4.GetRotationYawPitchRollMatrix(transform.Rotation.Y,
                                       transform.Rotation.X, transform.Rotation.Z) *
                                   Matrix4X4.GetTranslationMatrix(transform.Position);
 

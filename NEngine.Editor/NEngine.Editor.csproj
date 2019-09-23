@@ -36,6 +36,10 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fbx, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\FbxImporter\Fbx.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -73,6 +77,8 @@
     <Compile Include="Systems\TestSceneInitializeSystem.cs" />
     <Compile Include="Utilities\AssetType.cs" />
     <Compile Include="Utilities\AssetTypeUtilities.cs" />
+    <Compile Include="Utilities\FbxAsset.cs" />
+    <Compile Include="Utilities\FbxUtilities.cs" />
     <Compile Include="Utilities\GameObjectUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
