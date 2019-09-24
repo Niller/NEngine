@@ -33,6 +33,8 @@ namespace NEngine.Editor.Components
 
             DepthBuffer = new float[resolution.X * resolution.Y];
             Bmp = bmp;
+            BmpWidth = Bmp.PixelWidth;
+            BmpHeight = Bmp.PixelHeight;
         }
 
         public Vector2Int Resolution
@@ -45,6 +47,8 @@ namespace NEngine.Editor.Components
         public float[] DepthBuffer;
         public float[] ClearDepthBuffer;
         public WriteableBitmap Bmp;
+        public int BmpWidth;
+        public int BmpHeight;
 
     }
 }

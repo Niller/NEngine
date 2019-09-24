@@ -76,6 +76,7 @@
     <Compile Include="Systems\TestSceneInitializeSystem.cs" />
     <Compile Include="Utilities\AssetType.cs" />
     <Compile Include="Utilities\AssetTypeUtilities.cs" />
+    <Compile Include="Utilities\ColorUtilities.cs" />
     <Compile Include="Utilities\FbxAsset.cs" />
     <Compile Include="Utilities\FbxUtilities.cs" />
     <Compile Include="Utilities\GameObjectUtilities.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing.Imaging;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using ECS;
@@ -8,6 +9,8 @@ using Math.Matrices;
 using Math.Vectors;
 using NEngine.Editor.Components;
 using NEngine.Editor.Contexts;
+using NEngine.Editor.Utilities;
+using NEngine.Rendering;
 
 namespace NEngine.Editor.Systems
 {
@@ -15,7 +18,7 @@ namespace NEngine.Editor.Systems
     {
         private struct ScreenPoint
         {
-            private static Vector2Int zero = new Vector2Int(0, 0);
+            private static readonly Vector2Int Zero = new Vector2Int(0, 0);
 
             public readonly Vector2Int Point;
             public readonly float Z;
@@ -32,20 +35,22 @@ namespace NEngine.Editor.Systems
 
             public ScreenPoint(int x, int y, float z)
             {
-                Point = zero;
+                Point = Zero;
                 Z = z;
                 X = x;
                 Y = y;
             }
         }
 
-        private Color _currentColor;
+        private readonly object _syncObject = new object();
+        private float _farZ;
+        private float _nearZ;
 
         public void Execute()
         {
             var context = Services.ECS.GetContext<MainContext>();
 
-            Entity mainCameraEntity = new Entity();
+            var mainCameraEntity = new Entity();
             if (!context.TryGetEntity<MainCameraComponent>(ref mainCameraEntity))
             {
                 return;
@@ -93,8 +98,22 @@ namespace NEngine.Editor.Systems
 
                 var transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
-                int index = 0;
-                foreach (var triangle in mesh.Triangles)
+                _farZ = float.MaxValue;
+                _nearZ = float.MinValue;
+                foreach (var meshVertex in mesh.Vertices)
+                {
+                    if (_farZ > meshVertex.Z)
+                    {
+                        _farZ = meshVertex.Z;
+                    }
+
+                    if (_nearZ < meshVertex.Z)
+                    {
+                        _nearZ = meshVertex.Z;
+                    }
+                }
+
+                Parallel.ForEach(mesh.Triangles, (triangle) => 
                 {
                     var vertexA = mesh.Vertices[triangle.A];
                     var vertexB = mesh.Vertices[triangle.B];
@@ -104,13 +123,14 @@ namespace NEngine.Editor.Systems
                     var pixelB = Project(ref deviceComponent, vertexB, transformMatrix);
                     var pixelC = Project(ref deviceComponent, vertexC, transformMatrix);
 
-                    var color = (byte)((0.25f + (index++ % mesh.Triangles.Length) * 0.75f / mesh.Triangles.Length)*255);
-                    _currentColor = new Color {R = color, G = color, B = color, A = 255};
-                    //_currentColor = Colors.Gray;
+                    //var colorValue = (byte)((0.25f + (index++ % mesh.Triangles.Length) * 0.75f / mesh.Triangles.Length) * 255);
+                    //var color = new Color { R = colorValue, G = colorValue, B = colorValue, A = 255 };
+
+                    
 
                     if (!(pixelA.Y == pixelB.Y && pixelA.Y == pixelC.Y))
                     {
-                        DrawTriangle(ref deviceComponent, new ScreenPoint(pixelA, vertexA.Z), new ScreenPoint(pixelB, vertexB.Z), new ScreenPoint(pixelC, vertexC.Z));
+                        DrawTriangle(ref deviceComponent, new ScreenPoint(pixelA, vertexA.Z), new ScreenPoint(pixelB, vertexB.Z), new ScreenPoint(pixelC, vertexC.Z), Colors.Gray);
                     }
                     else
                     {
@@ -120,12 +140,11 @@ namespace NEngine.Editor.Systems
                     }
 
                     //continue;
-                    _currentColor = Colors.Red;
+                    //_currentColor = Colors.Red;
                     //DrawBLine(ref deviceComponent, new ScreenPoint(pixelA, vertexA.Z), new ScreenPoint(pixelB, vertexB.Z));
                     //DrawBLine(ref deviceComponent, new ScreenPoint(pixelB, vertexB.Z), new ScreenPoint(pixelC, vertexC.Z));
                     //DrawBLine(ref deviceComponent, new ScreenPoint(pixelC, vertexC.Z), new ScreenPoint(pixelA, vertexA.Z));
-                }
-
+                });
             }
 
             Present(ref deviceComponent);
@@ -144,13 +163,13 @@ namespace NEngine.Editor.Systems
             // The transformed coordinates will be based on coordinate system
             // starting on the center of the screen. But drawing on screen normally starts
             // from top left. We then need to transform them again to have x:0, y:0 on top left.
-            var x = point.X * deviceComponent.Bmp.PixelWidth + deviceComponent.Bmp.PixelWidth / 2f;
-            var y = -point.Y * deviceComponent.Bmp.PixelHeight + deviceComponent.Bmp.PixelHeight / 2f;
+            var x = point.X * deviceComponent.BmpWidth + deviceComponent.BmpWidth / 2f;
+            var y = -point.Y * deviceComponent.BmpHeight + deviceComponent.BmpHeight / 2f;
             return new Vector2Int((int)x, (int)y);
         }
 
         //Draw Line by Bresenham algorithm
-        private void DrawBLine(ref DeviceComponent deviceComponent, ScreenPoint p0, ScreenPoint p1)
+        private void DrawBLine(ref DeviceComponent deviceComponent, ScreenPoint p0, ScreenPoint p1, Color color)
         {
             var dx = System.Math.Abs(p1.X - p0.X);
             var dy = System.Math.Abs(p1.Y - p0.Y);
@@ -164,7 +183,7 @@ namespace NEngine.Editor.Systems
             while (true)
             {
                 //TODO Add depth handling
-                DrawPoint(ref deviceComponent, new ScreenPoint(new Vector2Int(x, y), float.MinValue));
+                DrawPoint(ref deviceComponent, new ScreenPoint(x, y, float.MinValue), color);
 
                 if (x == p1.X && y == p1.Y) break;
                 var e2 = 2 * err;
@@ -174,7 +193,7 @@ namespace NEngine.Editor.Systems
         }
 
         //Simple draw line (use for align axis lines)
-        private void DrawLine(ref DeviceComponent deviceComponent, ScreenPoint p0, ScreenPoint p1)
+        private void DrawLine(ref DeviceComponent deviceComponent, ScreenPoint p0, ScreenPoint p1, Color color)
         {
             int deltaX = 0;
             int deltaY = 0;
@@ -204,36 +223,41 @@ namespace NEngine.Editor.Systems
             for (var i = 0; i < len; ++i)
             { 
                 var z = Math.Utilities.MathUtilities.Lerp(p0.Z, p1.Z, (float) i / len);
-                DrawPoint(ref deviceComponent, new ScreenPoint(deltaX * i + p0X, deltaY * i + p0Y, z));
+                DrawPoint(ref deviceComponent, new ScreenPoint(deltaX * i + p0X, deltaY * i + p0Y, z), color);
             }
         }
 
-        private void DrawPoint(ref DeviceComponent deviceComponent, ScreenPoint p)
+        private void DrawPoint(ref DeviceComponent deviceComponent, ScreenPoint p, Color color)
         {
             var x = p.X;
             var y = p.Y;
             var z = p.Z;
 
             // Clipping what's visible on screen
-            if (x < 0 || y < 0 || x >= deviceComponent.Bmp.PixelWidth || y >= deviceComponent.Bmp.PixelHeight)
+            if (x < 0 || y < 0 || x >= deviceComponent.BmpWidth || y >= deviceComponent.BmpHeight)
             {
                 return;
             }
 
             var rawIndex = (x + y * deviceComponent.Resolution.X);
 
-            if (deviceComponent.DepthBuffer[rawIndex] < z)
+            lock (_syncObject)
             {
-                return; // Discard
+                if (deviceComponent.DepthBuffer[rawIndex] < z)
+                {
+                    return; // Discard
+                }
+
+                deviceComponent.DepthBuffer[rawIndex] = z;
+                
+                color = ColorUtilities.Lerp(Colors.Green, Colors.Red, (z -  _farZ)/(_nearZ - _farZ));
+
+                var index = rawIndex * 4;
+                deviceComponent.BackBuffer[index] = color.B;
+                deviceComponent.BackBuffer[index + 1] = color.G;
+                deviceComponent.BackBuffer[index + 2] = color.R;
+                deviceComponent.BackBuffer[index + 3] = color.A;
             }
-
-            deviceComponent.DepthBuffer[rawIndex] = z;
-
-            var index = rawIndex * 4;
-            deviceComponent.BackBuffer[index] = _currentColor.B;
-            deviceComponent.BackBuffer[index + 1] = _currentColor.G;
-            deviceComponent.BackBuffer[index + 2] = _currentColor.R;
-            deviceComponent.BackBuffer[index + 3] = _currentColor.A;
         }
 
         private void Clear(ref DeviceComponent deviceComponent)
@@ -257,7 +281,7 @@ namespace NEngine.Editor.Systems
             }
         }
 
-        private void FillBottomFlatTriangle(ref DeviceComponent deviceComponent, ScreenPoint v1, ScreenPoint v2, ScreenPoint v3)
+        private void FillBottomFlatTriangle(ref DeviceComponent deviceComponent, ScreenPoint v1, ScreenPoint v2, ScreenPoint v3, Color color)
         {
 
             var invSlope1 = (float)(v2.X - v1.X) / (v2.Y - v1.Y);
@@ -270,13 +294,13 @@ namespace NEngine.Editor.Systems
             {
                 var z = Math.Utilities.MathUtilities.Lerp(v1.Z, v2.Z, (float)scanLineY / v2.Y);
 
-                DrawLine(ref deviceComponent, new ScreenPoint(new Vector2Int((int)curX1, scanLineY), z), new ScreenPoint(new Vector2Int((int)curX2, scanLineY), z));
+                DrawLine(ref deviceComponent, new ScreenPoint((int)curX1, scanLineY, z), new ScreenPoint((int)curX2, scanLineY, z), color);
                 curX1 += invSlope1;
                 curX2 += invSlope2;
             }
         }
 
-        private void FillTopFlatTriangle(ref DeviceComponent deviceComponent, ScreenPoint v1, ScreenPoint v2, ScreenPoint v3)
+        private void FillTopFlatTriangle(ref DeviceComponent deviceComponent, ScreenPoint v1, ScreenPoint v2, ScreenPoint v3, Color color)
         {
             var invSlope1 = (float)(v3.X - v1.X) / (v3.Y - v1.Y);
             var invSlope2 = (float)(v3.X - v2.X) / (v3.Y - v2.Y);
@@ -288,14 +312,14 @@ namespace NEngine.Editor.Systems
             {
                 var z = Math.Utilities.MathUtilities.Lerp(v3.Z, v1.Z, (float)scanLineY / v1.Y);
 
-                DrawLine(ref deviceComponent, new ScreenPoint(new Vector2Int((int)curX1, scanLineY), z), new ScreenPoint(new Vector2Int((int)curX2, scanLineY), z));
+                DrawLine(ref deviceComponent, new ScreenPoint((int)curX1, scanLineY, z), new ScreenPoint((int)curX2, scanLineY, z), color);
                 curX1 -= invSlope1;
                 curX2 -= invSlope2;
             }
         }
 
         
-        private void DrawTriangle(ref DeviceComponent deviceComponent, ScreenPoint p1, ScreenPoint p2, ScreenPoint p3)
+        private void DrawTriangle(ref DeviceComponent deviceComponent, ScreenPoint p1, ScreenPoint p2, ScreenPoint p3, Color color)
         {
             // at first sort the three vertices by y-coordinate ascending so p1 is the topmost vertice 
             if (p1.Point.Y > p2.Point.Y)
@@ -323,12 +347,12 @@ namespace NEngine.Editor.Systems
             // check for trivial case of bottom-flat triangle 
             if (p2.Point.Y == p3.Point.Y)
             {
-                FillBottomFlatTriangle(ref deviceComponent, p1, p2, p3);
+                FillBottomFlatTriangle(ref deviceComponent, p1, p2, p3, color);
             }
             // check for trivial case of top-flat triangle 
             else if (p1.Point.Y == p2.Point.Y)
             {
-                FillTopFlatTriangle(ref deviceComponent, p1, p2, p3);
+                FillTopFlatTriangle(ref deviceComponent, p1, p2, p3, color);
             }
             else
             {
@@ -339,8 +363,8 @@ namespace NEngine.Editor.Systems
                     (splitPoint - p3.Point).GetMagnitude()/
                     (p1.Point - p3.Point).GetMagnitude()));
 
-                FillBottomFlatTriangle(ref deviceComponent, p1, p2, v4);
-                FillTopFlatTriangle(ref deviceComponent, p2, v4, p3);
+                FillBottomFlatTriangle(ref deviceComponent, p1, p2, v4, color);
+                FillTopFlatTriangle(ref deviceComponent, p2, v4, p3, color);
             }
         }
         
