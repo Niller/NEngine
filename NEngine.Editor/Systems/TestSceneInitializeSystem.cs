@@ -17,10 +17,10 @@ namespace NEngine.Editor.Systems
             
             var meshEntity = GameObjectUtilities.CreateGameObject<MainContext>("Cube", ref root);
 
-            var transform = meshEntity.CurrentContext.RegisterComponent(new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, new Vector3(.5f, .5f, .5f)));
+            var transform = meshEntity.CurrentContext.RegisterComponent(new TransformComponent(new Vector3(0, 0, 0), Vector3.Zero, new Vector3(.1f, .1f, .1f)));
             meshEntity.AddComponent(ref transform);
 
-            
+            /*
             var mesh = new Mesh("Cube", 8, 12)
             {
                 Vertices =
@@ -52,10 +52,10 @@ namespace NEngine.Editor.Systems
             };
             var meshRenderer = new MeshRendererComponent(mesh);
             meshEntity.AddComponent(ref meshRenderer);
+            */
             
-
-            //var assetComponent = meshEntity.CurrentContext.RegisterComponent(new AssetComponent("E:\\projects\\NEngineResources\\Glock.fbx"));
-            //meshEntity.AddComponent(ref assetComponent);
+            var assetComponent = meshEntity.CurrentContext.RegisterComponent(new AssetComponent("E:\\projects\\NEngineResources\\Glock.fbx"));
+            meshEntity.AddComponent(ref assetComponent);
 
             ref var cameraEntity = ref GameObjectUtilities.CreateGameObject<MainContext>("Camera");
 

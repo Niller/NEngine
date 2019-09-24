@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 
 namespace Math.Vectors
 {
@@ -7,6 +9,7 @@ namespace Math.Vectors
         private readonly VectorInt _innerVector;
 
         public int X => _innerVector.GetValue(0);
+
         public int Y => _innerVector.GetValue(1);
 
         public Vector2Int(int x, int y)

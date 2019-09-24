@@ -13,7 +13,7 @@ namespace NEngine.Editor.Systems
             var context = Services.ECS.GetContext<MainContext>();
             var deviceEntity = context.CreateEntity();
             
-            var deviceComponent = context.RegisterComponent(new DeviceComponent(new Vector2(640, 480), new byte[640 * 480 * 4], Services.EditorContext.RenderBitmap));
+            var deviceComponent = context.RegisterComponent(new DeviceComponent(new Vector2Int(640, 480), Services.EditorContext.RenderBitmap));
             deviceEntity.AddComponent(ref deviceComponent);
         }
     }

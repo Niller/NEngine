@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Math.Vectors;
 using NEngine.Editor;
 using NEngine.Editor.Components;
@@ -16,7 +17,8 @@ namespace NEngine
     {
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly Editor.Editor _editor;
-       
+        private readonly DispatcherTimer _dispatcherTimer;
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -33,7 +35,17 @@ namespace NEngine
 
             InitializeComponent();
 
-            CompositionTarget.Rendering += CompositionTargetOnRendering;
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += Callback;
+            _dispatcherTimer.Interval = TimeSpan.FromMilliseconds(0);
+            _dispatcherTimer.Start();
+            
+            //CompositionTarget.Rendering += CompositionTargetOnRendering;
+        }
+
+        private void Callback(object sender, EventArgs e)
+        {
+            Services.ECS.Execute();
         }
 
         private void CompositionTargetOnRendering(object sender, EventArgs e)
@@ -45,6 +57,8 @@ namespace NEngine
         {
             base.OnClosed(e);
             CompositionTarget.Rendering -= CompositionTargetOnRendering;
+            _dispatcherTimer.Tick -= Callback;
+            _dispatcherTimer.Stop();
         }
     }
 }
