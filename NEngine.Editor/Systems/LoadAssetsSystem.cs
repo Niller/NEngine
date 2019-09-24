@@ -31,7 +31,7 @@ namespace NEngine.Editor.Systems
         private void HandleFbx(ref Entity entity, string path)
         {
             var fbxAsset = FbxUtilities.Import(path);
-            var meshComponent = new MeshRendererComponent(fbxAsset.Mesh);
+            var meshComponent = entity.CurrentContext.RegisterComponent(new MeshRendererComponent(fbxAsset.Mesh));
             entity.AddComponent(ref meshComponent);
         }
     }

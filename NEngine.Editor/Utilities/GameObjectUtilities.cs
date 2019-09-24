@@ -8,7 +8,7 @@ namespace NEngine.Editor.Utilities
         public static ref Entity CreateGameObject<T>(string name, ref Entity entity) where T : Context
         {
             ref var gameObject = ref CreateGameObject<T>(name);
-            var hierarchyComponent = new HierarchyComponent(entity.Id);
+            var hierarchyComponent = entity.CurrentContext.RegisterComponent(new HierarchyComponent(entity.Id));
             gameObject.AddComponent(ref hierarchyComponent);
             return ref gameObject;
         }
@@ -18,7 +18,7 @@ namespace NEngine.Editor.Utilities
             var context = Services.ECS.GetContext<T>();
             var meshEntity = context.CreateEntity();
 
-            var gameObject = new GameObjectComponent(name);
+            var gameObject = context.RegisterComponent(new GameObjectComponent(name));
             meshEntity.AddComponent(ref gameObject);
 
             return ref context.GetEntity(meshEntity.Id);

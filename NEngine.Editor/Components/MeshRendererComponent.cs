@@ -13,6 +13,9 @@ namespace NEngine.Editor.Components
             Mesh = mesh;
         }
 
-        public Mesh Mesh;
+        public Mesh Mesh
+        {
+            get;
+        }
     }
 }

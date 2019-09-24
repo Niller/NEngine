@@ -22,8 +22,22 @@ namespace NEngine.Editor.Components
             Scale = scale;
         }
 
-        public Vector3 Position;
-        public Vector3 Rotation;
-        public Vector3 Scale;
+        public Vector3 Position
+        {
+            get;
+            set;
+        }
+
+        public Vector3 Rotation
+        {
+            get;
+            set;
+        }
+
+        public Vector3 Scale
+        {
+            get;
+            set;
+        }
     }
 }

@@ -17,9 +17,20 @@ namespace NEngine.Editor.Components
             Bmp = bmp;
         }
 
-        public readonly Vector2 Resolution;
-        public readonly byte[] BackBuffer;
-        public readonly WriteableBitmap Bmp;
+        public Vector2 Resolution
+        {
+            get;
+        }
+
+        public byte[] BackBuffer
+        {
+            get;
+        }
+
+        public WriteableBitmap Bmp
+        {
+            get;
+        }
         
     }
 }

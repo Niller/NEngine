@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentAttribute.cs" />
+    <Compile Include="ContextUtilities.cs" />
     <Compile Include="ECSManager.cs" />
     <Compile Include="EntityIndexAttribute.cs" />
     <Compile Include="EntityUtilities.cs" />

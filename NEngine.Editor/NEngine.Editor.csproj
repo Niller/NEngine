@@ -62,7 +62,6 @@
     <Compile Include="Components\MainCameraComponent.cs" />
     <Compile Include="Components\MeshRendererComponent.cs" />
     <Compile Include="Components\StartCubeComponent.cs" />
-    <Compile Include="Components\TestComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Contexts\MainContext.cs" />
     <Compile Include="Editor.cs" />

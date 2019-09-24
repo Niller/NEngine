@@ -17,7 +17,7 @@ namespace NEngine.Editor.Systems
             
             var meshEntity = GameObjectUtilities.CreateGameObject<MainContext>("Cube", ref root);
 
-            var transform = new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, new Vector3(.1f, .1f, .1f));
+            var transform = meshEntity.CurrentContext.RegisterComponent(new TransformComponent(new Vector3(0, 0, 0f), Vector3.Zero, new Vector3(.1f, .1f, .1f)));
             meshEntity.AddComponent(ref transform);
 
             /*
@@ -54,12 +54,12 @@ namespace NEngine.Editor.Systems
             meshEntity.AddComponent(ref meshRenderer);
             */
 
-            var assetComponent = new AssetComponent("E:\\projects\\NEngineResources\\Glock.fbx");
+            var assetComponent = meshEntity.CurrentContext.RegisterComponent(new AssetComponent("E:\\projects\\NEngineResources\\Glock.fbx"));
             meshEntity.AddComponent(ref assetComponent);
 
             ref var cameraEntity = ref GameObjectUtilities.CreateGameObject<MainContext>("Camera");
 
-            var cameraComponent = new CameraComponent(new Vector3(0, 0, 10.0f), Vector3.Zero);
+            var cameraComponent = cameraEntity.CurrentContext.RegisterComponent(new CameraComponent(new Vector3(0, 0, 10.0f), Vector3.Zero));
             cameraEntity.AddComponent(ref cameraComponent);
             cameraEntity.AddComponent<MainCameraComponent>();
         }

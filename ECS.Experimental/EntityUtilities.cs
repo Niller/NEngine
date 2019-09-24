@@ -10,9 +10,7 @@ namespace ECS.Experimental
 
             //TODO: Avoid casting to interface due to boxing/unboxing
             var iComponent = (IComponent) component;
-            iComponent.SetContext(entity.CurrentContext);
             iComponent.SetEntityId(entity.Id);
-            iComponent.SetType(typeof(T));
             iComponent.AddEntityByIndex();
             component = (T)iComponent;
 

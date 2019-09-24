@@ -16,7 +16,14 @@ namespace NEngine.Editor.Components
             Target = target;
         }
 
-        public Vector3 Position;
-        public Vector3 Target;
+        public Vector3 Position
+        {
+            get;
+        }
+
+        public Vector3 Target
+        {
+            get;
+        }
     }
 }
