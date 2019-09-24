@@ -49,8 +49,10 @@
     <Compile Include="Utilities\MathUtilities.cs" />
     <Compile Include="Vectors\Vector.cs" />
     <Compile Include="Vectors\Vector2.cs" />
+    <Compile Include="Vectors\Vector2Int.cs" />
     <Compile Include="Vectors\Vector3.cs" />
     <Compile Include="Vectors\Vector4.cs" />
+    <Compile Include="Vectors\VectorInt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

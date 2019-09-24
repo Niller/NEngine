@@ -2,22 +2,21 @@
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Math.Vectors
 {
-    public struct Vector
+    public struct VectorInt
     {
         public int Length
         {
             get;
         }
 
-        private readonly float[] _values;
+        private readonly int[] _values;
         private readonly int _hashCode;
 
-        public Vector(params float[] values)
+        public VectorInt(params int[] values)
         {
             if (values == null || values.Length == 0)
             {
@@ -34,7 +33,7 @@ namespace Math.Vectors
             }
         }
 
-        public Vector(params int[] values)
+        public VectorInt(params float[] values)
         {
             if (values == null || values.Length == 0)
             {
@@ -42,20 +41,20 @@ namespace Math.Vectors
             }
 
             Length = values.Length;
-            _values = new float[Length];
+            _values = new int[Length];
 
-            _values[0] = values[0];
+            _values[0] = (int)values[0];
             _hashCode = _values[0].GetHashCode();
             for (int i = 1; i < Length; ++i)
             {
-                _values[i] = values[i];
+                _values[i] = (int)values[i];
                 _hashCode ^= _values[i].GetHashCode();
             }
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float GetValue(int index)
+        public int GetValue(int index)
         {
             return _values[index];
         }
@@ -91,18 +90,18 @@ namespace Math.Vectors
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Vector GetReverse()
+        public VectorInt GetReverse()
         {
-            var newVectorValues = new float[_values.Length];
+            var newVectorValues = new int[_values.Length];
             for (var i = 0; i < _values.Length; ++i)
             {
                 newVectorValues[i] = -GetValue(i);
             }
 
-            return new Vector(newVectorValues);
+            return new VectorInt(newVectorValues);
         }
 
-        public static Vector Add(Vector vector1, Vector vector2)
+        public static VectorInt Add(VectorInt vector1, VectorInt vector2)
         {
             var length = vector1._values.Length;
 
@@ -111,16 +110,16 @@ namespace Math.Vectors
                 throw new ArgumentException("Vectors must have equal length");
             }
 
-            var newVectorValues = new float[length];
+            var newVectorValues = new int[length];
             for (var i = 0; i < length; ++i)
             {
                 newVectorValues[i] = vector1.GetValue(i) + vector2.GetValue(i);
             }
 
-            return new Vector(newVectorValues);
+            return new VectorInt(newVectorValues);
         }
 
-        public static Vector Div(Vector vector1, float number)
+        public static Vector Div(VectorInt vector1, float number)
         {
             var length = vector1._values.Length;
 
@@ -133,7 +132,7 @@ namespace Math.Vectors
             return new Vector(newVectorValues);
         }
 
-        public static Vector Sub(Vector vector1, Vector vector2)
+        public static VectorInt Sub(VectorInt vector1, VectorInt vector2)
         {
             return Add(vector1, vector2.GetReverse());
         }
@@ -143,36 +142,35 @@ namespace Math.Vectors
             return _hashCode;
         }
 
-        public static Vector operator +(Vector vector1, Vector vector2)
+        public static VectorInt operator +(VectorInt vector1, VectorInt vector2)
         {
             return Add(vector1, vector2);
         }
 
-        public static Vector operator -(Vector vector1, Vector vector2)
+        public static VectorInt operator -(VectorInt vector1, VectorInt vector2)
         {
             return Sub(vector1, vector2);
         }
 
-        public static Vector operator /(Vector vector1, float number)
+        public static Vector operator /(VectorInt vector1, float number)
         {
             return Div(vector1, number);
         }
 
-        public static bool operator ==(Vector vector1, Vector vector2)
+        public static bool operator ==(VectorInt vector1, VectorInt vector2)
         {
             return vector1.Equals(vector2);
         }
 
-        public static bool operator !=(Vector vector1, Vector vector2)
+        public static bool operator !=(VectorInt vector1, VectorInt vector2)
         {
             return !vector1.Equals(vector2);
         }
 
-
-        public static explicit operator VectorInt(Vector v) => new VectorInt(v._values);
+        public static explicit operator Vector(VectorInt v) => new Vector(v._values);
 
         [Pure]
-        public bool Equals(Vector other)
+        public bool Equals(VectorInt other)
         {
             if (_hashCode != other.GetHashCode() || Length != other.Length)
             {
