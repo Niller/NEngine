@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using ECS;
 using ECS.Experimental;
@@ -10,10 +12,18 @@ namespace NEngine.Editor.Components
     [Component(typeof(MainContext))]
     public struct DeviceComponent
     {
-        public DeviceComponent(Vector2Int resolution, WriteableBitmap bmp)
+        public DeviceComponent(Vector2Int resolution, WriteableBitmap bmp, Color backColor)
         {
             Resolution = resolution;
             BackBuffer = new byte[resolution.X * resolution.Y * 4];
+            ClearBackBuffer = new byte[resolution.X * resolution.Y * 4];
+            for (var i = 0; i < ClearBackBuffer.Length; i += 4)
+            {
+                ClearBackBuffer[i] = backColor.B;
+                ClearBackBuffer[i + 1] = backColor.G;
+                ClearBackBuffer[i + 2] = backColor.R;
+                ClearBackBuffer[i + 3] = backColor.A;
+            }
 
             ClearDepthBuffer = new float[resolution.X * resolution.Y];
             for (var i = 0; i < ClearDepthBuffer.Length; ++i)
@@ -30,25 +40,11 @@ namespace NEngine.Editor.Components
             get;
         }
 
-        public byte[] BackBuffer
-        {
-            get;
-        }
+        public byte[] BackBuffer;
+        public byte[] ClearBackBuffer;
+        public float[] DepthBuffer;
+        public float[] ClearDepthBuffer;
+        public WriteableBitmap Bmp;
 
-        public float[] DepthBuffer
-        {
-            get;
-        }
-
-        public float[] ClearDepthBuffer
-        {
-            get;
-        }
-
-        public WriteableBitmap Bmp
-        {
-            get;
-        }
-        
     }
 }

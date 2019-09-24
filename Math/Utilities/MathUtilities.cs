@@ -15,7 +15,7 @@ namespace Math.Utilities
 
         public static float Lerp(float min, float max, float gradient)
         {
-            return min + (max - min) * Clamp(gradient);
+            return min + (max - min) * gradient;
         }
 
         public static float Clamp(float value, float min = 0, float max = 1)

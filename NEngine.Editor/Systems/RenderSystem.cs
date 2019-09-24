@@ -15,16 +15,27 @@ namespace NEngine.Editor.Systems
     {
         private struct ScreenPoint
         {
-            public Vector2Int Point;
-            public float Z;
+            private static Vector2Int zero = new Vector2Int(0, 0);
 
-            public int X => Point.X;
-            public int Y => Point.Y;
+            public readonly Vector2Int Point;
+            public readonly float Z;
+            public readonly int X;
+            public readonly int Y;
 
             public ScreenPoint(Vector2Int point, float z)
             {
                 Point = point;
                 Z = z;
+                X = point.X;
+                Y = point.Y;
+            }
+
+            public ScreenPoint(int x, int y, float z)
+            {
+                Point = zero;
+                Z = z;
+                X = x;
+                Y = y;
             }
         }
 
@@ -55,7 +66,7 @@ namespace NEngine.Editor.Systems
             var deviceComponent = deviceEntity.GetComponent<DeviceComponent>();
 
             deviceComponent.Bmp.Lock();
-            Clear(ref deviceComponent, 0, 0, 0, 255);
+            Clear(ref deviceComponent);
 
             var viewMatrix = Matrix4X4.GetLookAtLeftHandedMatrix(cameraComponent.Position, cameraComponent.Target, Vector3.Up);
             var projectionMatrix = Matrix4X4.GetPerspectiveFovRightHandedMatrix(0.78f,
@@ -191,55 +202,43 @@ namespace NEngine.Editor.Systems
             var p0X = p0.X;
             var p0Y = p0.Y;
             for (var i = 0; i < len; ++i)
-            {
-
+            { 
                 var z = Math.Utilities.MathUtilities.Lerp(p0.Z, p1.Z, (float) i / len);
-                DrawPoint(ref deviceComponent, new ScreenPoint(new Vector2Int(deltaX * i + p0X, deltaY * i + p0Y), z));
+                DrawPoint(ref deviceComponent, new ScreenPoint(deltaX * i + p0X, deltaY * i + p0Y, z));
             }
         }
 
         private void DrawPoint(ref DeviceComponent deviceComponent, ScreenPoint p)
         {
+            var x = p.X;
+            var y = p.Y;
+            var z = p.Z;
+
             // Clipping what's visible on screen
-            if (p.Point.X >= 0 && p.Point.Y >= 0 && p.Point.X < deviceComponent.Bmp.PixelWidth && p.Point.Y < deviceComponent.Bmp.PixelHeight)
+            if (x < 0 || y < 0 || x >= deviceComponent.Bmp.PixelWidth || y >= deviceComponent.Bmp.PixelHeight)
             {
-                var index = (p.Point.X + p.Point.Y * deviceComponent.Resolution.X);
-
-                if (deviceComponent.DepthBuffer[index] < p.Z)
-                {
-                    return; // Discard
-                }
-
-                deviceComponent.DepthBuffer[index] = p.Z;
-
-                PutPixel(ref deviceComponent, p, _currentColor);
+                return;
             }
-        }
 
-        private void PutPixel(ref DeviceComponent deviceComponent, ScreenPoint p, Color color)
-        {
-            // As we have a 1-D Array for our back buffer
-            // we need to know the equivalent cell in 1-D based
-            // on the 2D coordinates on screen
-            var rawIndex = (p.Point.X + p.Point.Y * deviceComponent.Resolution.X);
+            var rawIndex = (x + y * deviceComponent.Resolution.X);
+
+            if (deviceComponent.DepthBuffer[rawIndex] < z)
+            {
+                return; // Discard
+            }
+
+            deviceComponent.DepthBuffer[rawIndex] = z;
+
             var index = rawIndex * 4;
-
-            deviceComponent.BackBuffer[index] = color.B;
-            deviceComponent.BackBuffer[index + 1] = color.G;
-            deviceComponent.BackBuffer[index + 2] = color.R;
-            deviceComponent.BackBuffer[index + 3] = color.A;
+            deviceComponent.BackBuffer[index] = _currentColor.B;
+            deviceComponent.BackBuffer[index + 1] = _currentColor.G;
+            deviceComponent.BackBuffer[index + 2] = _currentColor.R;
+            deviceComponent.BackBuffer[index + 3] = _currentColor.A;
         }
 
-        private void Clear(ref DeviceComponent deviceComponent, byte r, byte g, byte b, byte a)
+        private void Clear(ref DeviceComponent deviceComponent)
         {
-            for (var index = 0; index < deviceComponent.BackBuffer.Length; index += 4)
-            {
-                // BGRA is used by Windows
-                deviceComponent.BackBuffer[index] = b;
-                deviceComponent.BackBuffer[index + 1] = g;
-                deviceComponent.BackBuffer[index + 2] = r;
-                deviceComponent.BackBuffer[index + 3] = a;
-            }
+            Array.Copy(deviceComponent.ClearBackBuffer, deviceComponent.BackBuffer, deviceComponent.BackBuffer.Length);
             Array.Copy(deviceComponent.ClearDepthBuffer, deviceComponent.DepthBuffer, deviceComponent.DepthBuffer.Length);
         }
 

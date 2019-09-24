@@ -8,13 +8,16 @@ namespace Math.Vectors
     {
         private readonly VectorInt _innerVector;
 
-        public int X => _innerVector.GetValue(0);
 
-        public int Y => _innerVector.GetValue(1);
+        public int X;
+
+        public int Y;
 
         public Vector2Int(int x, int y)
         {
             _innerVector = new VectorInt(x, y);
+            X = x;
+            Y = y;
         }
 
         public Vector2Int(VectorInt vector)
@@ -25,6 +28,8 @@ namespace Math.Vectors
             }
 
             _innerVector = vector;
+            X = vector.GetValue(0);
+            Y = vector.GetValue(1);
         }
 
         public VectorInt GetVector()
