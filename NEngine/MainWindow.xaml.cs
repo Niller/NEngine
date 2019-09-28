@@ -37,7 +37,7 @@ namespace NEngine
 
             _dispatcherTimer = new DispatcherTimer();
             _dispatcherTimer.Tick += Callback;
-            _dispatcherTimer.Interval = TimeSpan.FromMilliseconds(0);
+            _dispatcherTimer.Interval = TimeSpan.FromMilliseconds(16);
             _dispatcherTimer.Start();
             
             //CompositionTarget.Rendering += CompositionTargetOnRendering;

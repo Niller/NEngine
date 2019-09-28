@@ -28,7 +28,13 @@ namespace NEngine.Editor.Components
             ClearDepthBuffer = new float[resolution.X * resolution.Y];
             for (var i = 0; i < ClearDepthBuffer.Length; ++i)
             {
-                ClearDepthBuffer[i] = float.MaxValue;
+                ClearDepthBuffer[i] = float.MinValue;
+            }
+
+            BufferSyncObjects = new object[resolution.X * resolution.Y];
+            for (var i = 0; i < BufferSyncObjects.Length; ++i)
+            {
+                BufferSyncObjects[i] = new object();
             }
 
             DepthBuffer = new float[resolution.X * resolution.Y];
@@ -49,6 +55,7 @@ namespace NEngine.Editor.Components
         public WriteableBitmap Bmp;
         public int BmpWidth;
         public int BmpHeight;
+        public object[] BufferSyncObjects;
 
     }
 }

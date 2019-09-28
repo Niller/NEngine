@@ -47,22 +47,23 @@ namespace MathTests
         [TestMethod]
         public void TransformCoordinateTest()
         {
-            var vector3 = new Vector3(1, 2, 3);
+            var vector3 = new Vector3(1,1,1);
             var m = new[]
             {
-                1f, 2f, 3f, 4f,
-                5f, 6f, 7f, 8f,
-                9f, 10f, 11f, 12f,
-                0f, 0f, 0f, 1f
+                -1.689f, 0.458f, -0.332f, -0.329f,
+                -0.568f, 0.283f, 0.953f, 0.943f,
+                -0.394f, -2.372f, 0.05f, 0.049f,
+                0, 0, -10.111f, -10
             };
             var matrix1 = new Matrix4X4(m);
 
             var result = vector3.TransformCoordinate(matrix1);
 
-            var sharpDxResult = SharpDX.Vector3.TransformCoordinate(new SharpDX.Vector3(1, 2, 3), new Matrix(1f, 2f, 3f, 4f,
-                5f, 6f, 7f, 8f,
-                9f, 10f, 11f, 12f,
-                0f, 0f, 0f, 1f));
+            var sharpDxResult = SharpDX.Vector3.TransformCoordinate(new SharpDX.Vector3(1, 1, 1), new Matrix(
+                -1.689f, 0.458f, -0.332f, -0.329f,
+                -0.568f, 0.283f, 0.953f, 0.943f,
+                -0.394f, -2.372f, 0.05f, 0.049f,
+                0, 0, -10.111f, -10));
 
             Debug.WriteLine(result);
             Debug.WriteLine(sharpDxResult);

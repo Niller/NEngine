@@ -12,11 +12,16 @@ using NEngine.Editor.Components;
 using NEngine.Editor.Contexts;
 using NEngine.Editor.Utilities;
 using NEngine.Rendering;
+using Matrix = SharpDX.Matrix;
 
 namespace NEngine.Editor.Systems
 {
-    public class RenderSystem : IExecuteSystem
+    public class RenderSystem1 : IExecuteSystem
     {
+        public static SharpDX.Vector3 ToDxVector3(Vector3 v)
+        {
+            return new SharpDX.Vector3(v.X, v.Y, v.Z);
+        }
         private struct ScreenPoint
         {
             private static readonly Vector2Int Zero = new Vector2Int(0, 0);
@@ -43,6 +48,7 @@ namespace NEngine.Editor.Systems
             }
         }
 
+        private readonly object _syncObject = new object();
         private float _farZ = float.MaxValue;
         private float _nearZ = float.MinValue;
 
@@ -72,10 +78,8 @@ namespace NEngine.Editor.Systems
 
             deviceComponent.Bmp.Lock();
             Clear(ref deviceComponent);
-
-            var viewMatrix = Matrix4X4.GetLookAtLeftHandedMatrix(cameraComponent.Position, cameraComponent.Target, Vector3.Up);
-            var projectionMatrix = Matrix4X4.GetPerspectiveFovRightHandedMatrix(0.78f,
-                (float)deviceComponent.Bmp.PixelWidth / deviceComponent.Bmp.PixelHeight,
+            var viewMatrix = Matrix.LookAtLH(ToDxVector3(cameraComponent.Position), ToDxVector3(cameraComponent.Target), SharpDX.Vector3.Up);
+            var projectionMatrix = Matrix.PerspectiveFovRH(0.78f, (float) deviceComponent.Bmp.PixelWidth / deviceComponent.Bmp.PixelHeight,
                 0.01f, 1.0f);
 
             var emptyTransformComponent = new TransformComponent();
@@ -92,33 +96,33 @@ namespace NEngine.Editor.Systems
                 var mesh = entity.GetComponent<MeshRendererComponent>().Mesh;
 
                 // Beware to apply rotation before translation 
-                var worldMatrix = Matrix4X4.GetScalingMatrix(transform.Scale) * Matrix4X4.GetRotationYawPitchRollMatrix(transform.Rotation.Y,
+                var worldMatrix = Matrix.Scaling(transform.Scale.X, transform.Scale.Y, transform.Scale.Z) * Matrix.RotationYawPitchRoll(transform.Rotation.Y,
                                       transform.Rotation.X, transform.Rotation.Z) *
-                                  Matrix4X4.GetTranslationMatrix(transform.Position);
+                                  Matrix.Translation(ToDxVector3(transform.Position));
 
                 var transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
-                Console.WriteLine(_farZ + " " + _nearZ);
-                Parallel.For(0, mesh.Triangles.Length, (index) =>
+                //Console.WriteLine(_farZ + " " + _nearZ);
+                /*
+                Parallel.ForEach(mesh.Triangles, (triangle) => 
                 {
-                    var triangle = mesh.Triangles[index];
-                    var vertexA = mesh.Vertices[triangle.A];
-                    var vertexB = mesh.Vertices[triangle.B];
-                    var vertexC = mesh.Vertices[triangle.C];
+                    var vertexA = ToDxVector3(mesh.Vertices[triangle.A]);
+                    var vertexB = ToDxVector3(mesh.Vertices[triangle.B]);
+                    var vertexC = ToDxVector3(mesh.Vertices[triangle.C]);
 
                     var pixelA = Project(ref deviceComponent, vertexA, transformMatrix);
                     var pixelB = Project(ref deviceComponent, vertexB, transformMatrix);
                     var pixelC = Project(ref deviceComponent, vertexC, transformMatrix);
 
-                    var colorValue = (byte)((0.25f + (index++ % mesh.Triangles.Length) * 0.75f / mesh.Triangles.Length) * 255);
-                    var color = new Color { R = colorValue, G = colorValue, B = colorValue, A = 255 };
+                    //var colorValue = (byte)((0.25f + (index++ % mesh.Triangles.Length) * 0.75f / mesh.Triangles.Length) * 255);
+                    //var color = new Color { R = colorValue, G = colorValue, B = colorValue, A = 255 };
 
                     
 
                     if (!(pixelA.Y == pixelB.Y && pixelA.Y == pixelC.Y))
                     {
-                       // if ((triangle.A == 0 && triangle.B == 1 && triangle.C == 2) || (triangle.A == 4 && triangle.B == 6 && triangle.C == 7))
+                        if ((triangle.A == 0 && triangle.B == 1 && triangle.C == 2) || (triangle.A == 4 && triangle.B == 6 && triangle.C == 7))
                         {
-                            DrawTriangle(ref deviceComponent, pixelA, pixelB, pixelC, color);
+                            DrawTriangle(ref deviceComponent, pixelA, pixelB, pixelC, Colors.Gray);
                         }
 
                         
@@ -132,11 +136,49 @@ namespace NEngine.Editor.Systems
 
                     //continue;
                     //_currentColor = Colors.Red;
-                   // DrawBLine(ref deviceComponent, pixelA, pixelB, Colors.Red);
-                   // DrawBLine(ref deviceComponent, pixelB, pixelC, Colors.Red);
-                   // DrawBLine(ref deviceComponent, pixelC, pixelA, Colors.Red);
+                    DrawBLine(ref deviceComponent, pixelA, pixelB, Colors.Red);
+                    DrawBLine(ref deviceComponent, pixelB, pixelC, Colors.Red);
+                    DrawBLine(ref deviceComponent, pixelC, pixelA, Colors.Red);
                 });
+                */
+                for (var i = 0; i < mesh.Triangles.Length; i++)
+                {
+                    var triangle = mesh.Triangles[i];
+                    var vertexA = ToDxVector3(mesh.Vertices[triangle.A]);
+                    var vertexB = ToDxVector3(mesh.Vertices[triangle.B]);
+                    var vertexC = ToDxVector3(mesh.Vertices[triangle.C]);
+
+                    var pixelA = Project(ref deviceComponent, vertexA, transformMatrix);
+                    var pixelB = Project(ref deviceComponent, vertexB, transformMatrix);
+                    var pixelC = Project(ref deviceComponent, vertexC, transformMatrix);
+
+                    //var colorValue = (byte)((0.25f + (index++ % mesh.Triangles.Length) * 0.75f / mesh.Triangles.Length) * 255);
+                    //var color = new Color { R = colorValue, G = colorValue, B = colorValue, A = 255 };
+
+
+                    if (!(pixelA.Y == pixelB.Y && pixelA.Y == pixelC.Y))
+                    {
+                        //if (i == 8 || i == 9)
+                        //if ((triangle.A == 0 && triangle.B == 1 && triangle.C == 2) || (triangle.A == 4 && triangle.B == 6 && triangle.C == 7))
+                        {
+                            DrawTriangle(ref deviceComponent, pixelA, pixelB, pixelC, Colors.Gray);
+                        }
+                    }
+                    else
+                    {
+                        //DrawBLine(ref deviceComponent, new ScreenPoint(pixelA, vertexA.Z), new ScreenPoint(pixelB, vertexB.Z));
+                        //DrawBLine(ref deviceComponent, new ScreenPoint(pixelB, vertexB.Z), new ScreenPoint(pixelC, vertexC.Z));
+                        //DrawBLine(ref deviceComponent, new ScreenPoint(pixelC, vertexC.Z), new ScreenPoint(pixelA, vertexA.Z));
+                    }
+
+                    //continue;
+                    //_currentColor = Colors.Red;
+                    DrawBLine(ref deviceComponent, pixelA, pixelB, Colors.Red);
+                    DrawBLine(ref deviceComponent, pixelB, pixelC, Colors.Red);
+                    DrawBLine(ref deviceComponent, pixelC, pixelA, Colors.Red);
+                }
             }
+            
 
             Present(ref deviceComponent);
 
@@ -147,10 +189,10 @@ namespace NEngine.Editor.Systems
 
         // Project takes some 3D coordinates and transform them
         // in 2D coordinates using the transformation matrix
-        private ScreenPoint Project(ref DeviceComponent deviceComponent, Vector3 coord, Matrix4X4 transMat)
+        private ScreenPoint Project(ref DeviceComponent deviceComponent, SharpDX.Vector3 coord, Matrix transMat)
         {
             // transforming the coordinates
-            var point = coord.TransformCoordinate(transMat);
+            var point = SharpDX.Vector3.TransformCoordinate(coord, transMat);
 
             var z = point.Z;
             if (_farZ > z)
@@ -162,6 +204,7 @@ namespace NEngine.Editor.Systems
             {
                 _nearZ = z;
             }
+           //Console.WriteLine(point);
 
             // The transformed coordinates will be based on coordinate system
             // starting on the center of the screen. But drawing on screen normally starts
@@ -184,12 +227,14 @@ namespace NEngine.Editor.Systems
             var y = p0.Y;
 
             var fullDistance = (p0.Point - p1.Point).GetMagnitude();
+            
 
             while (true)
             {
                 var z = MathUtilities.Lerp(p0.Z, p1.Z,
                     new Vector2Int(p0.X - x, p0.Y - y).GetMagnitude() / fullDistance);
-                DrawPoint(ref deviceComponent, new ScreenPoint(x, y, z), color);
+                //TODO Add depth handling
+                DrawPoint(ref deviceComponent, new ScreenPoint(x, y, z), order:1000f);
 
                 if (x == p1.X && y == p1.Y) break;
                 var e2 = 2 * err;
@@ -226,14 +271,14 @@ namespace NEngine.Editor.Systems
 
             var p0X = p0.X;
             var p0Y = p0.Y;
-            for (var i = -1; i < len + 1; ++i)
+            for (var i = 0; i < len + 1; ++i)
             { 
                 var z = MathUtilities.Lerp(p0.Z, p1.Z, (float) i / len);
-                DrawPoint(ref deviceComponent, new ScreenPoint(deltaX * i + p0X, deltaY * i + p0Y, z), color);
+                DrawPoint(ref deviceComponent, new ScreenPoint(deltaX * i + p0X, deltaY * i + p0Y, z));
             }
         }
 
-        private void DrawPoint(ref DeviceComponent deviceComponent, ScreenPoint p, Color? color = null)
+        private void DrawPoint(ref DeviceComponent deviceComponent, ScreenPoint p, Color? color = null, float order = 0)
         {
             var x = p.X;
             var y = p.Y;
@@ -247,21 +292,17 @@ namespace NEngine.Editor.Systems
 
             var rawIndex = (x + y * deviceComponent.Resolution.X);
 
-            lock (deviceComponent.BufferSyncObjects[rawIndex])
+            lock (_syncObject)
             {
-                if (deviceComponent.DepthBuffer[rawIndex] > z)
+                if (deviceComponent.DepthBuffer[rawIndex] > z + order)
                 {
                     return; // Discard
                 }
 
-                deviceComponent.DepthBuffer[rawIndex] = z;
-
-                
+                deviceComponent.DepthBuffer[rawIndex] = z + order;
 
                 if (color == null)
                 {
-                    
-                    
                     color = ColorUtilities.Lerp(Colors.Green, Colors.Red, (z - _farZ) / (_nearZ - _farZ));
                 }
 
@@ -296,6 +337,7 @@ namespace NEngine.Editor.Systems
 
         private void FillBottomFlatTriangle(ref DeviceComponent deviceComponent, ScreenPoint v1, ScreenPoint v2, ScreenPoint v3, Color color)
         {
+
             var invSlope1 = (float)(v2.X - v1.X) / (v2.Y - v1.Y);
             var invSlope2 = (float)(v3.X - v1.X) / (v3.Y - v1.Y);
 
@@ -304,7 +346,7 @@ namespace NEngine.Editor.Systems
 
             for (var scanLineY = v1.Y; scanLineY <= v2.Y; ++scanLineY)
             {
-                var z1 = MathUtilities.Lerp(v2.Z, v1.Z, ((float)scanLineY - v2.Y) / (v1.Y - v2.Y));
+                var z1 = MathUtilities.Lerp(v2.Z, v1.Z, ((float)scanLineY - v2.Y) / ( v1.Y - v2.Y));
                 var z2 = MathUtilities.Lerp(v3.Z, v1.Z, ((float)scanLineY - v3.Y) / (v1.Y - v3.Y));
 
                 DrawLine(ref deviceComponent, new ScreenPoint((int)curX1, scanLineY, z1), new ScreenPoint((int)curX2, scanLineY, z2), color);
@@ -376,7 +418,7 @@ namespace NEngine.Editor.Systems
                 var v4 = new ScreenPoint(splitPoint, MathUtilities.Lerp(p3.Z, p1.Z, 
                     (splitPoint - p3.Point).GetMagnitude()/
                     (p1.Point - p3.Point).GetMagnitude()));
-
+                //Console.WriteLine(p3.Z + " ");
                 FillBottomFlatTriangle(ref deviceComponent, p1, p2, v4, color);
                 FillTopFlatTriangle(ref deviceComponent, p2, v4, p3, color);
             }

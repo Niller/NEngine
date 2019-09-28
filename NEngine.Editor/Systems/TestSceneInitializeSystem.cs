@@ -17,7 +17,7 @@ namespace NEngine.Editor.Systems
             
             var meshEntity = GameObjectUtilities.CreateGameObject<MainContext>("Cube", ref root);
 
-            var transform = meshEntity.CurrentContext.RegisterComponent(new TransformComponent(new Vector3(0, 0, 0), Vector3.Zero, new Vector3(.1f, .1f, .1f)));
+            var transform = meshEntity.CurrentContext.RegisterComponent(new TransformComponent(new Vector3(0, 0, 0), new Vector3(100.97f, 100.97f, 100f), new Vector3(.1f, .1f, .1f)));
             meshEntity.AddComponent(ref transform);
 
             /*

@@ -42,6 +42,12 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -72,6 +78,7 @@
     <Compile Include="Systems\LoadAssetsSystem.cs" />
     <Compile Include="Systems\PermanentRotateCubeSystem.cs" />
     <Compile Include="Systems\RenderInitializeSystem.cs" />
+    <Compile Include="Systems\RenderSystem - Copy.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\TestSceneInitializeSystem.cs" />
     <Compile Include="Utilities\AssetType.cs" />
